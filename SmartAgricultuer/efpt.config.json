@@ -1,0 +1,82 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "AppdbContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "IrregularWords": null,
+   "MinimumProductVersion": "2.6.1378",
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PluralRules": null,
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "SmartAgricultuer",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "SingularRules": null,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Analysis_Results]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Analysis_Types]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Insect_Plants]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Insects]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Plant_Diseases]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Plants]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Treatment_Steps]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Uploads]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false,
+   "UseTypedTvpParameters": true
+}
