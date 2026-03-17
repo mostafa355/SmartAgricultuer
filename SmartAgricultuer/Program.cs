@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartAgricultuer.Models;
-using Microsoft.Extensions.DependencyInjection;
-// تأكد من الـ Namespace بتاع الـ Context بتاعك
-// لو AppdbContext موجود في فولدر Data سيب السطر ده، لو في Models امسحه
-using SmartAgricultuer.Data;
+using SmartAgricultuer.Services;
 
 namespace SmartAgricultuer
 {
@@ -18,6 +15,9 @@ namespace SmartAgricultuer
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<AppdbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            // بنقول للـ DI Container لو حد طلب IAuthService يديله AuthService
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             // 2. إعدادات الهوية (Identity) مربوطة بالـ Context الصح
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
@@ -59,17 +59,36 @@ namespace SmartAgricultuer
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            // كود إنشاء الأدوار تلقائياً
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                // إنشاء الـ Roles
                 string[] roleNames = { "Admin", "User" };
                 foreach (var roleName in roleNames)
                 {
                     if (!await roleManager.RoleExistsAsync(roleName))
-                    {
                         await roleManager.CreateAsync(new IdentityRole<int>(roleName));
-                    }
+                }
+
+                // إنشاء أول Admin
+                string adminEmail = "admin@plantguard.com";
+                string adminPassword = "Admin@123";
+
+                if (await userManager.FindByEmailAsync(adminEmail) == null)
+                {
+                    var admin = new ApplicationUser
+                    {
+                        UserName = adminEmail,
+                        Email = adminEmail,
+                        EmailConfirmed = true,
+                        Name = "Admin"
+                    };
+
+                    var result = await userManager.CreateAsync(admin, adminPassword);
+                    if (result.Succeeded)
+                        await userManager.AddToRoleAsync(admin, "Admin");
                 }
             }
 
