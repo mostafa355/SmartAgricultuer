@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartAgricultuer.Models;
-using Microsoft.Extensions.DependencyInjection;
-// تأكد من الـ Namespace بتاع الـ Context بتاعك
-// لو AppdbContext موجود في فولدر Data سيب السطر ده، لو في Models امسحه
-using SmartAgricultuer.Data;
 
 namespace SmartAgricultuer
 {
@@ -59,17 +55,36 @@ namespace SmartAgricultuer
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            // كود إنشاء الأدوار تلقائياً
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                // إنشاء الـ Roles
                 string[] roleNames = { "Admin", "User" };
                 foreach (var roleName in roleNames)
                 {
                     if (!await roleManager.RoleExistsAsync(roleName))
-                    {
                         await roleManager.CreateAsync(new IdentityRole<int>(roleName));
-                    }
+                }
+
+                // إنشاء أول Admin
+                string adminEmail = "admin@plantguard.com";
+                string adminPassword = "Admin@123";
+
+                if (await userManager.FindByEmailAsync(adminEmail) == null)
+                {
+                    var admin = new ApplicationUser
+                    {
+                        UserName = adminEmail,
+                        Email = adminEmail,
+                        EmailConfirmed = true,
+                        Name = "Admin"
+                    };
+
+                    var result = await userManager.CreateAsync(admin, adminPassword);
+                    if (result.Succeeded)
+                        await userManager.AddToRoleAsync(admin, "Admin");
                 }
             }
 

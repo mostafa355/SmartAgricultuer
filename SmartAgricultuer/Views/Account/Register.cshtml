@@ -1,0 +1,65 @@
+﻿@model SmartAgricultuer.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Create Account";
+    Layout = "_AuthLayout"; // التأكد من استخدام اللاي أوت المخصص
+}
+
+
+
+<div class="register-wrapper">
+    <div class="register-card">
+        <div class="register-header">
+            <div class="icon-circle">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#006400" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <h1 class="register-title">Create your account</h1>
+        </div>
+
+        <form asp-action="Register" method="post">
+            @* ملخص الأخطاء التي تأتي من السيرفر *@
+            <div asp-validation-summary="ModelOnly" class="text-danger" style="font-size: 0.8rem; margin-bottom: 10px;"></div>
+
+            <div class="input-group">
+                <label asp-for="Name">Full Name</label>
+                <input asp-for="Name" placeholder="Enter your full name">
+                <span asp-validation-for="Name" class="error-text"></span>
+            </div>
+
+            <div class="input-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" placeholder="Enter your email">
+                <span asp-validation-for="Email" class="error-text"></span>
+            </div>
+
+            <div class="input-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" type="password" placeholder="Enter 9 digits">
+                <span asp-validation-for="Password" class="error-text"></span>
+            </div>
+
+            <div class="input-group">
+                <label asp-for="ConfirmPassword">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" placeholder="Confirm your password">
+                <span asp-validation-for="ConfirmPassword" class="error-text"></span>
+            </div>
+
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+
+        <div class="footer-links">
+            <p>By signing up, you agree to the Terms and Privacy Policy</p>
+            <p style="margin-top:15px;">
+                Already have an account? <a asp-action="Login">Log in</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* تفعيل الـ Validation من جهة العميل (Client-side validation) *@
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
