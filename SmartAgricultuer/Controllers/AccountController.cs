@@ -42,7 +42,7 @@ namespace SmartAgricultuer.Controllers
             }
 
             // لو role == null يبقى الدخول فشل
-            ModelState.AddModelError("", "الإيميل أو الباسورد غلط");
+            ModelState.AddModelError("", "Invalid email or password.");
             return View(model);
         }
 

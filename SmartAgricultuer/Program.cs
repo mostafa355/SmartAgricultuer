@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartAgricultuer.Models;
-
+using SmartAgricultuer.Services; 
 namespace SmartAgricultuer
 {
     public class Program
