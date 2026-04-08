@@ -36,19 +36,22 @@ namespace SmartAgricultuer.Controllers
                 var roles = await _userManager.GetRolesAsync(user);
 
                 if (roles.Contains("Admin"))
-                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
                 else
-                    return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
+            // لو role == null يبقى الدخول فشل
             ModelState.AddModelError("", "الإيميل أو الباسورد غلط");
             return View(model);
         }
 
         // GET: /Account/Register
+        // بيعرض صفحة التسجيل فارغة
         public IActionResult Register() => View();
 
         // POST: /Account/Register
+        // بيستقبل البيانات من الصفحة ويبعتها للـ Service
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -72,6 +75,7 @@ namespace SmartAgricultuer.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            // لو فيه أخطاء نضيفها للـ ModelState عشان تظهر في الصفحة
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);
 

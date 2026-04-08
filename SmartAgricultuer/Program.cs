@@ -15,6 +15,9 @@ namespace SmartAgricultuer
             builder.Services.AddDbContext<AppdbContext>(options =>
                 options.UseSqlServer(connectionString));
 
+            // بنقول للـ DI Container لو حد طلب IAuthService يديله AuthService
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
             // 2. إعدادات الهوية (Identity) مربوطة بالـ Context الصح
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
             {

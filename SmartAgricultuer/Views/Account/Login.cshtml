@@ -14,7 +14,13 @@
             <h1>Login to Your Account</h1>
         </div>
 
-        <form asp-action="Login" method="post">
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">تسجيل الدخول</h3>
+
+                <form asp-action="Login" method="post">
             <div asp-validation-summary="All" class="error-msg"></div>
 
             <div class="input-box">
@@ -22,7 +28,7 @@
                 <div class="field">
                     <i data-lucide="mail" class="side-icon"></i>
                     <input asp-for="Email" type="email" placeholder="Enter your email" class="form-input" />
-                </div>
+                    </div>
                 <span asp-validation-for="Email" class="error-msg"></span>
             </div>
 
@@ -39,15 +45,15 @@
                     </div>
                 </div>
                 <span asp-validation-for="Password" class="error-msg"></span>
-            </div>
+                    </div>
 
             <div class="remember-row">
                 <input asp-for="RememberMe" class="form-check-input" id="rememberMe" />
                 <label asp-for="RememberMe" class="form-check-label">Remember me</label>
-            </div>
+                    </div>
 
             <button type="submit" class="login-btn">Login</button>
-        </form>
+                </form>
 
         <div class="footer-text">
             Don't have an account? <a asp-action="Register">Create an account</a>

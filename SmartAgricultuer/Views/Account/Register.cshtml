@@ -5,6 +5,11 @@
     Layout = "_AuthLayout"; // التأكد من استخدام اللاي أوت المخصص
 }
 
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">إنشاء حساب جديد</h3>
 
 
 <div class="register-wrapper">
@@ -19,7 +24,7 @@
             <h1 class="register-title">Create your account</h1>
         </div>
 
-        <form asp-action="Register" method="post">
+                <form asp-action="Register" method="post">
             @* ملخص الأخطاء التي تأتي من السيرفر *@
             <div asp-validation-summary="ModelOnly" class="text-danger" style="font-size: 0.8rem; margin-bottom: 10px;"></div>
 
@@ -27,28 +32,28 @@
                 <label asp-for="Name">Full Name</label>
                 <input asp-for="Name" placeholder="Enter your full name">
                 <span asp-validation-for="Name" class="error-text"></span>
-            </div>
+                    </div>
 
             <div class="input-group">
                 <label asp-for="Email">Email</label>
                 <input asp-for="Email" placeholder="Enter your email">
                 <span asp-validation-for="Email" class="error-text"></span>
-            </div>
+                    </div>
 
             <div class="input-group">
                 <label asp-for="Password">Password</label>
                 <input asp-for="Password" type="password" placeholder="Enter 9 digits">
                 <span asp-validation-for="Password" class="error-text"></span>
-            </div>
+                    </div>
 
             <div class="input-group">
                 <label asp-for="ConfirmPassword">Confirm Password</label>
                 <input asp-for="ConfirmPassword" type="password" placeholder="Confirm your password">
                 <span asp-validation-for="ConfirmPassword" class="error-text"></span>
-            </div>
+                    </div>
 
             <button type="submit" class="submit-btn">Sign Up</button>
-        </form>
+                </form>
 
         <div class="footer-links">
             <p>By signing up, you agree to the Terms and Privacy Policy</p>
@@ -58,6 +63,7 @@
         </div>
     </div>
 </div>
+
 
 @section Scripts {
     @* تفعيل الـ Validation من جهة العميل (Client-side validation) *@
