@@ -1,27 +1,121 @@
-﻿/* Layout */
+/* CSS Variables for consistent theming */
+:root {
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 80px;
+    --primary-color: #00450d;
+    --primary-hover: #1b5e20;
+    --bg-color: #f0f0e7;
+    --text-color: #555;
+    --white: #ffffff;
+    --danger-color: #c62828;
+    --danger-bg: #f9ebee;
+    --transition-speed: 0.3s;
+}
+
+/* Reset and Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8faf8;
+}
+
+/* Layout */
 .result-layout {
     display: flex;
-    font-family: Arial, sans-serif;
 }
 
 /* Sidebar */
 .sidebar {
-    width: 260px;
+    width: var(--sidebar-width);
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    background: #f9f9f8;
+    background: var(--bg-color);
     border-right: 1px solid #ddd;
-    padding: 16px;
+    padding: 10px 16px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    box-sizing: border-box;
+    overflow: hidden;        /* شلت السكرول من هنا */
+    transition: width var(--transition-speed) ease;
+    z-index: 1000;
+}
+
+/* Scrollbar Styling */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
 }
 
 /* Top section */
 .top-section {
     text-align: left;
+    position: relative;
+    padding-top: 45px;
+    flex-shrink: 0;          /* ميتكبرش ولا يتصغر */
+}
+/* Toggle Button */
+.toggle-btn {
+    position: absolute;
+    right: 0;
+    top: 8px;                    /* فوق خالص */
+    width: 28px;
+    height: 28px;
+    background: var(--white);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    padding: 0;
+}
+
+.toggle-btn:hover {
+    background: var(--primary-hover);
+    color: var(--white);
+    border-color: var(--primary-hover);
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.toggle-btn:active {
+    transform: scale(0.95);
+}
+
+/* SVG Icon */
+.toggle-btn svg {
+    transition: transform 0.3s ease;
+}
+
+/* الأيقونة بتعكس لما يتقفل */
+.sidebar.collapsed .toggle-btn svg {
+    transform: scaleX(-1);
+}
+
+/* Hide toggle button on mobile */
+@media (max-width: 768px) {
+    .toggle-btn {
+        display: none;
+    }
 }
 
 /* Logo container */
@@ -32,25 +126,27 @@
     gap: 8px;
     text-decoration: none;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 /* Icon */
 .logo-icon {
     font-size: 24px;
+    line-height: 1;
 }
 
 /* Text logo */
 .logo-text {
     font-size: 20px;
     font-weight: 900;
-    color: #00450d;
+    color: var(--primary-color);
     letter-spacing: 1px;
-    transition: 0.3s;
+    transition: opacity var(--transition-speed), transform var(--transition-speed);
 }
 
 /* Hover effect */
 .navbar-logo:hover .logo-text {
-    color: #1b5e20;
+    color: var(--primary-hover);
     transform: scale(1.05);
 }
 
@@ -58,7 +154,7 @@
 .logo {
     font-size: 20px;
     font-weight: 400;
-    color: #00450d;
+    color: var(--primary-color);
     margin: 5px 0;
 }
 
@@ -74,58 +170,324 @@
 .nav {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     margin-top: 20px;
-    flex: 1;
+    flex: 1;                 /* ياخد كل المساحة المتبقية */
+    overflow-y: auto;        /* السكرول هنا بس */
+    overflow-x: hidden;
+    min-height: 0;           /* مهم عشان flex scroll يشتغل */
+}
+.nav::-webkit-scrollbar {
+    width: 4px;
 }
 
+.nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 2px;
+}
 /* Nav item */
 .nav-item {
     text-decoration: none;
-    padding: 10px;
+    padding: 12px 10px;
     border-radius: 10px;
-    color: #555;
-    transition: 0.2s;
+    font-size: 15px;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
 }
 
-    /* Hover */
-    .nav-item:hover {
-        background: #f3f4f3;
-    }
+/* Hover */
+.nav-item:hover {
+    background: var(--primary-hover);
+    color: var(--white);
+}
 
-    /* Active link */
-    .nav-item.active {
-        background: #1b5e20;
-        color: white;
-    }
+/* Focus styles for accessibility */
+.nav-item:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Active link */
+.nav-item.active {
+    background: var(--primary-hover);
+    color: var(--white);
+}
+
+/* Nav Icons */
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.nav-text {
+    transition: opacity var(--transition-speed);
+    white-space: nowrap;
+}
+
+/* Dropdown Arrow */
+.arrow-icon {
+    margin-left: auto;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-trigger.open .arrow-icon {
+    transform: rotate(180deg);
+}
+
+/* History Submenu */
+.history-submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 40px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 0 0 10px 10px;
+    /* شلت max-height و overflow-y عشان السكرول يبقى على الـ sidebar */
+}
+
+.history-submenu.open {
+    display: flex;
+}
+
+.history-submenu a {
+    text-decoration: none;
+    color: #666;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-submenu a:hover {
+    background: var(--white);
+    color: var(--primary-hover);
+}
 
 /* Bottom section */
 .bottom-section {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: auto;
-    padding-top: 10px;
+    padding-top: 15px;
     border-top: 1px solid #ddd;
+    flex-shrink: 0;          /* ميتكبرش ولا يتصغر */
+    background: var(--bg-color);  /* خلفية عشان يغطي اللي تحته */
+    margin-top: 10px;        /* مسافة بسيطة من فوق */
 }
 
-/* Settings */
-.bottom {
-    font-weight: 500;
-}
-
-/* Logout */
-.logout {
-    color: #c62828;
-}
-
-    .logout:hover {
-        background: #ffebee;
-    }
-
-/* Content */
-.content {
-    margin-left: 260px;
-    padding: 20px;
+/* Profile Container */
+.profile-container {
+    position: relative;
     width: 100%;
+}
+
+.profile-btn-trigger {
+    background: var(--primary-hover) !important;
+    color: var(--white) !important;
+}
+
+/* Profile Menu */
+.profile-menu {
+    display: none;
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    width: 220px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    z-index: 9999;
+    border: 1px solid #eee;
+}
+
+.profile-menu.show {
+    display: block;
+    animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Profile Info */
+.profile-info b {
+    color: var(--primary-hover);
+    font-size: 16px;
+    display: block;
+}
+
+.profile-info p {
+    margin: 4px 0;
+    font-size: 13px;
+    color: #777;
+}
+
+.profile-menu hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 12px 0;
+}
+
+.menu-item {
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-item:hover {
+    background: #f5f5f5;
+    color: var(--primary-hover);
+}
+
+.menu-item:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Logout Button */
+.nav-item.logout {
+    color: var(--danger-color);
+    background: var(--danger-bg);
+    justify-content: flex-start;
+}
+
+.nav-item.logout:hover {
+    background: #ffcdd2;
+    color: #b71c1c;
+}
+
+/* Content Area */
+.content {
+    margin-left: var(--sidebar-width);
+    padding: 30px;
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    transition: margin-left var(--transition-speed), width var(--transition-speed);
+}
+
+/* ============================================
+   COLLAPSED SIDEBAR MODE - التعديلات الجديدة
+   ============================================ */
+
+/* Sidebar collapsed - basic styles */
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+    padding: 10px 8px;
+}
+
+/* Hide texts and logo in collapsed mode */
+.sidebar.collapsed .nav-text,
+.sidebar.collapsed .logo-wrapper,
+.sidebar.collapsed .logo-text {
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    overflow: hidden;
+}
+
+.sidebar.collapsed .navbar-logo {
+    justify-content: center;
+}
+
+.sidebar.collapsed .nav-item {
+    justify-content: center;
+    padding: 15px 0;
+}
+
+/* ============================================
+   NEW: Hide history arrow in collapsed mode
+   ============================================ */
+.sidebar.collapsed #historyDropdown .arrow-icon {
+    display: none !important;
+}
+
+/* ============================================
+   NEW: Always hide submenu in collapsed mode
+   ============================================ */
+.sidebar.collapsed .history-submenu {
+    display: none !important;
+}
+
+/* Remove open state when collapsed */
+.sidebar.collapsed #historyDropdown.open {
+    background: none;
+    color: var(--text-color);
+}
+
+.sidebar.collapsed #historyDropdown.open:hover {
+    background: var(--primary-hover);
+    color: var(--white);
+}
+
+/* Content shift when collapsed */
+.sidebar.collapsed ~ .content {
+    margin-left: var(--sidebar-collapsed);
+    width: calc(100% - var(--sidebar-collapsed));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-speed) ease;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .sidebar.collapsed ~ .content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar {
+        display: none;
+    }
+    
+    .content {
+        margin-left: 0;
+        width: 100%;
+    }
 }

@@ -1,0 +1,137 @@
+/* General Styling */
+/* ─── margin: 0 و padding: 0 في general.css ─── */
+body {
+    background-color: #f8faf8;
+    font-family: "Inter", sans-serif;
+    box-sizing: border-box;
+}
+
+/* التعديل هنا: محاذاة الصفحة بالنسبة للـ Navbar */
+.history-page {
+    padding: 40px 20px;
+    min-height: 100vh;
+    max-width: 1200px;
+    margin-left: 260px;
+    flex-grow: 1;
+}
+
+/* Header & Hero */
+.topbar {
+    font-size: 18px;
+    font-weight: 700;
+    color: #154212;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    color: #154212;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #4a6549;
+    margin-bottom: 40px;
+}
+
+/* شبكة الكروت */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* Card Styling */
+.card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+.card-content {
+    padding: 15px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .card-header h3 {
+        font-size: 15px;
+        color: #154212;
+        margin: 0;
+    }
+
+    .card-header span {
+        font-size: 11px;
+        color: #888;
+    }
+
+.card-content p {
+    font-size: 13px;
+    color: #4a6549;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    height: 40px;
+    overflow: hidden;
+}
+
+/* Status Labels */
+.status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    width: fit-content;
+}
+
+.healthy {
+    background: #ccebc7;
+    color: #154212;
+}
+
+.diseased {
+    background: #ffdad6;
+    color: #93000a;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .history-page {
+        margin-left: 0;
+        padding-top: 80px;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}

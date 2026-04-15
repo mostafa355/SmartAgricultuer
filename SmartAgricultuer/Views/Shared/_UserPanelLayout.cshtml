@@ -3,14 +3,118 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
     <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/General.css" asp-append-version="true">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    <div>
+    <div class="result-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="top-section">
+                <button class="toggle-btn" id="toggleSidebar" aria-label="Toggle Sidebar">
+                    <svg viewBox="0 0 1024 1024" width="14" height="14" fill="currentColor">
+                        <path d="M725.333333 132.266667A166.4 166.4 0 0 1 891.733333 298.666667v426.666666c0 91.904-74.496 166.4-166.4 166.4H298.666667A166.442667 166.442667 0 0 1 132.266667 725.333333V298.666667A166.4 166.4 0 0 1 298.666667 132.266667h426.666666z m-281.6 682.666666H725.333333a89.6 89.6 0 0 0 89.6-89.6V298.666667A89.6 89.6 0 0 0 725.333333 209.066667h-281.6v605.866666zM298.666667 209.066667A89.6 89.6 0 0 0 209.066667 298.666667v426.666666c0 49.493333 40.106667 89.6 89.6 89.6h68.266666V209.066667H298.666667z" />
+                    </svg>
+                </button>
+
+                    <a asp-controller="UserPanel" asp-action="Home" class="navbar-logo">
+                    <span class="logo-icon" aria-hidden="true">🌱</span>
+                    <span class="logo-text">PlantAI</span>
+                </a>
+                <div class="logo-wrapper">
+                    <h1 class="logo">The Herbarium</h1>
+                    <p class="sub">Digital Specimen</p>
+                </div>
+            </div>
+
+            <nav class="nav" aria-label="Main Navigation">
+                <a asp-controller="UserPanel" asp-action="Home" class="nav-item" data-page="home">
+                    <i class="fas fa-home nav-icon" aria-hidden="true"></i>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a asp-controller="UserPanel" asp-action="Upload" class="nav-item" data-page="upload">
+                    <i class="fas fa-cloud-upload-alt nav-icon" aria-hidden="true"></i>
+                    <span class="nav-text">Upload</span>
+                </a>
+                <a asp-controller="UserPanel" asp-action="Archive" class="nav-item" data-page="archive">
+                    <i class="fas fa-archive nav-icon" aria-hidden="true"></i>
+                    <span class="nav-text">Archive</span>
+                </a>
+
+                <div class="nav-item dropdown-trigger" id="historyDropdown" role="button" tabindex="0"
+                     aria-expanded="false" aria-controls="historySubmenu">
+                    <i class="fas fa-history nav-icon" aria-hidden="true"></i>
+                    <span class="nav-text">History</span>
+                    <i class="fas fa-chevron-down arrow-icon" aria-hidden="true"></i>
+                </div>
+                <div class="history-submenu" id="historySubmenu" aria-label="History Submenu">
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
+                    
+                </div>
+            </nav>
+
+            <div class="bottom-section">
+                <div class="profile-container">
+                    <button id="profileTrigger" class="nav-item profile-btn-trigger" aria-expanded="false"
+                            aria-controls="profileCard">
+                        <i class="fas fa-user-circle nav-icon" aria-hidden="true"></i>
+                        <span class="nav-text">Profile</span>
+                    </button>
+                    <div id="profileCard" class="profile-menu" role="menu" aria-label="Profile Menu">
+                        <div class="profile-info">
+                            <b>John Doe</b>
+                            <p>john@email.com</p>
+                        </div>
+                        <hr>
+                        <a href="register.html" class="menu-item" role="menuitem">
+                            <i class="fas fa-user-edit" aria-hidden="true"></i> Edit Profile
+                        </a>
+                        <a href="newpassword.html" class="menu-item" role="menuitem">
+                            <i class="fas fa-key" aria-hidden="true"></i> Password
+                        </a>
+                    </div>
+                </div>
+                <a href="#" class="nav-item logout" onclick="handleLogout(event)">
+                    <i class="fas fa-sign-out-alt nav-icon" aria-hidden="true"></i>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </div>
+        </aside>
+    </div>
+    <div class="main-content">
         @RenderBody()
     </div>
+        <footer class="footer-section">
+            <div class="footer-icons">
+                <div class="icon-circle"><span class="material-symbols-outlined">public</span></div>
+                <div class="icon-circle"><span class="material-symbols-outlined">share</span></div>
+                <div class="icon-circle"><span class="material-symbols-outlined">mail</span></div>
+            </div>
+            <p class="copyright">© 2024 PlantAI. All rights reserved.</p>
+        </footer>
     <script src="~/js/home.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/navbar.js"></script>
 </body>
 </html>

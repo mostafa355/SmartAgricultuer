@@ -9,7 +9,15 @@ namespace SmartAgricultuer.Controllers
             return View();
         }
 
-        public IActionResult u()
+        public IActionResult Upload()
+        {
+            return View();
+        }
+        public IActionResult Result()
+        {
+            return View();
+        }
+        public IActionResult Archive()
         {
             return View();
         }

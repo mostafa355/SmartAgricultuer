@@ -1,0 +1,312 @@
+:root {
+    --primary-green: #0d631b;
+    --light-green-bg: #d1fae5;
+    --bg-gray: #f8faf8;
+    --text-main: #191c1b;
+    --text-muted: #5c615e;
+    --error-red: #ba1a1a;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-gray);
+    font-family: 'Inter', sans-serif;
+}
+
+.page-content-wrapper {
+    flex: 1;
+    margin-left: 260px; 
+    padding: 30px;
+}
+
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+
+.hero { 
+    display: flex; 
+    gap: 50px; 
+    align-items: center; 
+    margin-top: 60px; 
+    margin-bottom: 40px; 
+}
+
+.hero-image img {
+    width: 100%; 
+    max-width: 450px; 
+    border-radius: 30px; 
+    box-shadow: var(--card-shadow); 
+    transition: transform 0.3s ease;
+}
+
+.hero-image img:hover { 
+    transform: scale(1.03); 
+}
+
+.hero-text h1 { 
+    font-family: 'Manrope', sans-serif; 
+    font-size: 2.8rem; 
+    margin-bottom: 10px; 
+}
+
+.confidence-container {
+    background: white; 
+    padding: 20px; 
+    border-radius: 20px; 
+    margin-top: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05); 
+    max-width: 400px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.confidence-container:hover { 
+    transform: translateY(-5px); 
+    box-shadow: var(--hover-shadow); 
+}
+
+.confidence-info { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 10px; 
+    align-items: center; 
+}
+
+.confidence-label { 
+    font-size: 0.75rem; 
+    font-weight: 800; 
+    color: var(--text-muted); 
+}
+
+.confidence-value { 
+    font-weight: 800; 
+    color: var(--primary-green); 
+    font-size: 1.3rem; 
+}
+
+.progress-bar-bg { 
+    width: 100%; 
+    height: 10px; 
+    background-color: #f0f2f0; 
+    border-radius: 10px; 
+    overflow: hidden; 
+}
+
+.progress-bar-fill { 
+    height: 100%; 
+    background: var(--primary-green); 
+    transition: width 1s ease-in-out; 
+}
+
+.main-grid { 
+    display: grid; 
+    grid-template-columns: 2fr 1fr; 
+    gap: 30px; 
+    align-items: start; 
+}
+
+.left-column { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 30px; 
+}
+
+.result-info-sidebar { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+}
+
+.card {
+    background: white; 
+    border-radius: 24px; 
+    padding: 25px; 
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover { 
+    transform: translateY(-4px); 
+    box-shadow: var(--hover-shadow); 
+}
+
+.card-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 20px; 
+}
+
+.disease-profile { 
+    background-color: #fce8e6 !important; 
+    border: 1px solid #f8d7da; 
+}
+
+.healthy-profile { 
+    background-color: #f0fdf4 !important; 
+    border: 1px solid #dcfce7; 
+}
+
+.maintenance-note {
+    background: white; 
+    padding: 15px; 
+    border-radius: 12px;
+    margin-top: 15px; 
+    border-left: 4px solid #166534;
+}
+
+.protocol-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 15px; 
+}
+
+.step-card {
+    background: white; 
+    padding: 20px; 
+    border-radius: 18px; 
+    border-left: 5px solid var(--primary-green);
+    transition: transform 0.3s ease;
+}
+
+.step-card:hover { 
+    transform: translateY(-5px); 
+}
+
+.step-num {
+    background: var(--primary-green); 
+    color: white; 
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+}
+
+.scientific-row { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%; 
+    margin-top: 4px; 
+}
+
+.tag-harmful {
+    background: var(--error-red); 
+    color: white; 
+    padding: 3px 12px; 
+    border-radius: 50px;
+    font-size: 0.7rem; 
+    font-weight: bold;
+}
+
+.tip-box {
+    flex: 1;
+    background: #f4f6f4;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 10px ;
+}
+
+.icon-green, .plant-info .card-header .material-symbols-outlined { 
+    color: #2e7d32 !important; 
+}
+
+.icon-red, .disease-profile .card-header .material-symbols-outlined { 
+    color: #d32f2f !important; 
+}
+
+.icon-green-success, .healthy-profile .card-header .material-symbols-outlined { 
+    color: #388e3c !important; 
+}
+
+.protocol-section .card-header .material-symbols-outlined { 
+    color: #0277bd !important; 
+}
+
+.horizontal-safety .card-header .material-symbols-outlined { 
+    color: #455a64 !important; 
+}
+
+.care-list .material-symbols-outlined { 
+    color: #4caf50; 
+}
+
+
+.icon-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--light-green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #10b981; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.icon-circle span {
+    font-size: 18px !important;
+}
+
+.icon-circle:hover {
+    background-color: var(--light-green-bg);
+    transform: translateY(-3px);
+}
+
+
+label { 
+    font-size: 0.7rem; 
+    font-weight: 800; 
+    color: #888; 
+    text-transform: uppercase; 
+    margin-top: 10px; 
+    display: block; 
+}
+
+.bold { 
+    font-weight: 700; 
+    font-size: 1.1rem; 
+}
+
+.italic { 
+    font-style: italic; 
+    color: #666; 
+}
+
+.small { 
+    font-size: 0.85rem; 
+    line-height: 1.4; 
+}
+
+.care-list { 
+    list-style: none; 
+    padding: 0; 
+}
+
+.care-list li { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    margin-top: 8px; 
+}
+
+#nav-placeholder {
+    position: fixed;
+    z-index: 10000;
+}
+
+.sidebar {
+    overflow: visible !important;
+}
