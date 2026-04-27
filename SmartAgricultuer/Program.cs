@@ -17,6 +17,9 @@ namespace SmartAgricultuer
 
             // بنقول للـ DI Container لو حد طلب IAuthService يديله AuthService
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IImageService, ImageService>();
+            // محتاج HttpClient عشان يتكلم مع الـ Python API
+            builder.Services.AddHttpClient<IDiagnosisService, DiagnosisService>();
 
             // 2. إعدادات الهوية (Identity) مربوطة بالـ Context الصح
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>

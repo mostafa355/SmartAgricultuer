@@ -23,6 +23,7 @@ public partial class AppdbContext : IdentityDbContext<ApplicationUser, IdentityR
     public virtual DbSet<PlantDisease> PlantDiseases { get; set; }
     public virtual DbSet<TreatmentStep> TreatmentSteps { get; set; }
     public virtual DbSet<Upload> Uploads { get; set; }
+    public IEnumerable<object> DetectionHistories { get; internal set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
