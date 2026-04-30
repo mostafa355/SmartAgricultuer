@@ -3,6 +3,8 @@
     const historyDrop = document.getElementById('historyDropdown');
     const historySubmenu = document.getElementById('historySubmenu');
     const maincontet = document.getElementById('mainContent');
+    const navContainer = document.querySelector('.nav');
+    const scrollKey = 'sidebar_scroll_position';
 
     // وظيفة موحدة لتغيير حالة السايدبار والمحتوى معاً
     function updateSidebarState(isCollapsed) {
@@ -25,11 +27,8 @@
     // History Click
     historyDrop.onclick = (e) => {
         e.stopPropagation();
-
-        // لو السايدبار مقفول، افتحه وثبته كأنه اتفتح من الأيقونة
         if (sidebar.classList.contains('collapsed')) {
-            updateSidebarState(false); // دي اللي هتخليه يثبت وميقفلش تاني
-
+            updateSidebarState(false);
             setTimeout(() => {
                 historySubmenu.classList.add('open');
                 localStorage.setItem('historyOpen', 'true');
@@ -40,30 +39,57 @@
         }
     };
 
-    // Restore on load - تنظيف الكود ومنع التكرار
+    // --- منطق استعادة الحالة والسكرول عند التحميل ---
     const savedCollapsed = localStorage.getItem('collapsed') === 'true';
     const savedHistoryOpen = localStorage.getItem('historyOpen') === 'true';
+    const savedScrollPos = localStorage.getItem(scrollKey);
 
-    if (savedCollapsed) {
-        sidebar.classList.add('collapsed');
-        maincontet.classList.replace('content-normal', 'content-expanded');
-    } else {
-        sidebar.classList.remove('collapsed');
-        maincontet.classList.replace('content-expanded', 'content-normal');
+    // استعادة حالة السايدبار
+    updateSidebarState(savedCollapsed);
+
+    // استعادة فتح الهيستري (لو مش مقفول) أو لو إحنا في صفحة Result
+    if ((savedHistoryOpen && !savedCollapsed) || window.location.pathname.includes('Result') || document.querySelector('.active-scan')) {
+        if (historySubmenu) {
+            historySubmenu.classList.add('open');
+            if (historyDrop) historyDrop.classList.add('open');
+        }
     }
 
-    if (savedHistoryOpen && !savedCollapsed) {
-        historySubmenu.classList.add('open');
+    // استعادة السكرول "بنعومة واحترافية"
+    if (savedScrollPos && navContainer) {
+        // نلغي الـ smooth مؤقتاً عشان ينط للمكان صح فوراً
+        navContainer.style.scrollBehavior = 'auto';
+
+        // استخدمنا requestAnimationFrame عشان نضمن إن الـ Submenu فتحت والـ Layout اتحسب
+        requestAnimationFrame(() => {
+            navContainer.scrollTop = savedScrollPos;
+            // نرجع الـ smooth بعد التحميل عشان السكرول اليدوي يفضل ناعم
+            setTimeout(() => {
+                navContainer.style.scrollBehavior = 'smooth';
+            }, 50);
+        });
+    }
+
+    // حفظ السكرول عند الضغط على أي رابط
+    if (navContainer) {
+        navContainer.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link) {
+                localStorage.setItem(scrollKey, navContainer.scrollTop);
+            }
+        });
     }
 
     // Profile Logic
     const profileTrigger = document.getElementById('profileTrigger');
     const profileCard = document.getElementById('profileCard');
 
-    profileTrigger.onclick = (e) => {
-        e.stopPropagation();
-        profileCard.classList.toggle('show');
-    };
+    if (profileTrigger) {
+        profileTrigger.onclick = (e) => {
+            e.stopPropagation();
+            profileCard.classList.toggle('show');
+        };
+    }
 
     document.onclick = (e) => {
         if (profileCard && !profileCard.contains(e.target) && e.target !== profileTrigger) {

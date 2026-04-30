@@ -173,10 +173,11 @@ body {
     flex-direction: column;
     gap: 5px;
     margin-top: 20px;
-    flex: 1;                 /* ياخد كل المساحة المتبقية */
-    overflow-y: auto;        /* السكرول هنا بس */
+    flex: 1; /* ياخد كل المساحة المتبقية */
+    overflow-y: auto; /* السكرول هنا بس */
     overflow-x: hidden;
-    min-height: 0;           /* مهم عشان flex scroll يشتغل */
+    min-height: 0;
+    scroll-behavior: smooth; /* مهم عشان flex scroll يشتغل */
 }
 .nav::-webkit-scrollbar {
     width: 4px;
@@ -258,6 +259,7 @@ body {
     padding-left: 40px;
     background: rgba(0, 0, 0, 0.02);
     border-radius: 0 0 10px 10px;
+    scroll-behavior: smooth;
     /* شلت max-height و overflow-y عشان السكرول يبقى على الـ sidebar */
 }
 
@@ -537,4 +539,13 @@ body {
     color: #359f35; /* لون رمادي هادي */
     letter-spacing: 0.5px;
     margin: 0;
+}
+
+/* تنسيق العنصر المختار في الهيستري */
+.history-submenu a.active-scan {
+    background-color: var(--cta-hover); /* أو أي لون تختاره */
+    color: var(--primary-green) !important;
+    font-weight: 700;
+    border-right: 4px solid var(--primary-green); /* علامة مميزة على الجنب */
+    padding-right: 12px; /* مسافة بسيطة */
 }

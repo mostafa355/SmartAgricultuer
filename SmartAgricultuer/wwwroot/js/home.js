@@ -1,19 +1,3 @@
-// اضغط زر Start Upload
-document.getElementById('startUploadBtn').addEventListener('click', () => {
-  alert('Navigate to Upload Page (like navigate("/upload") in React)');
-});
-// 1. تحميل الناف بار أولاً
-fetch('navbar.html')
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById('nav-placeholder').innerHTML = data;
-
-        // 2. بعد ما الناف بار يحمل، نربط أزرار البروفايل
-        setupProfileMenu();
-        
-        // 3. كود تحديد الرابط النشط
-        highlightActiveLink();
-    });
 
 function setupProfileMenu() {
     const trigger = document.getElementById('profileTrigger');
@@ -42,12 +26,5 @@ function highlightActiveLink() {
         if (currentUrl.includes(item.getAttribute('href'))) {
             item.classList.add('active');
         }
-    });
-}
-
-// زر الـ Start Upload
-if(document.getElementById('startUploadBtn')){
-    document.getElementById('startUploadBtn').addEventListener('click', () => {
-        window.location.href = 'upload.html'; // بدلاً من الـ alert
     });
 }

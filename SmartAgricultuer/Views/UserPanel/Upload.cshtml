@@ -1,13 +1,18 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     Layout = "_UserPanelLayout";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/upload.css" asp-append-version="true">
 }
+@section Scripts {
+    <script src="~/js/upload.js" asp-append-version="true"></script>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <main class="content">
     <div class="main-wrapper">
         <div class="upload-card">
@@ -16,42 +21,46 @@
                 Upload a clear photo of the affected leaves for an instant AI analysis and recovery plan.
             </p>
 
-            <!-- Toggle تحت النص مباشرة -->
-            <div class="toggle-wrapper">
-                <label class="custom-switch">
-                    <input type="checkbox">
-                    <div class="slider">
-                        <span class="text plant">Plant</span>
-                        <span class="text insect">Insect</span>
-                        <div class="knob"></div>
+            <form asp-controller="UserPanel" asp-action="Result" method="post" enctype="multipart/form-data">
+                <!-- Toggle -->
+                <div class="toggle-wrapper">
+                    <label class="custom-switch">
+                        @* ضفنا name هنا عشان تعرف في الباك إند هو اختار نبات ولا حشرة *@
+                        <input type="checkbox" name="isInsect">
+                        <div class="slider">
+                            <span class="text plant">Plant</span>
+                            <span class="text insect">Insect</span>
+                            <div class="knob"></div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="upload-area">
+                    @* تأكد أن الـ name هنا هو نفس اسم البارامتر في الـ Action *@
+                    <input type="file" name="fileInput" id="fileInput" accept="image/png, image/jpeg" hidden>
+                    <div id="uploadIcon" class="upload-icon-circle">
+                        <span class="material-symbols-outlined">cloud_upload</span>
                     </div>
-                </label>
-            </div>
-
-            <div class="upload-area">
-                <input type="file" id="fileInput" accept="image/png, image/jpeg" hidden>
-                <div id="uploadIcon" class="upload-icon-circle">
-                    <span class="material-symbols-outlined">cloud_upload</span>
+                    <h3>Upload Plant Image</h3>
+                    <p>Drag and drop your image here, or click to browse files</p>
+                    <small>JPEG, PNG • MAX 10MB</small>
+                    <br>
+                    <button type="button" id="browseBtn">Browse Files</button>
                 </div>
-                <h3>Upload Plant Image</h3>
-                <p>Drag and drop your image here, or click to browse files</p>
-                <small>JPEG, PNG • MAX 10MB</small>
-                <br>
-                <button id="browseBtn">Browse Files</button>
-            </div>
 
-            <div id="filePreviewContainer" class="file-preview hidden">
-                <div class="file-preview-inner">
-                    <img id="previewImage" src="" alt="preview">
-                    <p id="fileName"></p>
-                    <span id="removeFile" class="material-symbols-outlined delete-icon">delete</span>
+                <div id="filePreviewContainer" class="file-preview hidden">
+                    <div class="file-preview-inner">
+                        <img id="previewImage" src="" alt="preview">
+                        <p id="fileName"></p>
+                        <span id="removeFile" class="material-symbols-outlined delete-icon">delete</span>
+                    </div>
                 </div>
-            </div>
 
-            <button id="scanBtn" class="scan-btn">
-                <span class="material-symbols-outlined">analytics</span> Scan Image
-            </button>
-            <p id="result" class="result"></p>
+                @* زرار الفحص بقا Submit عشان يبعت الفورم *@
+                <button type="submit" id="scanBtn" class="scan-btn">
+                    <span class="material-symbols-outlined">analytics</span> Scan Image
+                </button>
+            </form>
         </div>
     </div>
 </main>

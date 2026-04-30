@@ -63,22 +63,26 @@
                     <span class="nav-text">History</span>
                     <i class="fas fa-chevron-down arrow-icon" aria-hidden="true"></i>
                 </div>
-                <div class="history-submenu" id="historySubmenu" aria-label="History Submenu">
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    <a asp-controller="UserPanel" asp-action="Result">Recent Scans1</a>
-                    
+                <div class="history-submenu" id="historySubmenu">
+                    @if (ViewBag.UserScans != null)
+                    {
+                        foreach (var scan in ViewBag.UserScans)
+                        {
+                            // بنقرأ الـ id من الـ URL الحالي عشان نعرف إحنا في أنهي صفحة
+                            var currentId = ViewContext.RouteData.Values["id"]?.ToString();
+            
+                            // لو الـ id بتاع الصفحة هو نفسه الـ id بتاع العنصر ده، بنضيف كلاس الـ active
+                            var isActive = (currentId == scan.Id.ToString()) ? "active-scan" : "";
+
+                            <a asp-controller="UserPanel"
+                                   asp-action="Result"
+                                   asp-route-id="@scan.Id"
+                                   class="@isActive">
+                                <i class="fas fa-file-medical-alt" style="font-size: 12px; margin-right: 8px;"></i>
+                                Scan - @scan.Date.ToShortDateString()
+                            </a>
+                        }
+                    }
                 </div>
             </nav>
 

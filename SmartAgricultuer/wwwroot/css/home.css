@@ -179,15 +179,16 @@
 }
 
 .cta-btn {
-  padding: 15px 40px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  background-color: #359f35;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+    text-decoration: none;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #359f35;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .cta-btn:hover {

@@ -70,12 +70,6 @@ input:checked + .slider::before {
 input:checked + .slider .plant { color: #333; }
 input:checked + .slider .insect { color: white; }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #e5eee7;
-  margin: 0;
-  padding: 0;
-}
 
 .main-wrapper {
   display: flex;
@@ -108,19 +102,19 @@ body {
   cursor: default;
 }
 
-.upload-icon-circle {
-  width: 60px;
-  height: 60px;
-  background-color: #359f35;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 15px;
-  pointer-events: none;
-  animation: pulse 2s infinite;
-  box-shadow: 0 4px 12px rgba(53, 159, 53, 0.2);
+.upload-card .upload-icon-circle {
+    width: 60px;
+    height: 60px;
+    background-color: #359f35;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    pointer-events: none;
+    animation: pulse 2s infinite;
+    box-shadow: 0 4px 12px rgba(53, 159, 53, 0.2);
 }
 
 #browseBtn {
