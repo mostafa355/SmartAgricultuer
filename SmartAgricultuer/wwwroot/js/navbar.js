@@ -1,44 +1,73 @@
-(function() {
+(function () {
     const sidebar = document.getElementById('sidebar');
     const historyDrop = document.getElementById('historyDropdown');
     const historySubmenu = document.getElementById('historySubmenu');
+    const maincontet = document.getElementById('mainContent');
 
-    // Toggle Sidebar
+    // وظيفة موحدة لتغيير حالة السايدبار والمحتوى معاً
+    function updateSidebarState(isCollapsed) {
+        if (isCollapsed) {
+            sidebar.classList.add('collapsed');
+            maincontet.classList.replace('content-normal', 'content-expanded');
+        } else {
+            sidebar.classList.remove('collapsed');
+            maincontet.classList.replace('content-expanded', 'content-normal');
+        }
+        localStorage.setItem('collapsed', isCollapsed);
+    }
+
+    // Toggle Sidebar (الأيقونة)
     document.getElementById('toggleSidebar').onclick = () => {
-        sidebar.classList.toggle('collapsed');
-        localStorage.setItem('collapsed', sidebar.classList.contains('collapsed'));
+        const isCollapsed = !sidebar.classList.contains('collapsed');
+        updateSidebarState(isCollapsed);
     };
 
     // History Click
     historyDrop.onclick = (e) => {
         e.stopPropagation();
+
+        // لو السايدبار مقفول، افتحه وثبته كأنه اتفتح من الأيقونة
         if (sidebar.classList.contains('collapsed')) {
-            sidebar.classList.remove('collapsed');
-            setTimeout(() => historySubmenu.classList.add('open'), 300);
+            updateSidebarState(false); // دي اللي هتخليه يثبت وميقفلش تاني
+
+            setTimeout(() => {
+                historySubmenu.classList.add('open');
+                localStorage.setItem('historyOpen', 'true');
+            }, 300);
         } else {
-            historySubmenu.classList.toggle('open');
+            const isOpen = historySubmenu.classList.toggle('open');
+            localStorage.setItem('historyOpen', isOpen);
         }
-        localStorage.setItem('historyOpen', historySubmenu.classList.contains('open'));
     };
 
-    // Restore on load
-    if (localStorage.getItem('collapsed') === 'true') sidebar.classList.add('collapsed');
-    if (localStorage.getItem('historyOpen') === 'true') historySubmenu.classList.add('open');
+    // Restore on load - تنظيف الكود ومنع التكرار
+    const savedCollapsed = localStorage.getItem('collapsed') === 'true';
+    const savedHistoryOpen = localStorage.getItem('historyOpen') === 'true';
 
-    const profileTrigger = document.getElementById('profileTrigger');
-const profileCard = document.getElementById('profileCard');
-
-// فتح/قفل لما تدوس
-profileTrigger.onclick = (e) => {
-    e.stopPropagation();
-    profileCard.classList.toggle('show');
-};
-
-// قفل لما تدوس بره
-document.onclick = (e) => {
-    if (!profileCard.contains(e.target) && e.target !== profileTrigger) {
-        profileCard.classList.remove('show');
+    if (savedCollapsed) {
+        sidebar.classList.add('collapsed');
+        maincontet.classList.replace('content-normal', 'content-expanded');
+    } else {
+        sidebar.classList.remove('collapsed');
+        maincontet.classList.replace('content-expanded', 'content-normal');
     }
-};
 
+    if (savedHistoryOpen && !savedCollapsed) {
+        historySubmenu.classList.add('open');
+    }
+
+    // Profile Logic
+    const profileTrigger = document.getElementById('profileTrigger');
+    const profileCard = document.getElementById('profileCard');
+
+    profileTrigger.onclick = (e) => {
+        e.stopPropagation();
+        profileCard.classList.toggle('show');
+    };
+
+    document.onclick = (e) => {
+        if (profileCard && !profileCard.contains(e.target) && e.target !== profileTrigger) {
+            profileCard.classList.remove('show');
+        }
+    };
 })();

@@ -7,13 +7,13 @@
 
 /* Hero Section */
 .home-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 100px 80px;
-  background-color: #e5eee7;
-  min-height: calc(100vh - 80px);
-  box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 6% 5%;
+    background-color: var(--bg--content);
+    min-height: var(--navbar-height);
+    box-sizing: border-box;
 }
 
 .home-text {
@@ -24,7 +24,7 @@
 
 .home-text h1 {
   margin: 0;
-  font-size:60px;
+  font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 800;
   color: var(--text-dark);
 }
@@ -219,8 +219,4 @@
   .cta-container p { font-size:16px;}
   .cta-btn { width:100%; padding:15px 0; font-size:16px;}
 }
-/* المحتوى الأساسي */
-.main-content {
-    margin-left: 250px;  /* زق المحتوى لليمين مسافة 250px عشان ميبقاش تحت الناف بار */
-    width: calc(100% - 250px);
-}
+

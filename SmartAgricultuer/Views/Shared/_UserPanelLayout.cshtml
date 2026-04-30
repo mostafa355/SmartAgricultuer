@@ -12,8 +12,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true">
-    <link rel="stylesheet" href="~/css/General.css" asp-append-version="true">
     @await RenderSectionAsync("Styles", required: false)
+    <script>
+            // ده بيشتغل قبل ما أي حاجة تترسم على الشاشة
+            (function() {
+                const collapsed = localStorage.getItem('collapsed') === 'true';
+                if (collapsed) {
+                    document.documentElement.classList.add('is-collapsed');
+                }
+            })();
+    </script>
 </head>
 <body>
     <div class="result-layout">
@@ -102,7 +110,7 @@
             </div>
         </aside>
     </div>
-    <div class="main-content">
+    <div class="content-normal" id="mainContent">
         @RenderBody()
     </div>
         <footer class="footer-section">
@@ -113,8 +121,9 @@
             </div>
             <p class="copyright">© 2024 PlantAI. All rights reserved.</p>
         </footer>
+    <script src="~/js/navbar.js" asp-append-version="true"></script>
     <script src="~/js/home.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="~/js/navbar.js"></script>
+    
 </body>
 </html>

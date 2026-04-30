@@ -8,16 +8,8 @@
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
-
-body {
-    margin: 0;
-    background-color: var(--bg-gray);
-    font-family: 'Inter', sans-serif;
-}
-
 .page-content-wrapper {
     flex: 1;
-    margin-left: 260px; 
     padding: 30px;
 }
 
