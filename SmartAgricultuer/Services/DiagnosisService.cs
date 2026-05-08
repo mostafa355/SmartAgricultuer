@@ -45,7 +45,7 @@ namespace SmartAgricultuer.Services
                 formData.Add(new StringContent(type), "type");
 
                 // جلب رابط الـ Python API من الـ appsettings.json
-                var apiUrl = _configuration["PythonApi:Url"] ?? "http://localhost:5000/diagnose";
+                var apiUrl = _configuration["PythonApi:Url"] ?? "http://127.0.0.1:5000";
 
                 // إرسال الصورة للـ Python API
                 var response = await _httpClient.PostAsync(apiUrl, formData);

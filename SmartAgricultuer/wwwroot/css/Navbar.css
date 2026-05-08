@@ -1,28 +1,86 @@
-/* CSS Variables for consistent theming */
+/* ========================================
+   CSS Variables - Fixed & Organized
+   ======================================== */
 :root {
+    /* ===== Colors ===== */
+    --bg-color: #ffffff;
+    --primary-green: #006400;
+    --primary-color: #006400;
+    --primary-hover: #004d00;
+    --dark-bg: #08270e;
+    --light-bg: #e5eee7;
+    --bg-surface: #f7faf8;
+    --bg-content: #f1f4f2;
+    --white: #ffffff;
+    /* ===== Text Colors ===== */
+    --text-dark: #0f172a;
+    --text-main: #181c1b;
+    --text-color: #333333;
+    --text-sub: #40493d;
+    --text-muted: #707a6c;
+    --text-gray: #666666;
+    /* ===== Status Colors ===== */
+    --healthy-bg: #ccebc7;
+    --healthy-text: #154212;
+    --diseased-bg: #ffdad6;
+    --diseased-text: #93000a;
+    --danger-color: #ba1a1a;
+    --danger-bg: #ffcdd2;
+    /* ===== Other Colors ===== */
+    --border-color: #e2e8f0;
+    --border-light: #ddd;
+    --border-soft: #eee;
+    --gray-text: #888;
+    --icon-color: #004d00;
+    --secondary-green: #359f35;
+    --dark-green: #004d00;
+    --hover-green: #004d00;
+    /* ===== Inputs ===== */
+    --input-bg: #f9fafb;
+    --input-focus-bg: #f9fff9;
+    /* ===== Cards ===== */
+    --card-bg: #e6f2e4;
+    --item-bg: #f1f8f0;
+    --item-hover: #e2efdf;
+    --cardDark-bg: #1e2b1d;
+    --itemDark-bg: #253324;
+    --itemDark-hover: #2d3e2b;
+    /* ===== Special ===== */
+    --logout-bg: #e85a50;
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    /* ===== Layout ===== */
     --sidebar-width: 260px;
     --sidebar-collapsed: 80px;
-    --primary-color: #00450d;
-    --primary-hover: #1b5e20;
-    --bg-color: #f0f0e7;
-    --text-color: #555;
-    --white: #ffffff;
-    --danger-color: #c62828;
-    --danger-bg: #f9ebee;
+    /* ===== Transitions ===== */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-speed: 0.3s;
-    --bg--content: #e5eee7;
+    --transition-smooth: all 0.4s ease-in-out;
+    --transition-fast: all 0.2s ease-out;
+    /* ===== Border Radius ===== */
+    --radius-sm: 12px;
+    --radius-md: 15px;
+    --radius-lg: 20px;
+    --radius-xl: 50px;
+    --radius-circle: 50%;
 }
 
-/* Reset and Base */
+/* ========================================
+   Base Styles
+   ======================================== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    box-sizing: border-box;
+    background-color: var(--bg-surface);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8faf8;
+    font-family: inherit;
 }
 
 /* Layout */
@@ -30,84 +88,97 @@ body {
     display: flex;
 }
 
-/* Sidebar */
+/* ========================================
+   SIDEBAR - Main Styles
+   ======================================== */
 .sidebar {
     width: var(--sidebar-width);
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    background: var(--bg-color);
-    border-right: 1px solid #ddd;
+    background-color: var(--light-bg);
+    border-right: 1px solid var(--border-light);
     padding: 10px 16px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    overflow: hidden;        /* شلت السكرول من هنا */
-    transition: width var(--transition-speed) ease;
+    overflow: hidden;
+    transition: width 0.5s ease-in-out, padding 0.5s ease-in-out;
     z-index: 1000;
+    will-change: width, padding;
 }
 
-/* Scrollbar Styling */
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
+    /* Scrollbar Styling */
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
 
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-.sidebar::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 3px;
-}
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 3px;
+        transition: background var(--transition-fast);
+    }
 
-/* Top section */
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+/* ========================================
+   TOP SECTION
+   ======================================== */
 .top-section {
     text-align: left;
     position: relative;
     padding-top: 45px;
-    flex-shrink: 0;          /* ميتكبرش ولا يتصغر */
+    flex-shrink: 0;
 }
+
 /* Toggle Button */
 .toggle-btn {
     position: absolute;
     right: 0;
-    top: 8px;                    /* فوق خالص */
+    top: 8px;
     width: 28px;
     height: 28px;
-    background: var(--white);
-    border: 1px solid #ddd;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary-color);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1001;
     padding: 0;
+    will-change: transform, background-color;
 }
 
-.toggle-btn:hover {
-    background: var(--primary-hover);
-    color: var(--white);
-    border-color: var(--primary-hover);
-    transform: scale(1.1);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
+    .toggle-btn:hover {
+        background: var(--primary-hover);
+        color: var(--white);
+        border-color: var(--primary-hover);
+        transform: scale(1.1);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
 
-.toggle-btn:active {
-    transform: scale(0.95);
-}
+    .toggle-btn:active {
+        transform: scale(0.95);
+    }
 
-/* SVG Icon */
-.toggle-btn svg {
-    transition: transform 0.3s ease;
-}
+    /* SVG Icon */
+    .toggle-btn svg {
+        transition: transform var(--transition-smooth);
+        width: 16px;
+        height: 16px;
+    }
 
-/* الأيقونة بتعكس لما يتقفل */
 .sidebar.collapsed .toggle-btn svg {
     transform: scaleX(-1);
 }
@@ -119,39 +190,51 @@ body {
     }
 }
 
-/* Logo container */
+/* Logo Container */
 .navbar-logo {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 8px;
     text-decoration: none;
     margin-bottom: 10px;
     margin-top: 10px;
+    transition: all var(--transition-fast);
+    will-change: transform;
 }
 
-/* Icon */
+    .navbar-logo:hover {
+        transform: translateX(4px);
+    }
+
+/* Logo Icon */
 .logo-icon {
     font-size: 24px;
     line-height: 1;
+    flex-shrink: 0;
+    transition: transform var(--transition-smooth);
 }
 
-/* Text logo */
+.navbar-logo:hover .logo-icon {
+    transform: scale(1.1);
+}
+
+/* Text Logo */
 .logo-text {
     font-size: 20px;
     font-weight: 900;
     color: var(--primary-color);
     letter-spacing: 1px;
-    transition: opacity var(--transition-speed), transform var(--transition-speed);
+    transition: all var(--transition-smooth);
+    white-space: nowrap;
 }
 
-/* Hover effect */
 .navbar-logo:hover .logo-text {
     color: var(--primary-hover);
     transform: scale(1.05);
 }
 
-/* Title */
+/* Title & Subtitle */
 .logo {
     font-size: 20px;
     font-weight: 400;
@@ -159,100 +242,119 @@ body {
     margin: 5px 0;
 }
 
-/* Subtitle */
 .sub {
     font-size: 10px;
-    color: gray;
+    color: var(--gray-text);
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
-/* Nav */
+/* ========================================
+   NAVIGATION
+   ======================================== */
 .nav {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-top: 20px;
-    flex: 1; /* ياخد كل المساحة المتبقية */
-    overflow-y: auto; /* السكرول هنا بس */
+    flex: 1;
+    overflow-y: auto;
     overflow-x: hidden;
     min-height: 0;
-    scroll-behavior: smooth; /* مهم عشان flex scroll يشتغل */
-}
-.nav::-webkit-scrollbar {
-    width: 4px;
+    scroll-behavior: smooth;
 }
 
-.nav::-webkit-scrollbar-track {
-    background: transparent;
-}
+    .nav::-webkit-scrollbar {
+        width: 4px;
+    }
 
-.nav::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 2px;
-}
-/* Nav item */
+    .nav::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .nav::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 2px;
+        transition: background var(--transition-fast);
+    }
+
+        .nav::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+/* Nav Item */
 .nav-item {
     text-decoration: none;
     padding: 12px 10px;
     border-radius: 10px;
     font-size: 15px;
     color: var(--text-color);
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
     border: none;
-    background: none;
+    background: transparent;
     width: 100%;
     text-align: left;
     font-family: inherit;
+    will-change: background-color, color, transform;
 }
 
-/* Hover */
-.nav-item:hover {
-    background: var(--primary-hover);
-    color: var(--white);
-}
+    .nav-item:hover {
+        background: var(--primary-hover);
+        color: var(--white);
+        transform: translateX(4px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
 
-/* Focus styles for accessibility */
-.nav-item:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
+    .nav-item:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
 
-/* Active link */
-.nav-item.active {
-    background: var(--primary-hover);
-    color: var(--white);
-}
+    .nav-item.active {
+        background: var(--primary-hover);
+        color: var(--white);
+        font-weight: 600;
+    }
 
-/* Nav Icons */
+/* Nav Icon */
 .nav-icon {
     width: 20px;
     text-align: center;
     font-size: 16px;
     flex-shrink: 0;
+    transition: transform var(--transition-smooth);
+}
+
+.nav-item:hover .nav-icon {
+    transform: scale(1.15);
 }
 
 .nav-text {
-    transition: opacity var(--transition-speed);
+    transition: opacity var(--transition-speed), max-width var(--transition-smooth);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Dropdown Arrow */
 .arrow-icon {
     margin-left: auto;
     font-size: 12px;
-    transition: transform 0.3s ease;
+    transition: transform var(--transition-smooth);
+    flex-shrink: 0;
 }
 
 .dropdown-trigger.open .arrow-icon {
     transform: rotate(180deg);
 }
 
-/* History Submenu */
+/* ========================================
+   HISTORY SUBMENU
+   ======================================== */
 .history-submenu {
     display: none;
     flex-direction: column;
@@ -260,40 +362,54 @@ body {
     background: rgba(0, 0, 0, 0.02);
     border-radius: 0 0 10px 10px;
     scroll-behavior: smooth;
-    /* شلت max-height و overflow-y عشان السكرول يبقى على الـ sidebar */
+    max-height: 0;
+    transition: all var(--transition-smooth);
 }
 
-.history-submenu.open {
-    display: flex;
-}
+    .history-submenu.open {
+        display: flex;
+        max-height: 500px;
+    }
 
-.history-submenu a {
-    text-decoration: none;
-    color: #666;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+    .history-submenu a {
+        text-decoration: none;
+        color: var(--text-gray);
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-left: 3px solid transparent;
+    }
 
-.history-submenu a:hover {
-    background: var(--white);
-    color: var(--primary-hover);
-}
+        .history-submenu a:hover {
+            background: var(--white);
+            color: var(--primary-hover);
+            border-left-color: var(--primary-hover);
+            padding-left: 15px;
+        }
 
-/* Bottom section */
+        .history-submenu a.active-scan {
+            background-color: var(--item-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            border-left-color: var(--primary-green);
+            padding-left: 15px;
+        }
+
+/* ========================================
+   BOTTOM SECTION
+   ======================================== */
 .bottom-section {
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding-top: 15px;
-    border-top: 1px solid #ddd;
-    flex-shrink: 0;          /* ميتكبرش ولا يتصغر */
-    background: var(--bg-color);  /* خلفية عشان يغطي اللي تحته */
-    margin-top: 10px;        /* مسافة بسيطة من فوق */
+    border-top: 1px solid var(--border-light);
+    flex-shrink: 0;
+    margin-top: 10px;
 }
 
 /* Profile Container */
@@ -319,19 +435,21 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     padding: 15px;
     z-index: 9999;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-soft);
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
 }
 
-.profile-menu.show {
-    display: block;
-    animation: slideUp 0.2s ease;
-}
+    .profile-menu.show {
+        display: block;
+    }
 
 @keyframes slideUp {
     from {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -343,24 +461,26 @@ body {
     color: var(--primary-hover);
     font-size: 16px;
     display: block;
+    transition: color var(--transition-fast);
 }
 
 .profile-info p {
     margin: 4px 0;
     font-size: 13px;
-    color: #777;
+    color: var(--text-muted);
+    transition: color var(--transition-fast);
 }
 
 .profile-menu hr {
     border: 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-soft);
     margin: 12px 0;
 }
 
 .menu-item {
     padding: 10px;
     font-size: 14px;
-    color: #333;
+    color: var(--text-color);
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -368,17 +488,19 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    will-change: background-color, color;
 }
 
-.menu-item:hover {
-    background: #f5f5f5;
-    color: var(--primary-hover);
-}
+    .menu-item:hover {
+        background: var(--bg-surface);
+        color: var(--primary-hover);
+        transform: translateX(4px);
+    }
 
-.menu-item:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
+    .menu-item:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
 
 /* Logout Button */
 .nav-item.logout {
@@ -387,128 +509,104 @@ body {
     justify-content: flex-start;
 }
 
-.nav-item.logout:hover {
-    background: #ffcdd2;
-    color: #b71c1c;
-}
+    .nav-item.logout:hover {
+        background: #ffcdd2;
+        color: #b71c1c;
+        transform: translateX(4px);
+    }
 
-
-
-/* ============================================
-   COLLAPSED SIDEBAR MODE - التعديلات الجديدة
-   ============================================ */
-/* الكلاس الأول: المحتوى في وضعه العادي */
-.content-normal {
-    margin-left: 260px;
-    width: calc(100% - 260px);
-    transition: all 0.3s ease; /* سرعة الحركة */
-    background-color: var(--bg--content); /* لون الخلفية */
-}
-
-/* الكلاس الثاني: المحتوى لما يتوسع */
-.content-expanded {
-    margin-left: 80px;
-    width: calc(100% - 80px);
-    transition: all 0.3s ease;
-    background-color: var(--bg--content);
-}
-/* Sidebar collapsed - basic styles */
+/* ========================================
+   COLLAPSED SIDEBAR MODE
+   ======================================== */
 .sidebar.collapsed {
     width: var(--sidebar-collapsed);
     padding: 10px 8px;
 }
 
-/* Hide texts and logo in collapsed mode */
-.sidebar.collapsed .nav-text,
-.sidebar.collapsed .logo-wrapper,
-.sidebar.collapsed .logo-text {
-    opacity: 0;
-    pointer-events: none;
-    width: 0;
-    overflow: hidden;
+    .sidebar.collapsed .nav-text,
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .logo,
+    .sidebar.collapsed .sub {
+        opacity: 0;
+        pointer-events: none;
+        max-width: 0;
+        overflow: hidden;
+        transition: opacity 0.4s ease-in-out, max-width 0.5s ease-in-out;
+    }
+
+.nav-text,
+.logo-text,
+.logo,
+.sub {
+    transition: opacity 0.4s ease-in-out, max-width 0.5s ease-in-out;
+    max-width: 300px;
 }
 
 .sidebar.collapsed .navbar-logo {
-    justify-content: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
 }
 
 .sidebar.collapsed .nav-item {
-    justify-content: center;
-    padding: 15px 0;
+    justify-content: flex-start;
+    padding: 15px 12px;
 }
 
-/* ============================================
-   NEW: Hide history arrow in collapsed mode
-   ============================================ */
+.sidebar.collapsed .nav-icon {
+    margin-right: 0;
+}
+
 .sidebar.collapsed #historyDropdown .arrow-icon {
     display: none !important;
 }
 
-/* ============================================
-   NEW: Always hide submenu in collapsed mode
-   ============================================ */
 .sidebar.collapsed .history-submenu {
     display: none !important;
 }
 
-/* Remove open state when collapsed */
 .sidebar.collapsed #historyDropdown.open {
-    background: none;
-    color: var(--text-color);
-}
-
-.sidebar.collapsed #historyDropdown.open:hover {
     background: var(--primary-hover);
     color: var(--white);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform var(--transition-speed) ease;
+    .sidebar.collapsed #historyDropdown.open:hover {
+        background: var(--primary-hover);
+        color: var(--white);
     }
-    
-    .sidebar.open {
-        transform: translateX(0);
-    }
-    
-    .content {
-        margin-left: 0;
-        width: 100%;
-    }
-    
-    .sidebar.collapsed ~ .content {
-        margin-left: 0;
-        width: 100%;
-    }
+
+/* ========================================
+   CONTENT AREA
+   ======================================== */
+.content-normal {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    transition: all 0.5s ease-in-out;
+    background-color: var(--bg-content);
+    will-change: margin-left, width;
 }
 
-/* Print styles */
-@media print {
-    .sidebar {
-        display: none;
+    .content-normal.collapsed {
+        margin-left: var(--sidebar-collapsed);
+        width: calc(100% - var(--sidebar-collapsed));
     }
-    
-    .content {
-        margin-left: 0;
-        width: 100%;
-    }
-}
+
+/* ========================================
+   FOOTER SECTION
+   ======================================== */
 .footer-section {
     width: 100%;
     padding: 10px 0;
     display: flex;
     flex-direction: column;
-    align-items: center; /* بيخلي كل حاجة في النص بالعرض */
+    align-items: center;
     justify-content: center;
-    background-color: transparent; /* أو نفس لون خلفية الصفحة */
-    margin-top: 5px; /* مسافة بينه وبين السكشن اللي فوقه */
+    background-color: transparent;
+    margin-top: 5px;
 }
 
 .footer-icons {
     display: flex;
-    gap: 20px; /* المسافة بين الدوائر */
+    gap: 20px;
     margin-bottom: 20px;
 }
 
@@ -516,36 +614,77 @@ body {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    border: 1px solid #d1fae5; /* لون أخضر فاتح جداً للحافة */
+    border: 1px solid #d1fae5;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #10b981; /* لون الأيقونات الأخضر */
+    color: #10b981;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: background-color, transform;
 }
 
     .icon-circle span {
         font-size: 18px !important;
+        transition: transform var(--transition-smooth);
     }
 
     .icon-circle:hover {
         background-color: #d1fae5;
-        transform: translateY(-3px); /* حركة خفيفة للفوق عند الهوفر */
+        transform: translateY(-4px) scale(1.1);
+        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
     }
+
+        .icon-circle:hover span {
+            transform: rotate(10deg) scale(1.15);
+        }
 
 .copyright {
     font-size: 12px;
-    color: #359f35; /* لون رمادي هادي */
+    color: var(--secondary-green);
     letter-spacing: 0.5px;
     margin: 0;
+    transition: color var(--transition-fast);
 }
 
-/* تنسيق العنصر المختار في الهيستري */
-.history-submenu a.active-scan {
-    background-color: var(--cta-hover); /* أو أي لون تختاره */
-    color: var(--primary-green) !important;
-    font-weight: 700;
-    border-right: 4px solid var(--primary-green); /* علامة مميزة على الجنب */
-    padding-right: 12px; /* مسافة بسيطة */
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-smooth);
+        width: 100%;
+        max-width: var(--sidebar-width);
+    }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+    .content-normal {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .sidebar.collapsed ~ .content-normal {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .toggle-btn {
+        display: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar {
+        display: none;
+    }
+
+    .content-normal {
+        margin-left: 0;
+        width: 100%;
+    }
 }

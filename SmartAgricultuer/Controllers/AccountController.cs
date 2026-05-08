@@ -38,7 +38,7 @@ namespace SmartAgricultuer.Controllers
                 if (roles.Contains("Admin"))
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
                 else
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Home", "UserPanel");
             }
 
             // لو role == null يبقى الدخول فشل
