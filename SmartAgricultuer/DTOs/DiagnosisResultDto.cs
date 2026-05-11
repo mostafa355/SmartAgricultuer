@@ -1,24 +1,21 @@
-﻿// DTOs/DiagnosisResultDto.cs
-namespace SmartAgricultuer.DTOs
+﻿namespace SmartAgricultuer.DTOs
 {
     public class DiagnosisResultDto
     {
-        // اسم المرض أو الحشرة
-        public string DiseaseName { get; set; } = string.Empty;
+        // هل العملية نجحت؟
+        public bool Success { get; set; }
 
-        // هل النبات سليم؟
-        public bool IsHealthy { get; set; }
+        // اسم النبات أو الحشرة _ اسم المرض
+        // مثال: "Tomato_Early Blight" أو "Bee"
+        public string? Label { get; set; }
 
-        // نسبة الثقة في التشخيص
-        public float Confidence { get; set; }
+        // مريض/ضار ولا لا
+        public bool IsHarmful { get; set; }
 
-        // خطوات العلاج
-        public string Treatment { get; set; } = string.Empty;
-
-        // هل التشخيص نجح؟
-        public bool IsSuccess { get; set; }
+        // نسبة الثقة
+        public float ConfidencePct { get; set; }
 
         // رسالة الخطأ لو فشل
-        public string? ErrorMessage { get; set; }
+        public string? Error { get; set; }
     }
 }

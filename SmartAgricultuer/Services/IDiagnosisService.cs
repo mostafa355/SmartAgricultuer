@@ -1,8 +1,11 @@
-﻿namespace SmartAgricultuer.Services
+﻿using SmartAgricultuer.DTOs;
+
+namespace SmartAgricultuer.Services
 {
     public interface IDiagnosisService
     {
-        // بتبعت مسار الصورة للـ Python API وترجع نتيجة التشخيص
-        Task<DiagnosisResultDto> DiagnoseAsync(string imagePath, string type);
+        // بتبعت الصورة للـ API وترجع النتيجة
+        // type: "plant" أو "insect"
+        Task<DiagnosisResultDto> DiagnoseAsync(IFormFile image, string type);
     }
 }

@@ -23,9 +23,13 @@ public partial class Insect
 
     public DateTime? CreatedAt { get; set; }
 
+    public string Status { get; set; }
+
+    public string ImageUrl { get; set; }
+
     public virtual ICollection<AnalysisResult> AnalysisResults { get; set; } = new List<AnalysisResult>();
 
-    public virtual ICollection<TreatmentStep> TreatmentSteps { get; set; } = new List<TreatmentStep>();
+    public virtual ICollection<InsectPlant> InsectPlants { get; set; } = new List<InsectPlant>();
 
-    public virtual ICollection<Plant> Plants { get; set; } = new List<Plant>();
+    public virtual ICollection<TreatmentStep> TreatmentSteps { get; set; } = new List<TreatmentStep>();
 }

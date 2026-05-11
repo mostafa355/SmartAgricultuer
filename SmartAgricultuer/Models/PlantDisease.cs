@@ -23,6 +23,12 @@ public partial class PlantDisease
 
     public bool? IsDeleted { get; set; }
 
+    public string PlantType { get; set; }
+
+    public string DetectionStatus { get; set; }
+
+    public string VisualEvidenceUrl { get; set; }
+
     public virtual ICollection<AnalysisResult> AnalysisResults { get; set; } = new List<AnalysisResult>();
 
     public virtual Plant Plant { get; set; }

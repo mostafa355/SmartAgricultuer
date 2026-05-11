@@ -21,9 +21,13 @@ public partial class Plant
 
     public DateTime? CreatedAt { get; set; }
 
+    public string CommonDiseases { get; set; }
+
+    public string ImageUrl { get; set; }
+
     public virtual ICollection<AnalysisResult> AnalysisResults { get; set; } = new List<AnalysisResult>();
 
-    public virtual ICollection<PlantDisease> PlantDiseases { get; set; } = new List<PlantDisease>();
+    public virtual ICollection<InsectPlant> InsectPlants { get; set; } = new List<InsectPlant>();
 
-    public virtual ICollection<Insect> Insects { get; set; } = new List<Insect>();
+    public virtual ICollection<PlantDisease> PlantDiseases { get; set; } = new List<PlantDisease>();
 }

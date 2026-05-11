@@ -6,71 +6,75 @@ namespace SmartAgricultuer.Services
     public class DiagnosisService : IDiagnosisService
     {
         private readonly HttpClient _httpClient;
-        private readonly IWebHostEnvironment _environment;
-        private readonly IConfiguration _configuration;
 
-        public DiagnosisService(HttpClient httpClient,
-                                IWebHostEnvironment environment,
-                                IConfiguration configuration)
+        public DiagnosisService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _environment = environment;
-            _configuration = configuration;
+            // رابط الـ Python API
+            _httpClient.BaseAddress = new Uri("http://127.0.0.1:5000");
         }
 
-        public async Task<DiagnosisResultDto> DiagnoseAsync(string imagePath, string type)
+        public async Task<DiagnosisResultDto> DiagnoseAsync(IFormFile image, string type)
         {
             try
             {
-                // تحويل المسار النسبي لمسار كامل على السيرفر
-                var fullPath = Path.Combine(_environment.WebRootPath, imagePath.TrimStart('/'));
+                // نسخ الصورة في الميموري الأول عشان نقدر نبعتها
+                using var memoryStream = new MemoryStream();
+                await image.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
 
-                // التحقق إن الصورة موجودة
-                if (!File.Exists(fullPath))
-                    return new DiagnosisResultDto
-                    {
-                        IsSuccess = false,
-                        ErrorMessage = "الصورة مش موجودة"
-                    };
-
-                // قراءة الصورة وتحضيرها للإرسال
-                var imageBytes = await File.ReadAllBytesAsync(fullPath);
-                var imageContent = new ByteArrayContent(imageBytes);
-                imageContent.Headers.ContentType =
-                    new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
-
-                // تحضير الـ Form Data للإرسال
                 var formData = new MultipartFormDataContent();
-                formData.Add(imageContent, "file", Path.GetFileName(fullPath));
-                formData.Add(new StringContent(type), "type");
+                var imageContent = new StreamContent(memoryStream);
+                imageContent.Headers.ContentType =
+                    new System.Net.Http.Headers.MediaTypeHeaderValue(image.ContentType);
+                formData.Add(imageContent, "image", image.FileName);
 
-                // جلب رابط الـ Python API من الـ appsettings.json
-                var apiUrl = _configuration["PythonApi:Url"] ?? "http://127.0.0.1:5000";
+                var endpoint = type == "insect"
+                    ? "/api/detect/insect"
+                    : "/api/detect/plant";
 
-                // إرسال الصورة للـ Python API
-                var response = await _httpClient.PostAsync(apiUrl, formData);
+                var response = await _httpClient.PostAsync(endpoint, formData);
+                var json = await response.Content.ReadAsStringAsync();
 
-                if (!response.IsSuccessStatusCode)
+                // بنقرأ الـ JSON بشكل مرن
+                var result = JsonSerializer.Deserialize<JsonElement>(json);
+
+                bool success = result.GetProperty("success").GetBoolean();
+
+                if (!success)
                     return new DiagnosisResultDto
                     {
-                        IsSuccess = false,
-                        ErrorMessage = "الـ API مش شغال"
+                        Success = false,
+                        Error = result.GetProperty("error").GetString()
                     };
 
-                // قراءة النتيجة
-                var json = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<DiagnosisResultDto>(json,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                // بناء الـ Label حسب النوع
+                string label;
+                if (type == "insect")
+                {
+                    label = result.GetProperty("detected").GetString() ?? "Unknown";
+                }
+                else
+                {
+                    string plant = result.GetProperty("plant").GetString() ?? "Unknown";
+                    string disease = result.GetProperty("disease").GetString() ?? "Unknown";
+                    label = $"{plant}_{disease}";
+                }
 
-                result!.IsSuccess = true;
-                return result;
+                return new DiagnosisResultDto
+                {
+                    Success = true,
+                    Label = label,
+                    IsHarmful = result.GetProperty("is_harmful").GetBoolean(),
+                    ConfidencePct = result.GetProperty("confidence_pct").GetSingle()
+                };
             }
             catch (Exception ex)
             {
                 return new DiagnosisResultDto
                 {
-                    IsSuccess = false,
-                    ErrorMessage = ex.Message
+                    Success = false,
+                    Error = ex.Message
                 };
             }
         }

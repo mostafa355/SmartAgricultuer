@@ -9,7 +9,6 @@ public partial class Upload
 {
     public int Id { get; set; }
 
-    // لازم السطر ده يكون موجود عشان ده الـ Foreign Key اللي في الداتابيز
     public int UserId { get; set; }
 
     public int AnalysisTypeId { get; set; }
@@ -19,9 +18,6 @@ public partial class Upload
     public bool? IsDeleted { get; set; }
 
     public DateTime? CreatedAt { get; set; }
-
-    // دي الـ Navigation Property اللي بتخليك توصل لبيانات اليوزر بسهولة
-    public virtual ApplicationUser User { get; set; }
 
     public virtual ICollection<AnalysisResult> AnalysisResults { get; set; } = new List<AnalysisResult>();
 

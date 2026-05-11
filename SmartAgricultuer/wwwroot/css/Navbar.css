@@ -1,8 +1,8 @@
 /* ========================================
-   CSS Variables - Fixed & Organized
+   CSS VARIABLES - LIGHT THEME (DEFAULT)
    ======================================== */
 :root {
-    /* ===== Colors ===== */
+    /* Colors - Light */
     --bg-color: #ffffff;
     --primary-green: #006400;
     --primary-color: #006400;
@@ -12,21 +12,18 @@
     --bg-surface: #f7faf8;
     --bg-content: #f1f4f2;
     --white: #ffffff;
-    /* ===== Text Colors ===== */
     --text-dark: #0f172a;
     --text-main: #181c1b;
     --text-color: #333333;
     --text-sub: #40493d;
     --text-muted: #707a6c;
     --text-gray: #666666;
-    /* ===== Status Colors ===== */
     --healthy-bg: #ccebc7;
     --healthy-text: #154212;
     --diseased-bg: #ffdad6;
     --diseased-text: #93000a;
     --danger-color: #ba1a1a;
     --danger-bg: #ffcdd2;
-    /* ===== Other Colors ===== */
     --border-color: #e2e8f0;
     --border-light: #ddd;
     --border-soft: #eee;
@@ -35,34 +32,68 @@
     --secondary-green: #359f35;
     --dark-green: #004d00;
     --hover-green: #004d00;
-    /* ===== Inputs ===== */
     --input-bg: #f9fafb;
     --input-focus-bg: #f9fff9;
-    /* ===== Cards ===== */
     --card-bg: #e6f2e4;
     --item-bg: #f1f8f0;
     --item-hover: #e2efdf;
-    --cardDark-bg: #1e2b1d;
-    --itemDark-bg: #253324;
-    --itemDark-hover: #2d3e2b;
-    /* ===== Special ===== */
     --logout-bg: #e85a50;
     --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    /* ===== Layout ===== */
     --sidebar-width: 260px;
     --sidebar-collapsed: 80px;
-    /* ===== Transitions ===== */
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-speed: 0.3s;
     --transition-smooth: all 0.4s ease-in-out;
     --transition-fast: all 0.2s ease-out;
-    /* ===== Border Radius ===== */
     --radius-sm: 12px;
     --radius-md: 15px;
     --radius-lg: 20px;
     --radius-xl: 50px;
     --radius-circle: 50%;
+}
+
+/* ========================================
+   DARK THEME
+   ======================================== */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --primary-green: #4ade80;
+    --primary-color: #4ade80;
+    --primary-hover: #22c55e;
+    --dark-bg: #0f0f0f;
+    --light-bg: #2a2a2a;
+    --bg-surface: #1f1f1f;
+    --bg-content: #252525;
+    --white: #ffffff;
+    --text-dark: #f0f0f0;
+    --text-main: #e8e8e8;
+    --text-color: #d0d0d0;
+    --text-sub: #a8a8a8;
+    --text-muted: #808080;
+    --text-gray: #999999;
+    --healthy-bg: #1e4620;
+    --healthy-text: #86efac;
+    --diseased-bg: #5a1f1f;
+    --diseased-text: #fca5a5;
+    --danger-color: #ff6b6b;
+    --danger-bg: #3d1a1a;
+    --border-color: #404040;
+    --border-light: #333333;
+    --border-soft: #2a2a2a;
+    --gray-text: #a0a0a0;
+    --icon-color: #4ade80;
+    --secondary-green: #22c55e;
+    --dark-green: #4ade80;
+    --hover-green: #4ade80;
+    --input-bg: #2a2a2a;
+    --input-focus-bg: #333333;
+    --card-bg: #2a3a28;
+    --item-bg: #1f2d1e;
+    --item-hover: #2a3d28;
+    --logout-bg: #a02d2d;
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* ========================================
@@ -74,6 +105,8 @@ body {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     box-sizing: border-box;
     background-color: var(--bg-surface);
+    color: var(--text-color);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 * {
@@ -83,7 +116,6 @@ body {
     font-family: inherit;
 }
 
-/* Layout */
 .result-layout {
     display: flex;
 }
@@ -104,12 +136,11 @@ body {
     flex-direction: column;
     box-sizing: border-box;
     overflow: hidden;
-    transition: width 0.5s ease-in-out, padding 0.5s ease-in-out;
+    transition: width 0.5s ease-in-out, padding 0.5s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
     z-index: 1000;
     will-change: width, padding;
 }
 
-    /* Scrollbar Styling */
     .sidebar::-webkit-scrollbar {
         width: 6px;
     }
@@ -128,6 +159,14 @@ body {
             background: #999;
         }
 
+[data-theme="dark"] .sidebar::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+    [data-theme="dark"] .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #777;
+    }
+
 /* ========================================
    TOP SECTION
    ======================================== */
@@ -138,7 +177,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Toggle Button */
+/* Sidebar Toggle Button */
 .toggle-btn {
     position: absolute;
     right: 0;
@@ -172,7 +211,6 @@ body {
         transform: scale(0.95);
     }
 
-    /* SVG Icon */
     .toggle-btn svg {
         transition: transform var(--transition-smooth);
         width: 16px;
@@ -183,14 +221,66 @@ body {
     transform: scaleX(-1);
 }
 
-/* Hide toggle button on mobile */
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    position: absolute;
+    right: 50px;
+    top: 8px;
+    width: 28px;
+    height: 28px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    padding: 0;
+    will-change: transform, background-color;
+    font-size: 16px;
+    border: none;
+}
+
+    .theme-toggle-btn:hover {
+        background: var(--primary-hover);
+        color: var(--white);
+        border-color: var(--primary-hover);
+        transform: scale(1.1) rotate(20deg);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .theme-toggle-btn:active {
+        transform: scale(0.95);
+    }
+
+    .theme-toggle-btn .sun-icon {
+        display: none;
+    }
+
+    .theme-toggle-btn .moon-icon {
+        display: block;
+    }
+
+[data-theme="dark"] .theme-toggle-btn .sun-icon {
+    display: block;
+}
+
+[data-theme="dark"] .theme-toggle-btn .moon-icon {
+    display: none;
+}
+
 @media (max-width: 768px) {
-    .toggle-btn {
+    .toggle-btn,
+    .theme-toggle-btn {
         display: none;
     }
 }
 
-/* Logo Container */
+/* Logo */
 .navbar-logo {
     display: flex;
     align-items: center;
@@ -207,7 +297,6 @@ body {
         transform: translateX(4px);
     }
 
-/* Logo Icon */
 .logo-icon {
     font-size: 24px;
     line-height: 1;
@@ -219,7 +308,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Text Logo */
 .logo-text {
     font-size: 20px;
     font-weight: 900;
@@ -234,12 +322,12 @@ body {
     transform: scale(1.05);
 }
 
-/* Title & Subtitle */
 .logo {
     font-size: 20px;
     font-weight: 400;
     color: var(--primary-color);
     margin: 5px 0;
+    transition: color 0.3s ease-in-out;
 }
 
 .sub {
@@ -247,6 +335,7 @@ body {
     color: var(--gray-text);
     text-transform: uppercase;
     letter-spacing: 2px;
+    transition: color 0.3s ease-in-out;
 }
 
 /* ========================================
@@ -282,7 +371,14 @@ body {
             background: #999;
         }
 
-/* Nav Item */
+[data-theme="dark"] .nav::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+    [data-theme="dark"] .nav::-webkit-scrollbar-thumb:hover {
+        background: #777;
+    }
+
 .nav-item {
     text-decoration: none;
     padding: 12px 10px;
@@ -309,18 +405,12 @@ body {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
-    .nav-item:focus-visible {
-        outline: 2px solid var(--primary-color);
-        outline-offset: 2px;
-    }
-
     .nav-item.active {
         background: var(--primary-hover);
         color: var(--white);
         font-weight: 600;
     }
 
-/* Nav Icon */
 .nav-icon {
     width: 20px;
     text-align: center;
@@ -340,7 +430,6 @@ body {
     text-overflow: ellipsis;
 }
 
-/* Dropdown Arrow */
 .arrow-icon {
     margin-left: auto;
     font-size: 12px;
@@ -410,9 +499,9 @@ body {
     border-top: 1px solid var(--border-light);
     flex-shrink: 0;
     margin-top: 10px;
+    transition: border-color 0.3s ease-in-out;
 }
 
-/* Profile Container */
 .profile-container {
     position: relative;
     width: 100%;
@@ -423,7 +512,6 @@ body {
     color: var(--white) !important;
 }
 
-/* Profile Menu */
 .profile-menu {
     display: none;
     position: absolute;
@@ -438,11 +526,16 @@ body {
     border: 1px solid var(--border-soft);
     animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity;
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
     .profile-menu.show {
         display: block;
     }
+
+[data-theme="dark"] .profile-menu {
+    background: var(--light-bg);
+}
 
 @keyframes slideUp {
     from {
@@ -456,7 +549,6 @@ body {
     }
 }
 
-/* Profile Info */
 .profile-info b {
     color: var(--primary-hover);
     font-size: 16px;
@@ -475,6 +567,7 @@ body {
     border: 0;
     border-top: 1px solid var(--border-soft);
     margin: 12px 0;
+    transition: border-color 0.3s ease-in-out;
 }
 
 .menu-item {
@@ -497,12 +590,6 @@ body {
         transform: translateX(4px);
     }
 
-    .menu-item:focus-visible {
-        outline: 2px solid var(--primary-color);
-        outline-offset: 2px;
-    }
-
-/* Logout Button */
 .nav-item.logout {
     color: var(--danger-color);
     background: var(--danger-bg);
@@ -569,11 +656,6 @@ body {
     color: var(--white);
 }
 
-    .sidebar.collapsed #historyDropdown.open:hover {
-        background: var(--primary-hover);
-        color: var(--white);
-    }
-
 /* ========================================
    CONTENT AREA
    ======================================== */
@@ -602,6 +684,7 @@ body {
     justify-content: center;
     background-color: transparent;
     margin-top: 5px;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .footer-icons {
@@ -671,13 +754,8 @@ body {
         margin-left: 0;
         width: 100%;
     }
-
-    .toggle-btn {
-        display: none;
-    }
 }
 
-/* Print Styles */
 @media print {
     .sidebar {
         display: none;

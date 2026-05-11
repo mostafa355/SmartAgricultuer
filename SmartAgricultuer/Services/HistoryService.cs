@@ -95,12 +95,11 @@ namespace SmartAgricultuer.Services
 
         public async Task SaveAnalysisResultAsync(int uploadId, DiagnosisResultDto result)
         {
-            // حفظ نتيجة التشخيص مرتبطة بالـ Upload
             var analysisResult = new AnalysisResult
             {
                 UploadId = uploadId,
-                IsDiseased = (bool)result.IsHealthy ? false : true,
-                ConfidenceScore = (decimal)result.Confidence,
+                IsDiseased = result.IsHarmful,           // ← IsHealthy اتغير لـ IsHarmful
+                ConfidenceScore = (decimal)result.ConfidencePct,  // ← Confidence اتغير لـ ConfidencePct
                 AnalyzedAt = DateTime.UtcNow
             };
 

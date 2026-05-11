@@ -5,14 +5,15 @@ namespace SmartAgricultuer.Controllers
 {
     public class UserPanel : BaseController
     {
-        // 1. تعريف المتغير اللي هيشيل الخدمة
         private readonly IImageService _imageService;
+        private readonly IDiagnosisService _diagnosisService;
 
-        // 2. عمل الـ Constructor لحقن الخدمة
-        public UserPanel(IImageService imageService)
+        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService)
         {
             _imageService = imageService;
+            _diagnosisService = diagnosisService;
         }
+    // ...
         public IActionResult Home()
         {
             return View();
@@ -30,6 +31,21 @@ namespace SmartAgricultuer.Controllers
             try
             {
                 string folder = isInsect ? "Insects" : "Plants";
+                string type = isInsect ? "insect" : "plant";
+
+                var diagnosisResult = await _diagnosisService.DiagnoseAsync(fileInput, type);
+
+                Console.WriteLine($"✅ Success: {diagnosisResult.Success}");
+                Console.WriteLine($"🏷️ Label: {diagnosisResult.Label}");
+                Console.WriteLine($"⚠️ IsHarmful: {diagnosisResult.IsHarmful}");
+                Console.WriteLine($"📊 Confidence: {diagnosisResult.ConfidencePct}");
+
+                if (!diagnosisResult.Success)
+                {
+                    TempData["Error"] = diagnosisResult.Error;
+                    return RedirectToAction("Upload");
+                }
+
                 string? imagePath = await _imageService.SaveImageAsync(fileInput, folder);
 
                 if (imagePath == null)
@@ -39,12 +55,16 @@ namespace SmartAgricultuer.Controllers
                 }
 
                 ViewBag.ImagePath = imagePath;
+                ViewBag.Label = diagnosisResult.Label;
+                ViewBag.IsHarmful = diagnosisResult.IsHarmful;
+                ViewBag.Confidence = diagnosisResult.ConfidencePct;
+                ViewBag.IsInsect = isInsect;
+
                 return View();
             }
             catch (Exception ex)
             {
-                // هنشوف الـ Error الحقيقي بدل ما المشروع يكسر
-                TempData["Error"] = ex.Message;
+                TempData["Error"] = $"{ex.Message} | {ex.InnerException?.Message}";
                 return RedirectToAction("Upload");
             }
         }

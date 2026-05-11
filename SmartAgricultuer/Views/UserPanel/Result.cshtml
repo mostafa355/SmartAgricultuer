@@ -1,6 +1,6 @@
-﻿@*
+﻿@* 
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 @{
     Layout = "_UserPanelLayout";
 }
@@ -15,11 +15,11 @@
         <!-- HERO -->
         <section class="hero">
             <div class="hero-image">
-                <img src="~/imeges/image1.png" alt="Tomato leaf infected with early blight">
+                <img src="@ViewBag.ImagePath" alt="Tomato leaf infected with early blight">
             </div>
 
             <div class="hero-text">
-                <h1>Diagnosis: Early Blight</h1>
+                <h1>Diagnosis: @ViewBag.diagnosisResult</h1>
                 <p>
                     Our AI analyzed your sample with 98.4% confidence. This fungal infection requires prompt
                     treatment to prevent spread.
@@ -213,4 +213,47 @@
 
         </div>
     </main>
+</div> *@
+@{
+    Layout = "_UserPanelLayout";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">نتائج تحليل PlantDoc AI</h2>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="@ViewBag.ImagePath" alt="Uploaded Image"
+                     class="img-fluid rounded border" style="max-height: 300px;" />
+            </div>
+
+            <ul class="list-group list-group-flush text-right" style="direction: rtl;">
+                
+                <!-- اسم النبات أو الحشرة _ المرض -->
+                <li class="list-group-item">
+                    <strong>@(ViewBag.IsInsect ? "الحشرة المكتشفة" : "النبات والمرض"):</strong>
+                    @ViewBag.Label
+                </li>
+
+                <!-- مريض/ضار ولا لا -->
+                <li class="list-group-item">
+                    <strong>@(ViewBag.IsInsect ? "هل ضارة؟" : "هل مريض؟"):</strong>
+                    <span class="badge @(ViewBag.IsHarmful ? "bg-danger" : "bg-success")">
+                        @(ViewBag.IsHarmful ? "نعم ⚠️" : "لا ✅")
+                    </span>
+                </li>
+
+                <!-- نسبة الثقة -->
+                <li class="list-group-item">
+                    <strong>نسبة الثقة:</strong> @ViewBag.Confidence%
+                </li>
+
+            </ul>
+        </div>
+        <div class="card-footer text-muted text-center">
+            تم التحليل بواسطة نظام الذكاء الاصطناعي
+        </div>
+    </div>
 </div>
