@@ -1,5 +1,4 @@
-﻿@* 
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿
 
 @{
     Layout = "_UserPanelLayout";
@@ -19,20 +18,20 @@
             </div>
 
             <div class="hero-text">
-                <h1>Diagnosis: @ViewBag.diagnosisResult</h1>
+                <h1>@(ViewBag.IsInsect ? "The discovered insect" : "Plant and disease"): @ViewBag.Label</h1>
                 <p>
-                    Our AI analyzed your sample with 98.4% confidence. This fungal infection requires prompt
+                    Our AI analyzed your sample with @ViewBag.Confidence% confidence. This fungal infection requires prompt
                     treatment to prevent spread.
                 </p>
 
                 <div class="confidence-container">
                     <div class="confidence-info">
                         <span class="confidence-label">AI CONFIDENCE SCORE</span>
-                        <span class="confidence-value">98.4%</span>
+                        <span class="confidence-value">@ViewBag.Confidence%</span>
                     </div>
 
                     <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 98.4%;"></div>
+                        <div class="progress-bar-fill" style="width: @ViewBag.Confidence%;"></div>
                     </div>
 
                     <p class="confidence-note small">High reliability based on visual leaf patterns</p>
@@ -213,8 +212,8 @@
 
         </div>
     </main>
-</div> *@
-@{
+</div>
+@* @{
     Layout = "_UserPanelLayout";
 }
 
@@ -256,4 +255,4 @@
             تم التحليل بواسطة نظام الذكاء الاصطناعي
         </div>
     </div>
-</div>
+</div> *@

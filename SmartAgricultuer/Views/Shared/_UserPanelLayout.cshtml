@@ -68,10 +68,7 @@
                     {
                         foreach (var scan in ViewBag.UserScans)
                         {
-                            // بنقرأ الـ id من الـ URL الحالي عشان نعرف إحنا في أنهي صفحة
                             var currentId = ViewContext.RouteData.Values["id"]?.ToString();
-            
-                            // لو الـ id بتاع الصفحة هو نفسه الـ id بتاع العنصر ده، بنضيف كلاس الـ active
                             var isActive = (currentId == scan.Id.ToString()) ? "active-scan" : "";
 
                             <a asp-controller="UserPanel"
@@ -79,7 +76,7 @@
                                    asp-route-id="@scan.Id"
                                    class="@isActive">
                                 <i class="fas fa-file-medical-alt" style="font-size: 12px; margin-right: 8px;"></i>
-                                Scan - @scan.Date.ToShortDateString()
+                                @scan.Label - @SmartAgricultuer.Controllers.BaseController.GetTimeAgo(scan.CreatedAt)
                             </a>
                         }
                     }
@@ -107,10 +104,13 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" class="nav-item logout" onclick="handleLogout(event)">
-                    <i class="fas fa-sign-out-alt nav-icon" aria-hidden="true"></i>
-                    <span class="nav-text">Logout</span>
-                </a>
+                <form asp-action="Logout" asp-controller="Account" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-item logout">
+                        <i class="fas fa-sign-out-alt nav-icon" aria-hidden="true"></i>
+                        <span class="nav-text">Logout</span>
+                    </button>
+                </form>
             </div>
         </aside>
     </div>

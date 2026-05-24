@@ -1,32 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic; // لازم عشان الـ List
-using System.Linq; // لازم عشان الـ Enumerable
+using SmartAgricultuer.Services;
+using SmartAgricultuer.DTOs;
+using System.Security.Claims;
 
 namespace SmartAgricultuer.Controllers
 {
     public class BaseController : Controller
     {
+        private readonly IHistoryService _historyService;
+
+        public BaseController(IHistoryService historyService)
+        {
+            _historyService = historyService;
+        }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            // الأفضل نستخدم كلاس بسيط بدل الـ Anonymous Type عشان الـ View يشوفه بسهولة
-            var dummyScans = Enumerable.Range(1, 10).Select(i => new TempScan
+            // جيب الـ User ID لو مسجل دخول
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim != null)
             {
-                Id = i,
-                Date = DateTime.Now.AddDays(-i)
-            }).ToList();
-
-            ViewBag.UserScans = dummyScans;
+                int userId = int.Parse(userIdClaim.Value);
+                var scans = _historyService.GetUserHistoryAsync(userId).Result;
+                ViewBag.UserScans = scans;
+            }
 
             base.OnActionExecuting(context);
         }
-    }
 
-    // كلاس مؤقت للتجربة فقط
-    public class TempScan
-    {
-        public int Id { get; set; }
-        public DateTime Date { get; set; }
+        // دالة تحويل الوقت
+        public static string GetTimeAgo(DateTime? dateTime)
+        {
+            if (dateTime == null) return "";
+
+            var diff = DateTime.UtcNow - dateTime.Value;
+
+            if (diff.TotalSeconds < 60)
+                return $"{(int)diff.TotalSeconds}s ago";
+
+            if (diff.TotalMinutes < 60)
+                return $"{(int)diff.TotalMinutes}m ago";
+
+            if (diff.TotalHours < 24)
+                return $"{(int)diff.TotalHours}h ago";
+
+            if (diff.TotalDays <= 3)
+                return $"{(int)diff.TotalDays}d ago";
+
+            // بعد 3 أيام يظهر تاريخ مختصر
+            return dateTime.Value.ToString("MMM dd");
+        }
     }
 }

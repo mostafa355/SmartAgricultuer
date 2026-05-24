@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartAgricultuer.Services;
 
 namespace SmartAgricultuer.Controllers
 {
+    [Authorize(Roles = "User")]
     public class UserPanel : BaseController
     {
         private readonly IImageService _imageService;
         private readonly IDiagnosisService _diagnosisService;
+        private readonly IHistoryService _historyService;
 
-        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService)
+        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService): base(historyService)
         {
             _imageService = imageService;
             _diagnosisService = diagnosisService;
+            _historyService = historyService;
         }
-    // ...
+        // ...
         public IActionResult Home()
         {
             return View();
@@ -35,11 +39,6 @@ namespace SmartAgricultuer.Controllers
 
                 var diagnosisResult = await _diagnosisService.DiagnoseAsync(fileInput, type);
 
-                Console.WriteLine($"✅ Success: {diagnosisResult.Success}");
-                Console.WriteLine($"🏷️ Label: {diagnosisResult.Label}");
-                Console.WriteLine($"⚠️ IsHarmful: {diagnosisResult.IsHarmful}");
-                Console.WriteLine($"📊 Confidence: {diagnosisResult.ConfidencePct}");
-
                 if (!diagnosisResult.Success)
                 {
                     TempData["Error"] = diagnosisResult.Error;
@@ -54,19 +53,40 @@ namespace SmartAgricultuer.Controllers
                     return RedirectToAction("Upload");
                 }
 
-                ViewBag.ImagePath = imagePath;
-                ViewBag.Label = diagnosisResult.Label;
-                ViewBag.IsHarmful = diagnosisResult.IsHarmful;
-                ViewBag.Confidence = diagnosisResult.ConfidencePct;
-                ViewBag.IsInsect = isInsect;
+                // جيب الـ User ID
+                var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+                int analysisTypeId = isInsect ? 2 : 1;
 
-                return View();
+                // احفظ في الداتابيز
+                int uploadId = await _historyService.SaveUploadAsync(userId, analysisTypeId, imagePath);
+                await _historyService.SaveAnalysisResultAsync(uploadId, diagnosisResult);
+
+                // Redirect للـ Result بالـ id
+                return RedirectToAction("Result", new { id = uploadId });
             }
             catch (Exception ex)
             {
                 TempData["Error"] = $"{ex.Message} | {ex.InnerException?.Message}";
                 return RedirectToAction("Upload");
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Result(int id)
+        {
+            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+
+            var result = await _historyService.GetHistoryByIdAsync(id, userId);
+
+            if (result == null) return RedirectToAction("Upload");
+
+            ViewBag.ImagePath = result.ImageUrl;
+            ViewBag.Label = result.Label;
+            ViewBag.IsHarmful = result.IsHarmful;
+            ViewBag.Confidence = result.Confidence;
+            ViewBag.IsInsect = result.AnalysisType == "Insect";
+            ViewBag.ActiveId = id; // عشان السايد بار يعرف هو واقف على إيه
+
+            return View();
         }
         public IActionResult Archive()
         {

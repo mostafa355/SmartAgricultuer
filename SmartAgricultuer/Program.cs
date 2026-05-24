@@ -31,8 +31,22 @@ namespace SmartAgricultuer
                 options.Password.RequireLowercase = false;
                 options.SignIn.RequireConfirmedAccount = false;
             })
+
             .AddEntityFrameworkStores<AppdbContext>()
             .AddDefaultTokenProviders();
+            // ← أضف هنا
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/Login";
+                options.ExpireTimeSpan = TimeSpan.FromDays(30); // الكوكي تفضل شغالة 30 يوم
+                options.SlidingExpiration = true; // كل ما يدخل بتتجدد الـ 30 يوم
+                options.Cookie.HttpOnly = true; // أمان
+                options.Cookie.IsEssential = true;
+            });
+            builder.Services.AddScoped<IHistoryService, HistoryService>(); // ← لو مش موجود
+
+
 
             builder.Services.AddControllersWithViews();
 
