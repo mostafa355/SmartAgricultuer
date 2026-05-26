@@ -5,21 +5,13 @@ using SmartAgricultuer.Services;
 namespace SmartAgricultuer.Controllers
 {
     [Authorize(Roles = "User")]
-<<<<<<< HEAD
-    public class AdminController : BaseController
-=======
     public class UserPanel : BaseController
->>>>>>> b01a79cd3f62b2b82abb51c8e6aec241e76a5e18
     {
         private readonly IImageService _imageService;
         private readonly IDiagnosisService _diagnosisService;
         private readonly IHistoryService _historyService;
 
-<<<<<<< HEAD
-        public AdminController(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService): base(historyService)
-=======
-        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService): base(historyService)
->>>>>>> b01a79cd3f62b2b82abb51c8e6aec241e76a5e18
+        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService) : base(historyService)
         {
             _imageService = imageService;
             _diagnosisService = diagnosisService;

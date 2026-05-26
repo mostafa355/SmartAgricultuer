@@ -24,11 +24,7 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
         {
             return View();
         }
-<<<<<<< HEAD
        
-=======
-
->>>>>>> b01a79cd3f62b2b82abb51c8e6aec241e76a5e18
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
