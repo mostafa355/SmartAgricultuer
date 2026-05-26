@@ -1,0 +1,269 @@
+﻿@{
+    ViewData["Title"] = "Add Insect Page";
+}
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/DS/css/table_plant.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/DS/js/table_plant.js" asp-append-version="true"></script>
+}
+<main class="main-content">
+
+
+    <header class="top-header">
+        <div class="top-tabs">
+            <span class="tab-title">Plants Database</span>
+
+        </div>
+        <div class="top-right">
+            <a asp-area="Admin" asp-controller="AdminPanel" asp-action="Add_plant" class="add-btn" style="text-decoration: none;">
+                <span class="material-symbols-outlined">add</span> Add Plant
+            </a>
+
+            <button class="notif-btn">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+        
+            <div class="user-info">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQXWZVttJeFZ-7hRSnZ_Mdq1Mi0UOm89yVmawoapMX1JyZSnheNNK6srM4OvmoK-4b-UGP9_Y_Gcf0_6vfVA1xeMel1oLVy2wslusN3Od0Plg3h3-RRCXFIvp_97w_aPBwyJcusG-VpqwbMYPltIfAicZJd1U8-b-Lrj0Fh9E5FXR4zoJulDh5E3T2f_aJtSxfVcPA_u8VcmjsaL1ARorZNu_vJkwHRqmZqsSso4OTRsRXkIF96Ss2zCFwpFUp6H1mQG9Ro1yAKs4" alt="Alex Rivera">
+                <span>Alex Rivera</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-inner">
+
+        <div class="page-header">
+            <div>
+                <h1>Plants Database</h1>
+                <p>Manage plant information and agricultural care metrics in real-time.</p>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-icon green">psychiatry</span>
+                    <div>
+                        <small>TOTAL SPECIES</small>
+                        <strong>128</strong>
+                    </div>
+                </div>
+                <div class="stat-card risk">
+                    <span class="material-symbols-outlined stat-icon red">emergency_home</span>
+                    <div>
+                        <small>AT RISK</small>
+                        <strong>14</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <div class="search-input">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" id="searchInput" placeholder="Search plant name, scientific name, diseases..." onkeyup="filterTable()">
+            </div>
+            <button class="filter-btn">
+                <span class="material-symbols-outlined">tune</span> Filters
+            </button>
+
+            <a asp-area="Admin" asp-controller="AdminPanel" asp-action="Add_plant" class="add-plant-btn" style="text-decoration: none;">
+                <span class="material-symbols-outlined">add_circle</span> Add Plant
+            </a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>PLANT ID</th>
+                        <th>PLANT DETAILS</th>
+                        <th>SCIENTIFIC NAME</th>
+                        <th>GENERAL CARE</th>
+                        <th>COMMON DISEASES</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id">#PLT-001</td>
+                        <td>
+                            <div class="plant-info">
+                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9kiYnkvBYajY07rWaHRURw4vq7kC9yTxXAxBMvC4IobrdXTrvkkE3-r_t1r4r9peV1miOkBC1tcA9N12_U46uC0WnSBlTxVXDRfwvK4t0pKZxs2oao6Y4raxzj5GKooCY5B0tF7P7J8WsZV0Izwgu9-f77ZsluH3LzhMH0qBe3Vj_kMfr5V2bOjS18pOPjKDVGMFS_xYmLa8t8VpPEHjDlxZZscmtdb98uvdrkMssNIa9ENA4_vxOqvvmJRIJvMPFPjCCrPWar5g" alt="Curly Kale">
+                                <div>
+                                    <strong>Curly Kale</strong>
+                                    <small>Hardy biennial leaf vegetable...</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="scientific">Brassica oleracea</td>
+                        <td class="care">
+                            <div><span class="care-icon">💧</span> Moderate water</div>
+                            <div><span class="care-icon">☀️</span> Full sun</div>
+                        </td>
+                        <td>
+                            <span class="disease">MILDEW</span>
+                            <span class="disease">APHIDS</span>
+                        </td>
+                        <td><span class="status healthy"><span class="dot"></span>HEALTHY</span></td>
+
+                        <td class="action">
+                            <div class="dropdown">
+
+                                <button class="more-btn" onclick="toggleMenu(this)">
+                                    ⋯
+                                </button>
+
+                                <div class="dropdown-menu">
+
+                                    <button class="dropdown-item edit-btn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                        Edit
+                                    </button>
+
+                                    <button class="dropdown-item delete-btn">
+                                        <span class="material-symbols-outlined">delete</span>
+                                        Delete
+                                    </button>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="id">#PLT-002</td>
+                        <td>
+                            <div class="plant-info">
+                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFAmuEnbgMHiBz3gBZ5bEjnkvnKDViINHYC8b8mBmNnJAubKEDVRQUnUaXDL5khYCaNEw9Y9_MEZ9Ccn0FAdTBjOLGWfNt_-tIaGst9nIb52zIh_MtbbA38PmpkrqHC9s7vv1NtdlC_ZLju5HYMFfbheP7DBmXJ2_0oj6cqU5kexfbwTAAWLaYEzf3HMOU4H47RkU11m1EjkVrh4KZ4cgHiU6uMD-2It530bC2oxR3jMfEgCqrInYdIverOuNx_rNdTkTyTr0vcVY" alt="Roma Tomato">
+                                <div>
+                                    <strong>Roma Tomato</strong>
+                                    <small>Paste tomato...</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="scientific">Solanum lycopersicum</td>
+                        <td class="care">
+                            <div><span class="care-icon">💧</span> High consistency</div>
+                            <div><span class="care-icon">☀️</span> Indirect sun</div>
+                        </td>
+                        <td>
+                            <span class="disease">BLIGHT</span>
+                            <span class="disease">ROOT ROT</span>
+                        </td>
+                        <td><span class="status warning"><span class="dot"></span>NEEDS ATTENTION</span></td>
+
+                        <td class="action">
+                            <div class="dropdown">
+
+                                <button class="more-btn" onclick="toggleMenu(this)">
+                                    ⋯
+                                </button>
+
+                                <div class="dropdown-menu">
+
+                                    <button class="dropdown-item edit-btn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                        Edit
+                                    </button>
+
+                                    <button class="dropdown-item delete-btn">
+                                        <span class="material-symbols-outlined">delete</span>
+                                        Delete
+                                    </button>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="id">#PLT-003</td>
+                        <td>
+                            <div class="plant-info">
+                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYPZsHWfuIyhrbCvPY0Xs-V2-U8s2yPN6-ltCG5dlStKkSRjmBXnDWgktBiAIA2rU1vsscdAkegfZZx0qXUJYQeoryDAuEbbXpWJ3zB5id6-A0CPToMcfYX6XSVH3JwJtGL984cnj4Bo_WBJEcCXX7Fjn7miN0CqK9vwgkDI-4JT8yW7IYGledC24h1yuu_VqNKaO3_85L9XN-xglLNySILXEvDpIV3cG3hpt-XJ8X6nNX-hs25ho5W8IDnLOPOKePsQR1pPvr3Jk" alt="Garden Strawberry">
+                                <div>
+                                    <strong>Garden Strawberry</strong>
+                                    <small>Widely grown hybrid species...</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="scientific">Fragaria × ananassa</td>
+                        <td class="care">
+                            <div><span class="care-icon">💧</span> Regular misting</div>
+                            <div><span class="care-icon">☀️</span> Partial shade</div>
+                        </td>
+                        <td>
+                            <span class="disease">VERTICILLIUM</span>
+                        </td>
+                        <td><span class="status danger"><span class="dot"></span>HIGH RISK</span></td>
+
+                        <td class="action">
+                            <div class="dropdown">
+
+                                <button class="more-btn" onclick="toggleMenu(this)">
+                                    ⋯
+                                </button>
+
+                                <div class="dropdown-menu">
+
+                                    <button class="dropdown-item edit-btn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                        Edit
+                                    </button>
+
+                                    <button class="dropdown-item delete-btn">
+                                        <span class="material-symbols-outlined">delete</span>
+                                        Delete
+                                    </button>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination-bar">
+                <span>Showing 3 of 128 plants</span>
+                <div class="pagination">
+                    <button class="page-btn nav-arrow">&#8249;</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn nav-arrow">&#8250;</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="climate-report">
+                <div class="climate-bg-icon">
+                    <span class="material-symbols-outlined">eco</span>
+                </div>
+                <h3>Climate Intelligence Report</h3>
+                <p>Based on current soil moisture levels and predicted humidity, 24% of your tomato crop requires immediate nutrient adjustment.</p>
+                <button class="recommend-btn">
+                    <span class="material-symbols-outlined">lightbulb</span> Review Recommendations
+                </button>
+            </div>
+
+            <div class="right-stats">
+                <div class="health-score">
+                    <small>FARM HEALTH SCORE</small>
+                    <div class="score">92 <span class="increase">+4%</span></div>
+                    <div class="progress-bar"><div class="fill" style="width: 92%;"></div></div>
+                </div>
+                <div class="integrity">
+                    <span class="material-symbols-outlined integrity-icon">verified</span>
+                    <div>
+                        <strong>Database Integrity</strong>
+                        <small>Validated 12 mins ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</main>

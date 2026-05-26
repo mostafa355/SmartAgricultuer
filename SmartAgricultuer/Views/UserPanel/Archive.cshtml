@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_UserPanelLayout";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Archive.css" asp-append-version="true">
+}
+
+
+<div class="history-page">
+    <header class="topbar">
+        Botanical History
+    </header>
+
+    <div class="hero">
+        <h1>Diagnostic Archive</h1>
+        <p>
+            Review your botanical history. AI tracks your plant health over time.
+        </p>
+    </div>
+
+    <div class="cards-grid">
+
+        <div class="card">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuChY4LfioGQ3Y2Zt60_KtxC6wFy4Ay2fXVAbt0OtF5LDVjsBX1Iw6jfMfrAm8N38rJ6ghqNGTnml6Vd0t4WxOPS-h-JInFWk6gTX0AS_HYnhu-_m_9-x_BnBRAWXcuyFavMk-xY-KuWYVgreXeKvnBrcYKOaL_iixAbbr_FMoN17AgoiHvpt3Pw2acbAiwpUnzsjtNUnhVOQHO7f16aEmjql7geYZzaIfPGeogdqqHtZBkEpjnexUUOB7Xr9NoNECGz6hNL-2JZ506u"
+                 alt="Monstera Deliciosa">
+            <div class="card-content">
+                <div class="card-header">
+                    <h3>Monstera Deliciosa</h3>
+                    <span>2h ago</span>
+                </div>
+                <p>Standard fenestration pattern observed. Chlorophyll levels optimal for photosynthesis.</p>
+                <div class="status healthy">Healthy</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk69wfkOhK-O0LeFpsKEGTI6u529bds0BNRerwRAdSbdfWd-_X8JcbMl7LPX1RmXkf6BBJbiv0yqY71TCfEY3KoWNtgkBB3n5ckBhAClsKavQ--uAJV_JK4g9SQqEQvlDJkHnRX6qPPgsxT9u6la2gTp8DqOPBeCnDbjnu-EQkA2JosbpmzTUn1v088MMtLYpWz2LNMOqnmMD9AjApQf6sybbH9zeH9_BgClS1ueM5N2D5YyDBPua3Lk58Vc5E2FTxTXkFOR6RDok7"
+                 alt="Fiddle Leaf Fig">
+            <div class="card-content">
+                <div class="card-header">
+                    <h3>Fiddle Leaf Fig</h3>
+                    <span>Yesterday</span>
+                </div>
+                <p>Brown lesions detected on leaf margins. High probability of root rot or fungal spread.</p>
+                <div class="status diseased">Diseased</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsXDhlkOp24Etcxr3lTK1qBiMKjZhLsd88d0ol4Ov8yyE6z_Pr2tGrlMwu6zQuw20f4rYU1lBxWjEDoAvGGwgLx2kxPF4DfyPGKwXZjVHzfhB1FPrJb1UwhK_QCFo-ORlk-urW7iwZuseUGsfJ_AVHJXzDkOiTbDcETKdT4E6l7Fhj1PnBUvzLZagR3Szkja9URt4UBRzbigyUvm8WAXQkFsHeRHtibnQsIoP2fq5bf1IOQGx4RlvnmIjlXMSDgb8k2qzkLA05pFEa"
+                 alt="Snake Plant">
+            <div class="card-content">
+                <div class="card-header">
+                    <h3>Snake Plant</h3>
+                    <span>Sep 12</span>
+                </div>
+                <p>Structure remains rigid and turgid. No signs of overwatering or pest infestation.</p>
+                <div class="status healthy">Healthy</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1xUc60Vef6QqJUGRU5HWkBI_I_Iiq182D_4md6EtNy7wd7XmQSOP7rGTWrtwudjEQVyZ5w4xTJm5CSQIcPOuFCD_mqvLlYkIrF29oYNwjbAwv5eKOpYtCRIo6ZB9iDxG4BTx9p07H8mxMcj4txrj02TdP3-CZfHmhta8c7zFjeq135N0rJyMX5huD_RpCAhMB4euX1e442lYJgyuFPQ1vdWZWVeKyh6rhehLRIShq0V1Me_a7Nb5HAGp-I5UsQ8lryof2s07fL0KG"
+                 alt="English Rose">
+            <div class="card-content">
+                <div class="card-header">
+                    <h3>English Rose</h3>
+                    <span>Sep 10</span>
+                </div>
+                <p>Powdery mildew covering 40% of the sample surface. Immediate isolation recommended.</p>
+                <div class="status diseased">Diseased</div>
+            </div>
+        </div>
+
+    </div>
+</div>

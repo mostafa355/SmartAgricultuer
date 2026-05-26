@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "Add Insect Page";
+}
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/DS/css/Add Insect.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/DS/js/Add Insect.js" asp-append-version="true"></script>
+}
+<main class="main-content" style="padding-left: 260px; padding-top: 80px; width: 100%; display: block;">
+    <div class="add-insect-container">
+
+
+        <header class="page-header">
+            <h1>Add New Insect</h1>
+            <p>Enter insect information and affected plants to update the registry.</p>
+        </header>
+
+
+        <form id="insectForm" class="form-card">
+            <div class="form-body">
+                <!-- Basic Info -->
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>Insect Name</label>
+                        <input type="text" id="insectName" placeholder="e.g. Aphid" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Scientific Name</label>
+                        <input type="text" id="sciName" class="italic" placeholder="e.g. Aphidoidea">
+                    </div>
+                </div>
+
+
+                <div class="input-group">
+                    <label>Affected Plants</label>
+                    <div class="tag-container" id="tagContainer">
+                        <span class="tag">Corn <span class="material-symbols-outlined remove-tag">close</span></span>
+                        <span class="tag">Wheat <span class="material-symbols-outlined remove-tag">close</span></span>
+                        <input type="text" id="plantInput" placeholder="Add plant...">
+                    </div>
+                </div>
+
+
+                <div class="input-group">
+                    <label>Insect Status</label>
+                    <div class="status-grid">
+                        <label class="status-option harmful">
+                            <input type="radio" name="status" value="harmful">
+                            <div class="status-info">
+                                <span class="title">Harmful</span>
+                                <span class="desc">Immediate threat</span>
+                            </div>
+                        </label>
+                        <label class="status-option warning">
+                            <input type="radio" name="status" value="warning">
+                            <div class="status-info">
+                                <span class="title">Warning</span>
+                                <span class="desc">Monitor closely</span>
+                            </div>
+                        </label>
+                        <label class="status-option controlled">
+                            <input type="radio" name="status" value="controlled">
+                            <div class="status-info">
+                                <span class="title">Controlled</span>
+                                <span class="desc">Stable population</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="input-group">
+                    <label>Damage Description</label>
+                    <textarea id="damageDesc" rows="3" placeholder="Describe the typical damage caused..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Prevention Method</label>
+                    <textarea id="prevention" rows="3" placeholder="List recommended prevention measures..."></textarea>
+                </div>
+
+
+                <div class="input-group">
+                    <label>Insect Photo</label>
+                    <div class="upload-box" id="dropZone">
+                        <input type="file" id="fileInput" accept="image/*" hidden>
+                        <div class="upload-content" id="uploadContent">
+                            <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+                            <p class="upload-text">Click to upload or drag and drop</p>
+                            <p class="upload-hint">PNG, JPG or WEBP (MAX. 5MB)</p>
+                        </div>
+                        <img id="imagePreview" class="preview-img hidden" alt="Preview">
+                    </div>
+                </div>
+
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-save" id="saveBtn">
+                        <span class="material-symbols-outlined">save</span>
+                        Save Insect
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="guidance-footer">
+            <span class="material-symbols-outlined">info</span>
+            <div>
+                <strong>Data Accuracy</strong>
+                <p>Newly added insects will be cross-referenced with the Global Agronomy Database before public registry update.</p>
+            </div>
+        </div>
+    </div>
+</main>

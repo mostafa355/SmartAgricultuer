@@ -1,0 +1,481 @@
+/* ================= UPLOAD PAGE - OPTIMIZED ================= */
+
+.result-layout {
+    background-color: var(--bg-light);
+}
+
+/* ========================================
+   TOGGLE WRAPPER & CUSTOM SWITCH
+   ======================================== */
+
+.toggle-wrapper {
+    padding: 20px 0;
+    display: flex;
+    justify-content: left;
+}
+
+.custom-switch {
+    position: relative;
+    width: 300px;
+    height: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    will-change: transform;
+}
+
+    .custom-switch input {
+        display: none;
+    }
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-soft);
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: background-color, box-shadow;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+    .slider:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .slider::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background-color: var(--secondary-green);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: left;
+    }
+
+.knob {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: var(--bg-color);
+    border-radius: 50%;
+    left: calc(50% - 14px);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    border: 1px solid #eee;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: left, box-shadow;
+}
+
+.text {
+    flex: 1;
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    z-index: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: color;
+}
+
+.plant {
+    color: var(--bg-color);
+}
+
+.insect {
+    color: var(--text-main);
+}
+
+input:checked + .slider::before {
+    left: 50%;
+}
+
+input:checked + .slider .plant {
+    color: var(--text-sub);
+}
+
+input:checked + .slider .insect {
+    color: var(--bg-color);
+}
+
+/* ========================================
+   MAIN WRAPPER & UPLOAD CARD
+   ======================================== */
+
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 40px 20px;
+}
+
+.upload-card {
+    background-color: var(--bg-color);
+    padding: 50px 40px 0 40px;
+    border-radius: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s ease-in-out;
+    will-change: transform, box-shadow;
+}
+
+    .upload-card:hover {
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+.upload-area {
+    border: 2px dashed var(--secondary-green);
+    background-color: #f0fff4;
+    padding: 40px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    cursor: default;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: background-color, border-color, box-shadow;
+    position: relative;
+}
+
+    .upload-area:hover {
+        background-color: #e8fce7;
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    }
+
+.upload-icon-circle {
+    width: 60px;
+    height: 60px;
+    background-color: var(--secondary-green);
+    color: var(--bg-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    pointer-events: none;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    box-shadow: 0 4px 12px rgba(53, 159, 53, 0.2);
+    transition: all 0.3s ease-in-out;
+    will-change: transform, box-shadow;
+}
+
+.upload-area:hover .upload-icon-circle {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(53, 159, 53, 0.3);
+}
+
+/* ========================================
+   BROWSE BUTTON
+   ======================================== */
+
+#browseBtn {
+    margin-top: 20px;
+    padding: 12px 30px;
+    border-radius: 12px;
+    border: none;
+    background-color: var(--secondary-green);
+    color: var(--bg-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: background-color, transform, box-shadow;
+    box-shadow: 0 4px 15px rgba(53, 159, 53, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+    #browseBtn:hover {
+        background-color: #28a745;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(53, 159, 53, 0.4);
+    }
+
+    #browseBtn:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(53, 159, 53, 0.25);
+    }
+
+    #browseBtn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease-in-out;
+    }
+
+    #browseBtn:hover::before {
+        left: 100%;
+    }
+
+/* ========================================
+   SCAN BUTTON
+   ======================================== */
+
+.scan-btn {
+    width: calc(100% + 80px);
+    margin-left: -40px;
+    padding: 20px;
+    border: none;
+    border-radius: 0;
+    background-color: var(--secondary-green);
+    color: var(--bg-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: background-color, transform;
+    overflow: hidden;
+}
+
+    .scan-btn:hover {
+        background-color: #28a745;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(53, 159, 53, 0.3);
+    }
+
+    .scan-btn:active {
+        transform: translateY(0);
+    }
+
+    .scan-btn::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scan-btn:hover::after {
+        left: 100%;
+    }
+
+/* ========================================
+   FILE PREVIEW
+   ======================================== */
+
+.file-preview-inner {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.3s ease-in-out;
+    will-change: transform, box-shadow;
+}
+
+    .file-preview-inner:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transform: translateX(2px);
+    }
+
+    .file-preview-inner img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        transition: all 0.3s ease-in-out;
+        will-change: transform;
+    }
+
+    .file-preview-inner:hover img {
+        transform: scale(1.05);
+    }
+
+/* ========================================
+   ICON CIRCLE & FOOTER
+   ======================================== */
+
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid #d1fae5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #10b981;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: background-color, transform, box-shadow;
+    background-color: var(--card-white);
+}
+
+    .icon-circle:hover {
+        background-color: #d1fae5;
+        transform: translateY(-4px) scale(1.1);
+        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+    }
+
+    .icon-circle:active {
+        transform: translateY(-2px) scale(1.05);
+    }
+
+.copyright {
+    font-size: 14px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease-in-out;
+}
+
+/* ========================================
+   ANIMATIONS - OPTIMIZED
+   ======================================== */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(53, 159, 53, 0.4);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(53, 159, 53, 0.2);
+    }
+
+    70% {
+        box-shadow: 0 0 0 12px rgba(53, 159, 53, 0);
+        transform: scale(1.02);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(53, 159, 53, 0);
+        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.hidden {
+    display: none;
+}
+
+.delete-icon {
+    color: #ef4444 !important;
+    margin-left: auto;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    will-change: transform, color;
+}
+
+    .delete-icon:hover {
+        color: #dc2626 !important;
+        transform: scale(1.15) rotate(10deg);
+    }
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .upload-card {
+        padding: 40px 20px 0 20px;
+        border-radius: 20px;
+    }
+
+    .scan-btn {
+        width: calc(100% + 40px);
+        margin-left: -20px;
+        font-size: 1rem;
+        padding: 15px;
+    }
+
+    .custom-switch {
+        width: 250px;
+    }
+
+    .upload-area {
+        padding: 30px 20px;
+    }
+
+    #browseBtn {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .upload-card {
+        padding: 30px 15px 0 15px;
+    }
+
+    .upload-area {
+        padding: 25px 15px;
+    }
+
+    .scan-btn {
+        width: calc(100% + 30px);
+        margin-left: -15px;
+        font-size: 0.95rem;
+        padding: 12px;
+    }
+
+    .custom-switch {
+        width: 220px;
+        height: 35px;
+    }
+
+    .text {
+        font-size: 14px;
+    }
+
+    #browseBtn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
