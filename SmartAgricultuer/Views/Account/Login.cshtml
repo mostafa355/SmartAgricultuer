@@ -1,0 +1,77 @@
+﻿@model SmartAgricultuer.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "تسجيل الدخول";
+    Layout = "_AuthLayout";
+}
+
+<div class="main-container">
+    <div class="glass-card">
+        <div class="logo-section">
+            <div class="icon-badge">
+                <i data-lucide="lock" style="color: #006400;"></i>
+            </div>
+            <h1>Login to Your Account</h1>
+        </div>
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="error-msg"></div>
+
+            <div class="input-box">
+                <label asp-for="Email">Email Address</label>
+                <div class="field">
+                    <i data-lucide="mail" class="side-icon"></i>
+                    <input asp-for="Email" type="email" placeholder="Enter your email" />
+                </div>
+                <span asp-validation-for="Email" class="error-msg" style="color:red; font-size:0.8rem;"></span>
+            </div>
+
+            <div class="input-box">
+                <div class="label-row">
+                    <label asp-for="Password">Password</label>
+                    <span class="forgot">Forgot password?</span>
+                </div>
+                <div class="field">
+                    <i data-lucide="lock" class="side-icon"></i>
+                    <input asp-for="Password" type="password" placeholder="Enter your password" id="passwordInput" />
+                    <div class="eye-btn" onclick="togglePassword()" style="cursor:pointer">
+                        <i id="eyeIcon" data-lucide="eye-off"></i>
+                    </div>
+                </div>
+                <span asp-validation-for="Password" class="error-msg" style="color:red; font-size:0.8rem;"></span>
+            </div>
+
+            <div class="remember-row" style="margin: 15px 0; display: flex; align-items: center; gap: 10px;">
+                <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="footer-text">
+            Don't have an account? <a asp-action="Register">Create an account</a>
+        </div>
+    </div> </div> 
+    @section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        // تشغيل الأيقونات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            const icon = document.getElementById('eyeIcon');
+            const isHidden = input.type === 'password';
+            
+            input.type = isHidden ? 'text' : 'password';
+            
+            // تغيير الأيقونة وإعادة تشغيل lucide
+            icon.setAttribute('data-lucide', isHidden ? 'eye' : 'eye-off');
+            lucide.createIcons();
+        }
+    </script>
+}

@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "Insects Page";
+}
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/DS/css/Insects.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/DS/js/Insects.js" asp-append-version="true"></script>
+}
+<main class="main-content">
+    <div class="content-container">
+
+
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Insects Database</h1>
+                <p>Manage harmful insects affecting plants</p>
+            </div>
+            <a asp-area="Admin" asp-controller="AdminPanel" asp-action="Add_Insects">
+                <button class="btn-add">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    Add Insect
+                </button>
+            </a>
+          
+        </div>
+
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper red-bg">
+                    <span class="material-symbols-outlined">report_problem</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">CRITICAL ALERTS</span>
+                    <span class="stat-value">12</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper green-bg">
+                    <span class="material-symbols-outlined">bug_report</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">TOTAL SPECIES</span>
+                    <span class="stat-value">142</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper blue-bg">
+                    <span class="material-symbols-outlined">verified_user</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">PREVENTION RATE</span>
+                    <span class="stat-value">92%</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper purple-bg">
+                    <span class="material-symbols-outlined">dna</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">GENOMIC DATA</span>
+                    <span class="stat-value">2.4k</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <span class="material-symbols-outlined search-icon">search</span>
+                <input type="text" id="Insects" placeholder="Search by Insects name, plant type, or ID...">
+            </div>
+        </div>
+
+
+        <div class="table-card">
+            <div class="table-responsive">
+                <table id="insectsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Insect Name</th>
+                            <th>Scientific Name</th>
+                            <th>Affected Plants</th>
+                            <th>Damage Type</th>
+                            <th>Status</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer">
+                <span id="entryCount">Showing 4 of 4 entries</span>
+                <div class="pagination">
+                    <button disabled><span class="material-symbols-outlined">chevron_left</span></button>
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button><span class="material-symbols-outlined">chevron_right</span></button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="bento-grid">
+            <div class="card card-white">
+                <div class="card-header-icon text-secondary">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    <span>OUTBREAK RISK</span>
+                </div>
+                <h3>High Activity</h3>
+                <p>Predicted increase in Potato Beetle activity due to rising soil temperatures.</p>
+                <a href="#" class="link-arrow">View Hotspot Map →</a>
+            </div>
+
+            <div class="card card-green">
+                <div class="card-header-icon text-emerald">
+                    <span class="material-symbols-outlined">shield</span>
+                    <span>PREVENTION TIP</span>
+                </div>
+                <h3>Biological Control</h3>
+                <p>Introduce natural predators like Ladybugs to manage Aphid populations.</p>
+                <button class="btn-outline-white">Request Resource Delivery</button>
+            </div>
+
+            <div class="card card-white relative">
+                <div class="card-header-icon text-slate">
+                    <span class="material-symbols-outlined">hub</span>
+                    <span>GLOBAL DATABASE</span>
+                </div>
+                <h3>1,200+ Species</h3>
+                <p>Our AI model has expanded to identify more regional variants of tropical insects.</p>
+                <span class="material-symbols-outlined bg-icon-watermark">bug_report</span>
+            </div>
+        </div>
+    </div>
+</main>
