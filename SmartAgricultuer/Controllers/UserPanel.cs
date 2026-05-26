@@ -11,7 +11,7 @@ namespace SmartAgricultuer.Controllers
         private readonly IDiagnosisService _diagnosisService;
         private readonly IHistoryService _historyService;
 
-        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService): base(historyService)
+        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService) : base(historyService)
         {
             _imageService = imageService;
             _diagnosisService = diagnosisService;

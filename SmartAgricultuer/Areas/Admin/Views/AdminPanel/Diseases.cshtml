@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "Disease Page";
+}
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/DS/css/Diseases.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/DS/js/Diseases.js" asp-append-version="true"></script>
+}
+<main class="main-content">
+
+
+    <header class="page-header">
+        <div class="header-text">
+            <h1>Manage and monitor plant diseases</h1>
+            <p>Access AI-driven diagnosis and historical records for your fields.</p>
+        </div>
+       
+        <a asp-area="Admin" asp-controller="AdminPanel" asp-action="adddisease" style="text-decoration: none;">
+            <button class="btn-primary" id="addDiseaseBtn">
+                <span class="material-symbols-outlined">add_circle</span> Add Disease
+            </button>
+        </a>
+    </header>
+
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="icon-box error"><span class="material-symbols-outlined">warning</span></div>
+            <div><p class="label">CRITICAL ALERTS</p><p class="value text-error">12</p></div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon-box success"><span class="material-symbols-outlined">check_circle</span></div>
+            <div><p class="label">HEALTHY CROPS</p><p class="value text-success">84%</p></div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon-box primary"><span class="material-symbols-outlined">monitoring</span></div>
+            <div><p class="label">SCANNED TODAY</p><p class="value">2,450</p></div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon-box neutral"><span class="material-symbols-outlined">coronavirus</span></div>
+            <div><p class="label">NEW PATHOGENS</p><p class="value">03</p></div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-box">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input type="text" id="diseaseSearch" placeholder="Search by disease name, plant type, or ID...">
+        </div>
+    </div>
+
+
+    <div class="table-wrapper">
+        <table id="diseaseTable">
+            <thead>
+                <tr>
+                    <th>Disease ID</th>
+                    <th>Disease Name</th>
+                    <th>Plant Type</th>
+                    <th>Symptoms</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+        </table>
+
+        <div class="table-footer">
+            <p id="rowCountText">Showing 0 of 0 diseases</p>
+            <div class="pagination">
+                <button class="btn-icon">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="btn-icon">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-grid">
+
+        <div class="prevention-card">
+            <h3>
+                <span class="material-symbols-outlined">verified_user</span>
+                Suggested Prevention Strategies
+            </h3>
+
+            <div class="strategy-item">
+                <span class="material-symbols-outlined">psychology</span>
+                <div>
+                    <h4>Crop Rotation (Interval: 3 Years)</h4>
+                    <p>Rotate Solanaceae crops with cereals or legumes to disrupt pathogen life cycles.</p>
+                </div>
+            </div>
+
+            <div class="strategy-item">
+                <span class="material-symbols-outlined">water_drop</span>
+                <div>
+                    <h4>Precision Irrigation Control</h4>
+                    <p>Avoid overhead watering during high-humidity cycles to minimize leaf moisture.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-card">
+            <h3>AI Diagnostic Insights</h3>
+            <p>Real-time analysis suggests weather patterns (High Humidity + 22°C) increase risk by 45%.</p>
+            <button class="btn-light">Run Risk Assessment</button>
+        </div>
+
+    </div>
+</main>
