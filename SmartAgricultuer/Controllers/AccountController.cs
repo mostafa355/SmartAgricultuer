@@ -18,7 +18,17 @@ namespace SmartAgricultuer.Controllers
         }
 
         // GET: /Account/Login
-        public IActionResult Login() => View();
+        public IActionResult Login()
+        {
+            if (User.Identity!.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin"))
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                else
+                    return RedirectToAction("Home", "UserPanel");
+            }
+            return View();
+        }
 
         // POST: /Account/Login
         [HttpPost]

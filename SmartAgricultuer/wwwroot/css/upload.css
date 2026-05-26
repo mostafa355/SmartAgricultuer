@@ -5,106 +5,76 @@
 }
 
 /* ========================================
-   TOGGLE WRAPPER & CUSTOM SWITCH
+   TYPE SELECTOR BUTTONS
    ======================================== */
 
-.toggle-wrapper {
-    padding: 20px 0;
+.type-selector {
     display: flex;
-    justify-content: left;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 0;
 }
 
-.custom-switch {
-    position: relative;
-    width: 300px;
-    height: 40px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    will-change: transform;
-}
-
-    .custom-switch input {
-        display: none;
-    }
-
-.slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+.type-btn {
+    flex: 1;
+    max-width: 160px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 2px solid var(--border-soft);
     background-color: var(--bg-color);
-    border: 1px solid var(--border-soft);
-    border-radius: 40px;
+    color: var(--text-sub);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: background-color, box-shadow;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    justify-content: center;
+    gap: 8px;
 }
 
-    .slider:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    .type-btn:hover {
+        border-color: var(--secondary-green);
+        color: var(--secondary-green);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(53, 159, 53, 0.15);
     }
 
-    .slider::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        width: 50%;
-        height: 100%;
+    .type-btn.active {
         background-color: var(--secondary-green);
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: left;
+        border-color: var(--secondary-green);
+        color: white;
+        box-shadow: 0 4px 15px rgba(53, 159, 53, 0.3);
+        transform: translateY(-2px);
     }
 
-.knob {
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    background: var(--bg-color);
-    border-radius: 50%;
-    left: calc(50% - 14px);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    z-index: 2;
-    border: 1px solid #eee;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: left, box-shadow;
-}
+/* ========================================
+   WARNING MESSAGE
+   ======================================== */
 
-.text {
-    flex: 1;
+.warning-msg {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-top: 16px; /* ← أضف ده */
+    margin-bottom: 16px;
     text-align: center;
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 16px;
-    z-index: 1;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: color;
+    font-size: 14px;
+    opacity: 1;
+    max-height: 60px;
+    overflow: hidden;
+    transition: opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease;
 }
 
-.plant {
-    color: var(--bg-color);
-}
-
-.insect {
-    color: var(--text-main);
-}
-
-input:checked + .slider::before {
-    left: 50%;
-}
-
-input:checked + .slider .plant {
-    color: var(--text-sub);
-}
-
-input:checked + .slider .insect {
-    color: var(--bg-color);
-}
-
+    .warning-msg.hidden {
+        opacity: 0;
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 /* ========================================
    MAIN WRAPPER & UPLOAD CARD
    ======================================== */
@@ -435,8 +405,14 @@ input:checked + .slider .insect {
         padding: 15px;
     }
 
-    .custom-switch {
-        width: 250px;
+    .type-selector {
+        gap: 8px;
+    }
+
+    .type-btn {
+        max-width: 130px;
+        padding: 10px 15px;
+        font-size: 14px;
     }
 
     .upload-area {
@@ -465,13 +441,10 @@ input:checked + .slider .insect {
         padding: 12px;
     }
 
-    .custom-switch {
-        width: 220px;
-        height: 35px;
-    }
-
-    .text {
-        font-size: 14px;
+    .type-btn {
+        max-width: 120px;
+        padding: 8px 12px;
+        font-size: 13px;
     }
 
     #browseBtn {
