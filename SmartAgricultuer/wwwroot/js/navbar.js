@@ -96,4 +96,6 @@
             profileCard.classList.remove('show');
         }
     };
+
+
 })();

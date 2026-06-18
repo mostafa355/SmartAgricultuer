@@ -15,7 +15,6 @@ namespace SmartAgricultuer.Services
 
         public async Task<List<HistoryDto>> GetUserHistoryAsync(int userId)
         {
-            // جلب كل الـ Uploads بتاعت الـ User مع نتائجها
             return await _context.Uploads
                 .Where(u => u.UserId == userId && u.IsDeleted != true)
                 .OrderByDescending(u => u.CreatedAt)
@@ -46,7 +45,6 @@ namespace SmartAgricultuer.Services
 
         public async Task<HistoryDto?> GetHistoryByIdAsync(int id, int userId)
         {
-            // جلب سجل معين مع التأكد إنه بتاع الـ User ده بس
             return await _context.Uploads
                 .Where(u => u.Id == id && u.UserId == userId && u.IsDeleted != true)
                 .Select(u => new HistoryDto
@@ -73,10 +71,10 @@ namespace SmartAgricultuer.Services
                 })
                 .FirstOrDefaultAsync();
         }
+       
 
         public async Task<int> SaveUploadAsync(int userId, int analysisTypeId, string imageUrl)
         {
-            // إنشاء Upload جديد وحفظه
             var upload = new Upload
             {
                 UserId = userId,
@@ -88,18 +86,49 @@ namespace SmartAgricultuer.Services
 
             await _context.Uploads.AddAsync(upload);
             await _context.SaveChangesAsync();
-
-            // بنرجع الـ Id عشان نستخدمه في حفظ الـ AnalysisResult
             return upload.Id;
         }
 
-        public async Task SaveAnalysisResultAsync(int uploadId, DiagnosisResultDto result)
+        public async Task SavePlantResultAsync(int uploadId, PlantDiagnosisDto result)
         {
+            // البحث عن النبات بالاسم
+            var plant = await _context.Plants
+                .FirstOrDefaultAsync(p => p.Name == result.Plant);
+
+            // البحث عن المرض بدمج النبات والمرض
+            // الـ API بيرجع "Black_rot" والداتابيز فيها "Grape_Black_rot"
+            string fullDiseaseName = $"{result.Plant}_{result.Disease}";
+
+            var disease = await _context.PlantDiseases
+                .FirstOrDefaultAsync(d => d.Name == fullDiseaseName
+                                       || d.Name == result.Disease);
+
             var analysisResult = new AnalysisResult
             {
                 UploadId = uploadId,
-                IsDiseased = result.IsHarmful,           // ← IsHealthy اتغير لـ IsHarmful
-                ConfidenceScore = (decimal)result.ConfidencePct,  // ← Confidence اتغير لـ ConfidencePct
+                DetectedPlantId = plant?.Id,
+                DetectedDiseaseId = disease?.Id,
+                IsDiseased = result.IsHarmful,
+                ConfidenceScore = (decimal)result.ConfidencePct,
+                AnalyzedAt = DateTime.UtcNow
+            };
+
+            await _context.AnalysisResults.AddAsync(analysisResult);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveInsectResultAsync(int uploadId, InsectDiagnosisDto result)
+        {
+            // البحث عن الحشرة في الداتابيز
+            var insect = await _context.Insects
+                .FirstOrDefaultAsync(i => i.Name == result.Detected);
+
+            var analysisResult = new AnalysisResult
+            {
+                UploadId = uploadId,
+                DetectedInsectId = insect?.Id,
+                IsDiseased = result.IsHarmful,
+                ConfidenceScore = (decimal)result.ConfidencePct,
                 AnalyzedAt = DateTime.UtcNow
             };
 
@@ -114,7 +143,6 @@ namespace SmartAgricultuer.Services
 
             if (upload == null) return false;
 
-            // Soft Delete بدل ما نمسح الداتا فعلاً
             upload.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;

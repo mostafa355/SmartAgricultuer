@@ -24,6 +24,10 @@
             <form asp-controller="UserPanel" asp-action="Result" method="post" enctype="multipart/form-data">
                 <!-- Toggle -->
                 <!-- حطه فوق الـ Toggle مباشرة -->
+                <div id="apiWarningMsg" class="api-warning hidden">
+                    <span class="material-symbols-outlined">wifi_off</span>
+                    AI Service is currently offline. Please try again later.
+                </div>
                     <div id="warningMsg" class="warning-msg">
                     Please select Plant or Insect before scanning! ⚠️
                     </div>
@@ -63,6 +67,7 @@
                 <button type="submit" id="scanBtn" class="scan-btn">
                     <span class="material-symbols-outlined">analytics</span> Scan Image
                 </button>
+
             </form>
         </div>
     </div>

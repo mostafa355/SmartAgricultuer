@@ -7,6 +7,9 @@ const removeFile = document.getElementById('removeFile');
 const warningMsg = document.getElementById('warningMsg');
 const scanBtn = document.getElementById('scanBtn');
 
+let typeSelected = false;
+let apiOnline = false; // ← متغير جديد
+
 // فتح نافذة اختيار الملفات
 browseBtn.addEventListener('click', () => fileInput.click());
 
@@ -19,14 +22,13 @@ fileInput.addEventListener('change', (e) => {
     filePreviewContainer.classList.remove('hidden');
 });
 
-// إزالة الملف وتصفير الـ input
+// إزالة الملف
 removeFile.addEventListener('click', () => {
     fileInput.value = '';
     filePreviewContainer.classList.add('hidden');
 });
 
 // في الأول disable كل حاجة
-let typeSelected = false;
 scanBtn.disabled = true;
 browseBtn.disabled = true;
 scanBtn.style.opacity = '0.5';
@@ -34,10 +36,12 @@ browseBtn.style.opacity = '0.5';
 
 // دالة اختيار النوع
 function selectType(type) {
+    // لو الـ API مش شغال، ميسمحش باختيار
+    if (!apiOnline) return;
+
     typeSelected = true;
 
     document.getElementById('isInsectInput').value = type === 'insect' ? 'true' : 'false';
-
     document.getElementById('plantBtn').classList.toggle('active', type === 'plant');
     document.getElementById('insectBtn').classList.toggle('active', type === 'insect');
 
@@ -46,7 +50,6 @@ function selectType(type) {
     scanBtn.style.opacity = '1';
     browseBtn.style.opacity = '1';
 
-    // إخفاء سلس
     warningMsg.style.opacity = '0';
     warningMsg.style.maxHeight = '0';
     warningMsg.style.marginTop = '0';
@@ -56,6 +59,10 @@ function selectType(type) {
 }
 
 document.querySelector('form').addEventListener('submit', function (e) {
+    if (!apiOnline) {
+        e.preventDefault();
+        return;
+    }
     if (!typeSelected) {
         e.preventDefault();
         warningMsg.classList.remove('hidden');
@@ -68,3 +75,32 @@ document.querySelector('form').addEventListener('submit', function (e) {
         }, 10);
     }
 });
+
+// تحقق من الـ API
+async function checkApiStatus() {
+    try {
+        const response = await fetch('/UserPanel/CheckApiStatus');
+        const data = await response.json();
+
+        if (data.online) {
+            apiOnline = true; // ← شغال
+        } else {
+            showApiOffline();
+        }
+    } catch {
+        showApiOffline();
+    }
+}
+
+function showApiOffline() {
+    apiOnline = false;
+    const apiMsg = document.getElementById('apiWarningMsg');
+    apiMsg.classList.remove('hidden');
+
+    scanBtn.disabled = true;
+    browseBtn.disabled = true;
+    scanBtn.style.opacity = '0.5';
+    browseBtn.style.opacity = '0.5';
+}
+
+checkApiStatus();

@@ -13,8 +13,11 @@ namespace SmartAgricultuer.Services
         // حفظ Upload جديد
         Task<int> SaveUploadAsync(int userId, int analysisTypeId, string imageUrl);
 
-        // حفظ نتيجة التشخيص
-        Task SaveAnalysisResultAsync(int uploadId, DiagnosisResultDto result);
+        // حفظ نتيجة تشخيص نبات
+        Task SavePlantResultAsync(int uploadId, PlantDiagnosisDto result);
+
+        // حفظ نتيجة تشخيص حشرة
+        Task SaveInsectResultAsync(int uploadId, InsectDiagnosisDto result);
 
         // حذف سجل
         Task<bool> DeleteHistoryAsync(int id, int userId);

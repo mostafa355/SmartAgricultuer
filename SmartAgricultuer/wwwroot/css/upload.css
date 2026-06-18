@@ -1,3 +1,22 @@
+.api-warning {
+    background-color: #fdecea;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+    .api-warning.hidden {
+        display: none;
+    }
+
 /* ================= UPLOAD PAGE - OPTIMIZED ================= */
 
 .result-layout {

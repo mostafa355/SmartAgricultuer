@@ -1,5 +1,5 @@
-﻿
-
+﻿@using SmartAgriculture.ViewModels
+@model DiseaseResultViewModel
 @{
     Layout = "_UserPanelLayout";
 }
@@ -14,24 +14,24 @@
         <!-- HERO -->
         <section class="hero">
             <div class="hero-image">
-                <img src="@ViewBag.ImagePath" alt="Tomato leaf infected with early blight">
+                <img src="@Model.imgurl" alt="Tomato leaf infected with early blight">
             </div>
 
             <div class="hero-text">
-                <h1>@(ViewBag.IsInsect ? "The discovered insect" : "Plant and disease"): @ViewBag.Label</h1>
+                <h1>@(ViewBag.IsInsect ? "The discovered insect" : "Plant and disease"): @Model.DiseaseName</h1>
                 <p>
-                    Our AI analyzed your sample with @ViewBag.Confidence% confidence. This fungal infection requires prompt
+                    Our AI analyzed your sample with @Model.Confidence% confidence. This fungal infection requires prompt
                     treatment to prevent spread.
                 </p>
 
                 <div class="confidence-container">
                     <div class="confidence-info">
                         <span class="confidence-label">AI CONFIDENCE SCORE</span>
-                        <span class="confidence-value">@ViewBag.Confidence%</span>
+                        <span class="confidence-value">@Model.Confidence%</span>
                     </div>
 
                     <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: @ViewBag.Confidence%;"></div>
+                        <div class="progress-bar-fill" style="width: @Model.Confidence%;"></div>
                     </div>
 
                     <p class="confidence-note small">High reliability based on visual leaf patterns</p>
@@ -56,29 +56,21 @@
 
                         <div class="stats-side">
                             <label>COMMON NAME</label>
-                            <p class="bold">Tomato</p>
+                            <p class="bold">@Model.PlantName</p>
 
                             <label>SCIENTIFIC NAME</label>
-                            <p class="italic small">Solanum lycopersicum</p>
+                            <p class="italic small">@Model.ScientificName</p>
 
                             <label>GENERAL CARE</label>
-                            <ul class="care-list">
-                                <li>
-                                    <span class="material-symbols-outlined">water_drop</span> Regular watering at
-                                    base
-                                </li>
-                                <li>
-                                    <span class="material-symbols-outlined">wb_sunny</span> Full sun (6–8 hours)
-                                </li>
-                                <li><span class="material-symbols-outlined">eco</span> Nutrient-rich soil</li>
-                            </ul>
+                            <p class="small">
+                                @Model.GeneralCare
+                            </p>
                         </div>
 
                         <div class="description-side">
                             <label>DESCRIPTION</label>
                             <p class="small">
-                                A widely cultivated plant known for its edible fruits. Tomatoes are rich in
-                                nutrients and commonly used in many cuisines worldwide.
+                                @Model.PlantDescription
                             </p>
                         </div>
 
@@ -86,6 +78,8 @@
                 </div>
 
                 <!-- TREATMENT -->
+                @if (Model.TreatmentSteps != null && Model.TreatmentSteps.Count > 0)
+                {
                 <div class="protocol-section">
                     <div class="card-header">
                         <span class="material-symbols-outlined icon-green">medical_services</span>
@@ -93,29 +87,17 @@
                     </div>
 
                     <div class="protocol-grid">
-
-                        <div class="step-card">
-                            <div class="step-num">1</div>
-                            <h3>Remove infected leaves</h3>
-                            <p class="small">Carefully prune affected leaves using sterilized tools.</p>
-                        </div>
-
-                        <div class="step-card">
-                            <div class="step-num">2</div>
-                            <h3>Apply fungicide</h3>
-                            <p class="small">
-                                Use a copper-based fungicide following the recommended instructions.
-                            </p>
-                        </div>
-
-                        <div class="step-card">
-                            <div class="step-num">3</div>
-                            <h3>Improve soil health</h3>
-                            <p class="small">Ensure proper drainage, rotate crops, and avoid overhead watering.</p>
-                        </div>
-
+                        @foreach (var step in Model.TreatmentSteps)
+                        {
+                            <div class="step-card">
+                                <div class="step-num">@step.StepNumber</div>
+                                <h3>@step.StepTitle</h3>
+                                <p class="small">@step.StepDescription</p>
+                            </div>
+                        }
                     </div>
                 </div>
+                } 
 
                 <!-- SAFETY -->
                 <div class="card horizontal-safety">
@@ -125,16 +107,12 @@
                     </div>
 
                     <div class="safety-content">
-                        <p class="bold">Tomato</p>
+                        <p class="bold">@Model.PlantName</p>
 
                         <div class="scientific-row">
-                            <p class="italic small">Solanum lycopersicum</p>
-                            <span class="tag-harmful">HARMFUL</span>
+                            <p class="italic small">@Model.ScientificName</p>
                         </div>
 
-                        <p class="safety-desc small">
-                            Leaves and stems contain alkaloids that may be toxic if consumed.
-                        </p>
 
                         <div class="safety-tips-grid">
                             <div class="tip-box">
@@ -164,20 +142,20 @@
 
                     <div class="profile-content">
                         <label>DISEASE</label>
-                        <p class="bold">Early Blight</p>
+                        <p class="bold">@Model.DiseaseName</p>
 
                         <label>CAUSATIVE AGENT</label>
-                        <p class="italic small">Alternaria solani</p>
+                        <p class="italic small">@Model.Causes</p>
 
                         <label>KEY SYMPTOMS</label>
                         <p class="small">
-                            Circular brown or black spots with yellow halos on leaves.
+                            @Model.Symptoms
                         </p>
 
                         <div class="prevention-note">
                             <label>PREVENTION</label>
                             <p class="small">
-                                Avoid overhead watering and maintain good airflow between plants.
+                                @Model.Prevention
                             </p>
                         </div>
                     </div>
@@ -192,18 +170,46 @@
 
                     <div class="profile-content">
                         <label>CURRENT STATUS</label>
-                        <p class="bold">Infected</p>
+                        <p class="bold">@(Model.DetectionStatus != "NULL" ? Model.DetectionStatus : "Not Harmful")</p>
 
-                        <label>OBSERVATIONS</label>
-                        <p class="small">
-                            Visible lesions and discoloration detected on leaves.
-                        </p>
-
-                        <div class="maintenance-note">
+                        <div class="maintenance-note" style="border-left: 4px solid @if (Model.DetectionStatus == "Critical") { <text>#f44336</text> } else if (Model.DetectionStatus == "Moderate") { <text>#ff9800</text> } else if (Model.DetectionStatus == "Low") { <text>#ffc107</text> } else { <text>#166534</text> };">
                             <label>RECOMMENDATION</label>
-                            <p class="small">
-                                Follow treatment steps immediately to prevent disease spread.
-                            </p>
+                            @if (Model.DetectionStatus == "Critical")
+                            {
+                                <pre class="small">
+Follow treatment steps immediately to prevent disease spread.
+Remove and destroy severely infected plant parts immediately.
+Apply emergency treatment and consult a specialist urgently.
+Consider quarantining the plant to protect your entire garden.
+                                </pre>
+                            }
+                            else if (Model.DetectionStatus == "Moderate")
+                            {
+                            <pre class="small">
+Follow treatment steps immediately to prevent disease spread.
+Apply recommended fungicide or pesticide as directed.
+Improve air circulation around the plant immediately.
+Reduce watering frequency and avoid wetting the foliage.
+                            </pre>
+                            }
+                            else if (Model.DetectionStatus == "Low")
+                            {
+                            <pre class="small">
+Follow treatment steps immediately to prevent disease spread.
+Isolate the affected plant from others to avoid contamination.
+Remove any visibly infected leaves or stems carefully.
+Monitor daily for any progression of symptoms.
+                                </pre>
+                            }
+                            else
+                            {
+                            <pre class="small">
+Your plant is healthy! Keep up the good care routine.
+Continue regular watering and monitoring for any changes.
+Maintain proper sunlight exposure and fertilization schedule.
+Check weekly to ensure optimal growing conditions.
+                                </pre>
+                            }
                         </div>
                     </div>
                 </div>

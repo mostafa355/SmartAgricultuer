@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SmartAgricultuer.Models;
 using SmartAgricultuer.Services;
+using SmartAgriculture.ViewModels;
+using System.Security.Claims;
 
 namespace SmartAgricultuer.Controllers
 {
@@ -10,23 +14,21 @@ namespace SmartAgricultuer.Controllers
         private readonly IImageService _imageService;
         private readonly IDiagnosisService _diagnosisService;
         private readonly IHistoryService _historyService;
+        private readonly AppdbContext _context;
 
-        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService) : base(historyService)
+        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService, AppdbContext context)
+            : base(historyService)
         {
             _imageService = imageService;
             _diagnosisService = diagnosisService;
             _historyService = historyService;
-        }
-        // ...
-        public IActionResult Home()
-        {
-            return View();
+            _context = context;
         }
 
-        public IActionResult Upload()
-        {
-            return View();
-        }
+        public IActionResult Home() => View();
+
+        public IActionResult Upload() => View();
+
         [HttpPost]
         public async Task<IActionResult> Result(IFormFile fileInput, bool isInsect)
         {
@@ -34,34 +36,66 @@ namespace SmartAgricultuer.Controllers
 
             try
             {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                int analysisTypeId = isInsect ? 2 : 1;
                 string folder = isInsect ? "Insects" : "Plants";
-                string type = isInsect ? "insect" : "plant";
 
-                var diagnosisResult = await _diagnosisService.DiagnoseAsync(fileInput, type);
-
-                if (!diagnosisResult.Success)
-                {
-                    TempData["Error"] = diagnosisResult.Error;
-                    return RedirectToAction("Upload");
-                }
-
+                // 1. حفظ الصورة
                 string? imagePath = await _imageService.SaveImageAsync(fileInput, folder);
-
                 if (imagePath == null)
                 {
-                    TempData["Error"] = "فيه مشكلة في رفع الصورة";
+                    TempData["Error"] = "There's a problem uploading the image.";
                     return RedirectToAction("Upload");
                 }
 
-                // جيب الـ User ID
-                var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
-                int analysisTypeId = isInsect ? 2 : 1;
-
-                // احفظ في الداتابيز
+                // 2. حفظ الـ Upload في الداتابيز
                 int uploadId = await _historyService.SaveUploadAsync(userId, analysisTypeId, imagePath);
-                await _historyService.SaveAnalysisResultAsync(uploadId, diagnosisResult);
 
-                // Redirect للـ Result بالـ id
+                if (isInsect)
+                {
+                    // 3a. تشخيص حشرة
+                    var insectResult = await _diagnosisService.DiagnoseInsectAsync(fileInput);
+
+                    Console.WriteLine("==========================================");
+                    Console.WriteLine($"✅ Success: {insectResult.Success}");
+                    Console.WriteLine($"🐛 Detected: {insectResult.Detected}");
+                    Console.WriteLine($"📋 Type: {insectResult.Type}");
+                    Console.WriteLine($"⚠️ IsHarmful: {insectResult.IsHarmful}");
+                    Console.WriteLine($"📊 Confidence: {insectResult.ConfidencePct}");
+                    Console.WriteLine("==========================================");
+
+                    if (!insectResult.Success)
+                    {
+                        TempData["Error"] = insectResult.Error;
+                        return RedirectToAction("Upload");
+                    }
+
+                    await _historyService.SaveInsectResultAsync(uploadId, insectResult);
+                }
+                else
+                {
+                    // 3b. تشخيص نبات
+                    var plantResult = await _diagnosisService.DiagnosePlantAsync(fileInput);
+
+                    Console.WriteLine("==========================================");
+                    Console.WriteLine($"✅ Success: {plantResult.Success}");
+                    Console.WriteLine($"🌿 Plant: {plantResult.Plant}");
+                    Console.WriteLine($"🦠 Disease: {plantResult.Disease}");
+                    Console.WriteLine($"📋 Status: {plantResult.Status}");
+                    Console.WriteLine($"⚠️ IsHarmful: {plantResult.IsHarmful}");
+                    Console.WriteLine($"📊 Confidence: {plantResult.ConfidencePct}");
+                    Console.WriteLine("==========================================");
+
+                    if (!plantResult.Success)
+                    {
+                        TempData["Error"] = plantResult.Error;
+                        return RedirectToAction("Upload");
+                    }
+
+                    await _historyService.SavePlantResultAsync(uploadId, plantResult);
+                }
+
+                // 4. Redirect للـ Result
                 return RedirectToAction("Result", new { id = uploadId });
             }
             catch (Exception ex)
@@ -70,12 +104,39 @@ namespace SmartAgricultuer.Controllers
                 return RedirectToAction("Upload");
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> Result(int id)
         {
-            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
-
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await _historyService.GetHistoryByIdAsync(id, userId);
+
+
+            var disease = await _context.PlantDiseases
+                .Include(d => d.Plant)
+                .Include(d => d.TreatmentSteps)
+                .FirstOrDefaultAsync(d => d.Name == result.DiseaseName);
+            var viewModel = new DiseaseResultViewModel();
+            viewModel.imgurl = result.ImageUrl;
+            viewModel.DiseaseName = disease?.Name;
+            viewModel.DiseaseDescription = disease?.Description;
+            viewModel.Symptoms = disease?.Symptoms;
+            viewModel.Causes = disease?.Causes;
+            viewModel.Prevention = disease?.Prevention;
+            viewModel.PlantType = disease?.PlantType;
+            viewModel.DetectionStatus = disease?.DetectionStatus;
+            viewModel.Confidence = (float?)result.Confidence;
+
+
+            viewModel.PlantName = disease?.Plant?.Name;
+            viewModel.ScientificName = disease?.Plant?.ScientificName;
+            viewModel.PlantDescription = disease?.Plant?.Description;
+            viewModel.GeneralCare = disease?.Plant?.GeneralCare;
+
+            viewModel.TreatmentSteps = disease?.TreatmentSteps?
+                .OrderBy(t => t.StepNumber)
+                .ToList() ?? new List<TreatmentStep>();
+
 
             if (result == null) return RedirectToAction("Upload");
 
@@ -84,13 +145,29 @@ namespace SmartAgricultuer.Controllers
             ViewBag.IsHarmful = result.IsHarmful;
             ViewBag.Confidence = result.Confidence;
             ViewBag.IsInsect = result.AnalysisType == "Insect";
-            ViewBag.ActiveId = id; // عشان السايد بار يعرف هو واقف على إيه
+            ViewBag.ActiveId = id;
 
-            return View();
+            return View(viewModel);
         }
-        public IActionResult Archive()
+
+        [HttpGet]
+        public async Task<IActionResult> CheckApiStatus()
         {
-            return View();
+            try
+            {
+                var httpClient = HttpContext.RequestServices
+                    .GetRequiredService<IHttpClientFactory>()
+                    .CreateClient();
+
+                var response = await httpClient.GetAsync("http://127.0.0.1:5000/api/health");
+                return Json(new { online = response.IsSuccessStatusCode });
+            }
+            catch
+            {
+                return Json(new { online = false });
+            }
         }
+
+        public IActionResult Archive() => View();
     }
 }
