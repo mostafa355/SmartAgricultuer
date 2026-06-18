@@ -168,6 +168,20 @@ namespace SmartAgricultuer.Controllers
             }
         }
 
-        public IActionResult Archive() => View();
+        // متنسيش تعملي inject للـ ApplicationDbContext بتاعك
+        public IActionResult Archive()
+        {
+            // هنا بنسحب كل النباتات من الداتابيز
+            var plantsList = _context.Plants.ToList();
+
+            // وهنا بنسحب كل الحشرات
+            var insectsList = _context.Insects.ToList();
+
+            // بنحطهم في ViewBag عشان نقدر نقراهم في صفحة الـ HTML
+            ViewBag.Plants = plantsList;
+            ViewBag.Insects = insectsList;
+
+            return View();
+        }
     }
 }
