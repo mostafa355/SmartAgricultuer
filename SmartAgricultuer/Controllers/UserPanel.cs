@@ -121,43 +121,70 @@ namespace SmartAgricultuer.Controllers
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await _historyService.GetHistoryByIdAsync(id, userId);
 
-
-            var disease = await _context.PlantDiseases
-                .Include(d => d.Plant)
-                .Include(d => d.TreatmentSteps)
-                .FirstOrDefaultAsync(d => d.Name == result.DiseaseName);
-            var viewModel = new DiseaseResultViewModel();
-            viewModel.imgurl = result.ImageUrl;
-            viewModel.DiseaseName = disease?.Name;
-            viewModel.DiseaseDescription = disease?.Description;
-            viewModel.Symptoms = disease?.Symptoms;
-            viewModel.Causes = disease?.Causes;
-            viewModel.Prevention = disease?.Prevention;
-            viewModel.PlantType = disease?.PlantType;
-            viewModel.DetectionStatus = disease?.DetectionStatus;
-            viewModel.Confidence = (float?)result.Confidence;
-
-
-            viewModel.PlantName = disease?.Plant?.Name;
-            viewModel.ScientificName = disease?.Plant?.ScientificName;
-            viewModel.PlantDescription = disease?.Plant?.Description;
-            viewModel.GeneralCare = disease?.Plant?.GeneralCare;
-
-            viewModel.TreatmentSteps = disease?.TreatmentSteps?
-                .OrderBy(t => t.StepNumber)
-                .ToList() ?? new List<TreatmentStep>();
-
-
             if (result == null) return RedirectToAction("Upload");
 
-            ViewBag.ImagePath = result.ImageUrl;
-            ViewBag.Label = result.Label;
-            ViewBag.IsHarmful = result.IsHarmful;
-            ViewBag.Confidence = result.Confidence;
-            ViewBag.IsInsect = result.AnalysisType == "Insect";
+            bool isInsect = result.AnalysisType == "Insect";
             ViewBag.ActiveId = id;
 
-            return View(viewModel);
+            if (isInsect)
+            {
+                // جيب بيانات الحشرة من الداتابيز
+                var insect = await _context.Insects
+                    .Include(i => i.TreatmentSteps)
+                    .Include(i => i.InsectPlants)
+                        .ThenInclude(ip => ip.Plant)
+                    .FirstOrDefaultAsync(i => i.Name == result.InsectName);
+
+                var viewModel = new InsectResultViewModel
+                {
+                    imgurl = result.ImageUrl,
+                    Confidence = (float?)result.Confidence,
+                    IsHarmful = result.IsHarmful,
+                    InsectName = insect?.Name,
+                    ScientificName = insect?.ScientificName,
+                    Description = insect?.Description,
+                    Status = insect?.Status,
+                    Prevention = insect?.Prevention,
+                    ImageUrl = insect?.ImageUrl,
+                    AffectedPlants = insect?.InsectPlants?.ToList(),
+                    TreatmentSteps = insect?.TreatmentSteps?
+                        .OrderBy(t => t.StepNumber)
+                        .ToList() ?? new List<TreatmentStep>()
+                };
+
+                return View( viewModel);
+            }
+            else
+            {
+                // جيب بيانات النبات والمرض من الداتابيز
+                var disease = await _context.PlantDiseases
+                    .Include(d => d.Plant)
+                    .Include(d => d.TreatmentSteps)
+                    .FirstOrDefaultAsync(d => d.Name == result.DiseaseName);
+
+                var viewModel = new DiseaseResultViewModel
+                {
+                    imgurl = result.ImageUrl,
+                    Confidence = (float?)result.Confidence,
+                    IsHarmful = result.IsHarmful ,
+                    DiseaseName = disease?.Name,
+                    DiseaseDescription = disease?.Description,
+                    Symptoms = disease?.Symptoms,
+                    Causes = disease?.Causes,
+                    Prevention = disease?.Prevention,
+                    PlantType = disease?.PlantType,
+                    DetectionStatus = disease?.DetectionStatus,
+                    PlantName = disease?.Plant?.Name,
+                    ScientificName = disease?.Plant?.ScientificName,
+                    PlantDescription = disease?.Plant?.Description,
+                    GeneralCare = disease?.Plant?.GeneralCare,
+                    TreatmentSteps = disease?.TreatmentSteps?
+                        .OrderBy(t => t.StepNumber)
+                        .ToList() ?? new List<TreatmentStep>()
+                };
+
+                return View(viewModel);
+            }
         }
 
         [HttpGet]
