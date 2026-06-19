@@ -1,0 +1,213 @@
+﻿@using SmartAgriculture.ViewModels
+@model InsectResultViewModel
+@{
+    Layout = "_UserPanelLayout";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/result.css" asp-append-version="true">
+}
+
+<div class="page-content-wrapper">
+    <main class="container">
+
+        <!-- HERO -->
+        <section class="hero">
+        <div class="hero-image">
+            <img src="@Model.imgurl" alt="Tomato leaf infected with early blight">
+        </div>
+        <div class="hero-text">
+            <h1>The discovered insect: @Model.InsectName</h1>
+            <p>
+                Our AI analyzed your sample with @Model.Confidence% confidence.
+                @(Model.IsHarmful ? "This pest infestation requires prompt treatment to protect your crop." : "This insect is beneficial or non-harmful to your ecosystem.")
+            </p>
+
+            <div class="confidence-container">
+                <div class="confidence-info">
+                    <span class="confidence-label">AI CONFIDENCE SCORE</span>
+                    <span class="confidence-value">@Model.Confidence%</span>
+                </div>
+
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: @Model.Confidence%;"></div>
+                </div>
+
+                <p class="confidence-note small">High reliability based on visual pattern recognition</p>
+            </div>
+        </div>
+        </section>
+
+        <!-- MAIN GRID -->
+        <div class="main-grid">
+
+            <!-- LEFT -->
+            <div class="left-column">
+
+                <!-- INSECT INFO -->
+                <div class="card plant-info">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-bug" >bug_report</span>
+                        <h2>Insect Information</h2>
+                    </div>
+
+                    <div class="plant-details">
+
+                        <div class="stats-side">
+                            <label>COMMON NAME</label>
+                            <p class="bold">@Model.InsectName</p>
+
+                            <label>SCIENTIFIC NAME</label>
+                            <p class="italic small">@Model.ScientificName</p>
+                        </div>
+
+                        <div class="description-side">
+                            <label>DESCRIPTION</label>
+                            <p class="small">
+                                @Model.Description
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TREATMENT -->
+                @if (Model.TreatmentSteps != null && Model.TreatmentSteps.Count > 0)
+                {
+                    <div class="protocol-section">
+                        <div class="card-header">
+                            <span class="material-symbols-outlined icon-green">medical_services</span>
+                            <h2>Treatment Protocol</h2>
+                        </div>
+
+                        <div class="protocol-grid">
+                            @foreach (var step in Model.TreatmentSteps)
+                            {
+                                <div class="step-card">
+                                    <div class="step-num">@step.StepNumber</div>
+                                    <h3>@step.StepTitle</h3>
+                                    <p class="small">@step.StepDescription</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- SAFETY -->
+                <div class="card horizontal-safety">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined">security</span>
+                        <h2>Safety Profile</h2>
+                    </div>
+
+                    <div class="safety-content">
+                        <p class="bold">@Model.InsectName</p>
+
+                        <div class="scientific-row">
+                            <p class="italic small">@Model.ScientificName</p>
+                        </div>
+
+                        <div class="safety-tips-grid">
+                            @if (Model.IsHarmful)
+                            {
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-red">coronavirus</span>
+                                    Wear mask and gloves when spraying
+                                </div>
+
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-green">clean_hands</span>
+                                    Wash hands after handling chemicals
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-green">nature_people</span>
+                                    Do not spray chemical pesticides
+                                </div>
+
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-green">eco</span>
+                                    Harmless & beneficial to crops
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SIDEBAR -->
+            <aside class="result-info-sidebar">
+
+                <!-- INSECT PROFILE -->
+                <div class="card disease-profile" @(Model.IsHarmful ? "style='background-color:#f0fdf4;'" : "")>
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-red">bug_report</span>
+                        <h2>Insect Profile</h2>
+                    </div>
+
+                    <div class="profile-content">
+                        <label>INSECT</label>
+                        <p class="bold">@Model.InsectName</p>
+
+                        <label>TARGET PLANTS & DAMAGE</label>
+                        <ul class="small" style="padding-left: 20px; margin-top: 5px; margin-bottom: 15px; list-style-type: disc;">
+                            @if (Model.AffectedPlants != null && Model.AffectedPlants.Any())
+                            {
+                                @foreach (var item in Model.AffectedPlants)
+                                {
+                                    <li style="margin-bottom: 8px;">
+                                        <strong style="color: #1f2937;">@item.Plant?.Name:</strong>
+                                        <span style="color: #4b5563;">@item.DamageType</span>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li>No target plants or specific damage recorded.</li>
+                            }
+                        </ul>
+
+                        <div class="prevention-note">
+                            <label>PREVENTION</label>
+                            <p class="small">
+                                @Model.Prevention
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATUS -->
+            <div class="card healthy-profile">
+                    <div class="card-header">
+                        <span class="material-symbols-outlined icon-red">warning</span>
+                        <h2>Infestation Status</h2>
+                    </div>
+
+                    <div class="profile-content">
+                        <label>CURRENT STATUS</label>
+                        <p class="bold">@(Model.IsHarmful ? "Harmful" : Model.Status)</p>
+
+                        <div class="maintenance-note" style="border-left: 4px solid @(Model.IsHarmful ? "#f44336" : "#166534")">
+                        <label>RECOMMENDATION</label>
+                            @if (Model.IsHarmful)
+                            {
+                                <p class="info-value-text" style="margin-top: 5px; color: #1f2937; font-weight: 500;">
+                                    Follow pest control and treatment steps immediately to isolate the infestation and prevent crop damage.
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="info-value-text" style="margin-top: 5px; color: #1f2937; font-weight: 500;">
+                                    No chemical intervention needed. Preserve the insect as it may act as a natural predator against harmful pests.
+                                </p>
+                            }
+                        </div>
+                    </div>
+            </div>
+        </aside>
+
+    </div>
+</main>
+</div>

@@ -115,6 +115,7 @@ namespace SmartAgricultuer.Controllers
 
             bool isInsect = result.AnalysisType == "Insect";
             ViewBag.ActiveId = id;
+            ViewBag.IsInsect = isInsect;
 
             if (isInsect)
             {
@@ -142,7 +143,7 @@ namespace SmartAgricultuer.Controllers
                         .ToList() ?? new List<TreatmentStep>()
                 };
 
-                return View( viewModel);
+                return View("InsectResult", viewModel);
             }
             else
             {
@@ -173,9 +174,10 @@ namespace SmartAgricultuer.Controllers
                         .ToList() ?? new List<TreatmentStep>()
                 };
 
-                return View(viewModel);
+                return View("DiseaseResult", viewModel);
             }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> CheckApiStatus()
@@ -195,16 +197,45 @@ namespace SmartAgricultuer.Controllers
             }
         }
 
-        // متنسيش تعملي inject للـ ApplicationDbContext بتاعك
+        [HttpPost]
+        public ActionResult DeleteScan(int id)
+        {
+            try
+            {
+                // 1. ابحث عن نتيجة التحليل المرتبطة بالـ UploadId واحذفها الأول (لتجنب أيرور الـ Foreign Key)
+                var relatedResult = _context.AnalysisResults.FirstOrDefault(r => r.UploadId == id); // تأكد من اسم عمود الـ Foreign Key عندك (مثلاً UploadId)
+                if (relatedResult != null)
+                {
+                    _context.AnalysisResults.Remove(relatedResult);
+                }
+
+                // 2. ابحث عن الفحص نفسه في جدول الـ Uploads باستخدام الـ id
+                var upload = _context.Uploads.FirstOrDefault(u => u.Id == id); // غير "Uploads" لاسم الـ DbSet الحقيقي عندك في الـ Context
+
+                if (upload == null)
+                {
+                    return Json(new { success = false, message = "Upload not found in database." });
+                }
+
+                // 3. حذف الـ Upload وحفظ التغييرات
+                _context.Uploads.Remove(upload);
+                _context.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
         public IActionResult Archive()
         {
-            // هنا بنسحب كل النباتات من الداتابيز
             var plantsList = _context.Plants.ToList();
 
-            // وهنا بنسحب كل الحشرات
             var insectsList = _context.Insects.ToList();
 
-            // بنحطهم في ViewBag عشان نقدر نقراهم في صفحة الـ HTML
             ViewBag.Plants = plantsList;
             ViewBag.Insects = insectsList;
 

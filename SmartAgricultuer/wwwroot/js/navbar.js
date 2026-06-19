@@ -97,5 +97,63 @@
         }
     };
 
+    window.deleteScan = function (scanId) {
 
+        // 1. أليرت تأكيد الحذف الاحترافي
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this scan history!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626", // لون أحمر لزرار الحذف
+            cancelButtonColor: "#4b5563",  // لون رمادي للإلغاء
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel"
+        }).then((result) => {
+
+            // لو المستخدم ضغط على زرار التأكيد (Yes)
+            if (result.isConfirmed) {
+
+                // 2. تنفيذ عملية الحذف عبر الـ Fetch
+                fetch('/UserPanel/DeleteScan?id=' + scanId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // أليرت نجاح الحذف قبل الريفريش
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "The scan has been deleted successfully.",
+                                icon: "success",
+                                timer: 1500, // يختفي لوحده بعد ثانية ونصف
+                                showConfirmButton: false
+                            }).then(() => {
+                                // عمل ريفريش بعد ما الأليرت يقفل
+                                location.reload();
+                            });
+                        } else {
+                            // أليرت خطأ قادم من السيرفر
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Error from server: " + data.message,
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // أليرت خطأ في الاتصال
+                        Swal.fire({
+                            icon: "error",
+                            title: "Connection Error",
+                            text: "Could not connect to the server. Check your routing.",
+                        });
+                    });
+            }
+        });
+    }
 })();

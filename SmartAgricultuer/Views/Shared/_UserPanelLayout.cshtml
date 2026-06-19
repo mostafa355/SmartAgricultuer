@@ -6,6 +6,7 @@
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
@@ -65,21 +66,39 @@
                 </div>
                 <div class="history-submenu" id="historySubmenu">
                     @if (ViewBag.UserScans != null)
-                    {
-                        foreach (var scan in ViewBag.UserScans)
-                        {
-                            var currentId = ViewContext.RouteData.Values["id"]?.ToString();
-                            var isActive = (currentId == scan.Id.ToString()) ? "active-scan" : "";
+{
+    foreach (var scan in ViewBag.UserScans)
+    {
+        var currentId = ViewContext.RouteData.Values["id"]?.ToString();
+        var isActive = (currentId == scan.Id.ToString()) ? "active-scan" : "";
 
-                            <a asp-controller="UserPanel"
-                                   asp-action="Result"
-                                   asp-route-id="@scan.Id"
-                                   class="@isActive">
-                                <i class="fas fa-file-medical-alt" style="font-size: 12px; margin-right: 8px;"></i>
-                                @scan.Label - @SmartAgricultuer.Controllers.BaseController.GetTimeAgo(scan.CreatedAt)
-                            </a>
-                        }
-                    }
+        var isInsect = scan.AnalysisType == "Insect"; 
+        var iconClass = isInsect ? "fas fa-bug" : "fas fa-seedling"; 
+        var iconColor = isInsect ? "#eab308" : "#166534"; 
+
+        <!-- إضافة كلاس scan-history-item للتحكم بالـ Hover من الـ CSS -->
+        <a asp-controller="UserPanel"
+           asp-action="Result"
+           asp-route-id="@scan.Id"
+           class="@isActive scan-history-item" 
+           style="position: relative; display: flex; align-items: center; justify-content: space-between; padding-right: 35px;">
+            
+            <div style="display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                <!-- الأيقونة الديناميكية للنبات أو الحشرة -->
+                <i class="@iconClass" style="font-size: 12px; margin-right: 8px; color: @iconColor;"></i>
+                <span>@scan.Label - @SmartAgricultuer.Controllers.BaseController.GetTimeAgo(scan.CreatedAt ?? DateTime.Now)</span>
+            </div>
+
+            <!-- زر الحذف الذكي (يظهر عند الـ Hover فقط) -->
+            <button onclick="event.preventDefault(); deleteScan('@scan.Id');" 
+                    class="delete-scan-btn" 
+                    title="Delete this scan"
+                    style="position: absolute; right: 8px; background: none; border: none; color: #dc2626; cursor: pointer; padding: 4px; display: none; align-items: center; justify-content: center; z-index: 10;">
+                <i class="fas fa-trash-alt" style="font-size: 11px;"></i>
+            </button>
+        </a>
+    }
+}
                 </div>
             </nav>
 
@@ -125,6 +144,7 @@
             </div>
             <p class="copyright">© 2024 PlantAI. All rights reserved.</p>
         </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/navbar.js" asp-append-version="true"></script>
     <script src="~/js/home.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

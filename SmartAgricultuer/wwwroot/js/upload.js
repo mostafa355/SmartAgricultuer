@@ -76,31 +76,42 @@ document.querySelector('form').addEventListener('submit', function (e) {
     }
 });
 
-// تحقق من الـ API
 async function checkApiStatus() {
+    const apiMsg = document.getElementById('apiWarningMsg');
+
     try {
         const response = await fetch('/UserPanel/CheckApiStatus');
         const data = await response.json();
 
         if (data.online) {
-            apiOnline = true; // ← شغال
+            apiOnline = true;
+            if (apiMsg) apiMsg.classList.add('hidden');
         } else {
             showApiOffline();
         }
-    } catch {
+    } catch (error) {
+        console.error("API Status Check Failed:", error);
         showApiOffline();
     }
 }
 
 function showApiOffline() {
     apiOnline = false;
+    typeSelected = false; 
+
     const apiMsg = document.getElementById('apiWarningMsg');
-    apiMsg.classList.remove('hidden');
+    if (apiMsg) {
+        apiMsg.classList.remove('hidden');
+        apiMsg.textContent = "⚠️ AI Server is temporarily offline. Please try again later.";
+    }
 
     scanBtn.disabled = true;
     browseBtn.disabled = true;
     scanBtn.style.opacity = '0.5';
     browseBtn.style.opacity = '0.5';
+
+    document.getElementById('plantBtn').classList.remove('active');
+    document.getElementById('insectBtn').classList.remove('active');
 }
 
 checkApiStatus();

@@ -6,22 +6,28 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/result.css" asp-append-version="true">
 }
-
-
 <div class="page-content-wrapper">
     <main class="container">
 
         <!-- HERO -->
         <section class="hero">
             <div class="hero-image">
-                <img src="@Model.imgurl" alt="Tomato leaf infected with early blight">
+                <!-- الـ alt هنا بقى ديناميكي حسب اسم الحالة -->
+                <img src="@Model.imgurl" alt="Sample image of @Model.DiseaseName">
             </div>
 
             <div class="hero-text">
-                <h1>@(ViewBag.IsInsect ? "The discovered insect" : "Plant and disease"): @Model.DiseaseName</h1>
+                <h1>Plant and disease: @Model.DiseaseName</h1>
                 <p>
-                    Our AI analyzed your sample with @Model.Confidence% confidence. This fungal infection requires prompt
-                    treatment to prevent spread.
+                    Our AI analyzed your sample with @Model.Confidence% confidence.
+                    @if (Model.DetectionStatus == "Critical" || Model.DetectionStatus == "Moderate" || Model.DetectionStatus == "Low")
+                    {
+                        <text>This plant infection requires prompt treatment and careful management to prevent further spread.</text>
+                    }
+                    else
+                    {
+                        <text>Great news! No pathogens or diseases were detected in your plant sample.</text>
+                    }
                 </p>
 
                 <div class="confidence-container">
@@ -100,6 +106,7 @@
                 } 
 
                 <!-- SAFETY -->
+                <!-- SAFETY PROFILE -->
                 <div class="card horizontal-safety">
                     <div class="card-header">
                         <span class="material-symbols-outlined">security</span>
@@ -113,17 +120,33 @@
                             <p class="italic small">@Model.ScientificName</p>
                         </div>
 
-
                         <div class="safety-tips-grid">
-                            <div class="tip-box">
-                                <span class="material-symbols-outlined icon-red">pets</span>
-                                Keep away from pets
-                            </div>
+                            @if (Model.DetectionStatus == "Critical" || Model.DetectionStatus == "Moderate" || Model.DetectionStatus == "Low")
+                            {
+                                <!-- نصائح حماية في حالة الرش والتعامل مع العدوى -->
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-red">coronavirus</span>
+                                    Wear gloves and masks when applying treatments
+                                </div>
 
-                            <div class="tip-box">
-                                <span class="material-symbols-outlined icon-green">clean_hands</span>
-                                Wash hands after handling
-                            </div>
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-green">clean_hands</span>
+                                    Wash tools and hands to avoid cross-contamination
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- نصائح عادية للنبات السليم -->
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-green">potted_plant</span>
+                                    Safe to handle without chemical protection
+                                </div>
+
+                                <div class="tip-box">
+                                    <span class="material-symbols-outlined icon-green">clean_hands</span>
+                                    Wash hands after routine garden maintenance
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -131,48 +154,55 @@
             </div>
 
             <!-- SIDEBAR -->
+            <!-- SIDEBAR -->
             <aside class="result-info-sidebar">
 
-                <!-- DISEASE -->
-                <div class="card disease-profile">
-                    <div class="card-header">
-                        <span class="material-symbols-outlined icon-red">coronavirus</span>
-                        <h2>Disease Profile</h2>
-                    </div>
+                <!-- DISEASE PROFILE (يظهر فقط إذا كان هناك إصابة أو مرض حقيقي) -->
+                @if (Model.DetectionStatus == "Critical" || Model.DetectionStatus == "Moderate" || Model.DetectionStatus == "Low")
+                {
+                    <div class="card disease-profile">
+                        <div class="card-header">
+                            <span class="material-symbols-outlined icon-red">coronavirus</span>
+                            <h2>Disease Profile</h2>
+                        </div>
 
-                    <div class="profile-content">
-                        <label>DISEASE</label>
-                        <p class="bold">@Model.DiseaseName</p>
+                        <div class="profile-content">
+                            <label>DISEASE</label>
+                            <p class="bold">@Model.DiseaseName</p>
 
-                        <label>CAUSATIVE AGENT</label>
-                        <p class="italic small">@Model.Causes</p>
+                            <label>CAUSATIVE AGENT</label>
+                            <p class="italic small">@Model.Causes</p>
 
-                        <label>KEY SYMPTOMS</label>
-                        <p class="small">
-                            @Model.Symptoms
-                        </p>
-
-                        <div class="prevention-note">
-                            <label>PREVENTION</label>
+                            <label>KEY SYMPTOMS</label>
                             <p class="small">
-                                @Model.Prevention
+                                @Model.Symptoms
                             </p>
+
+                            <div class="prevention-note">
+                                <label>PREVENTION</label>
+                                <p class="small">
+                                    @Model.Prevention
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
 
                 <!-- STATUS -->
                 <div class="card healthy-profile">
                     <div class="card-header">
-                        <span class="material-symbols-outlined icon-red">warning</span>
+                        <span class="material-symbols-outlined icon-red">@((Model.DetectionStatus == "Critical" || Model.DetectionStatus == "Moderate" || Model.DetectionStatus == "Low") ? "warning" : "check_circle")</span>
                         <h2>Plant Health Status</h2>
                     </div>
 
                     <div class="profile-content">
                         <label>CURRENT STATUS</label>
-                        <p class="bold">@(Model.DetectionStatus != "NULL" ? Model.DetectionStatus : "Not Harmful")</p>
+                        <!-- تلوين الكلمة بناءً على الخطورة لإضافة لمسة جمالية -->
+                        <p class="bold" style="color: @(Model.DetectionStatus == "Critical" ? "#b91c1c" : Model.DetectionStatus == "Moderate" ? "#d97706" : Model.DetectionStatus == "Low" ? "#b45309" : "#166534")">
+                            @(Model.DetectionStatus != "NULL" ? Model.DetectionStatus : "Healthy")
+                        </p>
 
-                        <div class="maintenance-note" style="border-left: 4px solid @if (Model.DetectionStatus == "Critical") { <text>#f44336</text> } else if (Model.DetectionStatus == "Moderate") { <text>#ff9800</text> } else if (Model.DetectionStatus == "Low") { <text>#ffc107</text> } else { <text>#166534</text> };">
+                        <div class="maintenance-note" style="border-left: 4px solid @(Model.DetectionStatus == "Critical" ? "#f44336" : Model.DetectionStatus == "Moderate" ? "#ff9800" : Model.DetectionStatus == "Low" ? "#ffc107" : "#166534");">
                             <label>RECOMMENDATION</label>
                             @if (Model.DetectionStatus == "Critical")
                             {
@@ -181,34 +211,34 @@ Follow treatment steps immediately to prevent disease spread.
 Remove and destroy severely infected plant parts immediately.
 Apply emergency treatment and consult a specialist urgently.
 Consider quarantining the plant to protect your entire garden.
-                                </pre>
+                    </pre>
                             }
                             else if (Model.DetectionStatus == "Moderate")
                             {
-                            <pre class="small">
+                                <pre class="small">
 Follow treatment steps immediately to prevent disease spread.
 Apply recommended fungicide or pesticide as directed.
 Improve air circulation around the plant immediately.
 Reduce watering frequency and avoid wetting the foliage.
-                            </pre>
+                    </pre>
                             }
                             else if (Model.DetectionStatus == "Low")
                             {
-                            <pre class="small">
+                                <pre class="small">
 Follow treatment steps immediately to prevent disease spread.
 Isolate the affected plant from others to avoid contamination.
 Remove any visibly infected leaves or stems carefully.
 Monitor daily for any progression of symptoms.
-                                </pre>
+                    </pre>
                             }
                             else
                             {
-                            <pre class="small">
+                                <pre class="small">
 Your plant is healthy! Keep up the good care routine.
 Continue regular watering and monitoring for any changes.
 Maintain proper sunlight exposure and fertilization schedule.
 Check weekly to ensure optimal growing conditions.
-                                </pre>
+                    </pre>
                             }
                         </div>
                     </div>
@@ -219,46 +249,3 @@ Check weekly to ensure optimal growing conditions.
         </div>
     </main>
 </div>
-@* @{
-    Layout = "_UserPanelLayout";
-}
-
-<div class="container mt-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">نتائج تحليل PlantDoc AI</h2>
-        </div>
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <img src="@ViewBag.ImagePath" alt="Uploaded Image"
-                     class="img-fluid rounded border" style="max-height: 300px;" />
-            </div>
-
-            <ul class="list-group list-group-flush text-right" style="direction: rtl;">
-                
-                <!-- اسم النبات أو الحشرة _ المرض -->
-                <li class="list-group-item">
-                    <strong>@(ViewBag.IsInsect ? "الحشرة المكتشفة" : "النبات والمرض"):</strong>
-                    @ViewBag.Label
-                </li>
-
-                <!-- مريض/ضار ولا لا -->
-                <li class="list-group-item">
-                    <strong>@(ViewBag.IsInsect ? "هل ضارة؟" : "هل مريض؟"):</strong>
-                    <span class="badge @(ViewBag.IsHarmful ? "bg-danger" : "bg-success")">
-                        @(ViewBag.IsHarmful ? "نعم ⚠️" : "لا ✅")
-                    </span>
-                </li>
-
-                <!-- نسبة الثقة -->
-                <li class="list-group-item">
-                    <strong>نسبة الثقة:</strong> @ViewBag.Confidence%
-                </li>
-
-            </ul>
-        </div>
-        <div class="card-footer text-muted text-center">
-            تم التحليل بواسطة نظام الذكاء الاصطناعي
-        </div>
-    </div>
-</div> *@
