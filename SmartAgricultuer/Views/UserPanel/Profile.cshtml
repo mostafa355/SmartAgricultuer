@@ -1,8 +1,4 @@
 ﻿@model SmartAgricultuer.ViewModels.ProfileViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-    
-*@
 @{
     Layout = "_UserPanelLayout";
 }
@@ -10,55 +6,78 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true">
 }
+@section Scripts {
+    <script src="~/js/profile.js" asp-append-version="true"></script>
+}
 
-
-    <div class="card">
-
-        <div class="profile-top">
+<div class="card">
+    <div class="profile-top">
         <label for="fileInput" class="profile-img-container">
-            <img src="https://i.pravatar.cc/160" class="profile-img" id="profileImage">
+            @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+            {
+                <img src="/Uploads/Profiles/@Model.ProfilePicture" class="profile-img" id="profileImage">
+            }
+            else
+            {
+                <div class="profile-avatar" id="profileImagePlaceholder">
+                    <span class="material-symbols-outlined">account_circle</span>
+                </div>
+                <img src="" class="profile-img" id="profileImage" style="display: none;">
+            }
             <div class="overlay">Edit</div>
         </label>
-
         <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
 
-            <div>
+        <div>
             <h2>@Model.FullName</h2>
             <p>@Model.Email</p>
-            </div>
         </div>
+    </div>
 
-        <div class="menu">
-       
+    <div class="menu">
+        <a href="javascript:void(0)" onclick="openEditModal('name', '@Model.FullName')">
+            <span class="material-symbols-outlined">edit</span>
+            Edit Name
+        </a>
 
-            <button>
-                <span class="material-symbols-outlined">edit</span>
-                Edit Name
-            </button>
+        <a href="javascript:void(0)" onclick="openEditModal('email', '@Model.Email')">
+            <span class="material-symbols-outlined">email</span>
+            Edit Email
+        </a>
 
-            <button>
-            <a asp-controller="UserPanel" asp-action="newpassword" class="change-password-link">
-                <span class="material-symbols-outlined">lock</span>
-                Change Password
-            </a>
-            </button>
+        <a asp-action="newpassword" asp-controller="UserPanel" class="change-password-link">
+            <span class="material-symbols-outlined">lock</span>
+            Change Password
+        </a>
 
-            <button class="logout">
+        <form asp-action="Logout" asp-controller="Account" method="post" style="width: 100%;">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="logout" style="width: 100%; border: none; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-size: 18px; cursor: pointer; font-weight: 500;">
                 <span class="material-symbols-outlined">logout</span>
                 Logout
             </button>
-
-        </div>
-
+        </form>
     </div>
+</div>
 
-<script>
-    function previewImage(event) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const output = document.getElementById('profileImage');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-</script>
+<div id="editModal" class="custom-modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Edit Profile</h3>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <form id="editForm">
+            <input type="hidden" id="editType" name="EditType" />
+
+            <div class="input-field">
+                <label id="inputLabel">Value</label>
+                <input type="text" id="editValue" required />
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>

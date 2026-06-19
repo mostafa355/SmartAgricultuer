@@ -8,5 +8,6 @@ namespace SmartAgricultuer.Models // اتأكد إن الـ Namespace نفس ا�
         public string Name { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string? ProfilePicture { get; set; }
     }
 }

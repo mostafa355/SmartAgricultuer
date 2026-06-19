@@ -6,6 +6,7 @@ using SmartAgricultuer.Models;
 using SmartAgricultuer.Services;
 using SmartAgriculture.ViewModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
 
 
 namespace SmartAgricultuer.Controllers
@@ -18,6 +19,7 @@ namespace SmartAgricultuer.Controllers
         private readonly IHistoryService _historyService;
         private readonly AppdbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         // دمج كل الخدمات في Constructor واحد فقط
         public UserPanel(
@@ -25,7 +27,8 @@ namespace SmartAgricultuer.Controllers
             IDiagnosisService diagnosisService,
             IHistoryService historyService,
             AppdbContext context,
-            UserManager<ApplicationUser> userManager) // أضفنا الـ userManager هنا
+            UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment webHostEnvironment) // أضفنا الـ userManager هنا
             : base(historyService)
         {
             _imageService = imageService;
@@ -33,6 +36,7 @@ namespace SmartAgricultuer.Controllers
             _historyService = historyService;
             _context = context;
             _userManager = userManager; // قمنا بتهيئة المتغير هنا
+            _webHostEnvironment = webHostEnvironment; // قمنا بتهيئة المتغير هنا
         }
 
         public IActionResult Home() => View();
@@ -260,13 +264,119 @@ namespace SmartAgricultuer.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+
             var model = new SmartAgricultuer.ViewModels.ProfileViewModel
             {
                 FullName = user.Name,
-                Email = user.Email
+                Email = user.Email,
+                ProfilePicture = user.ProfilePicture
             };
 
             return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                try
+                {
+                    // 1. تحديد مسار الفولدر داخل wwwroot التابع للمشروع لقراءة وحفظ الصور
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", "Profiles");
+
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user != null)
+                    {
+                        if (!string.IsNullOrEmpty(user.ProfilePicture))
+                        {
+                            string oldFilePath = Path.Combine(uploadsFolder, user.ProfilePicture);
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath);
+                            }
+                        }
+
+                        user.ProfilePicture = uniqueFileName;
+                        var result = await _userManager.UpdateAsync(user);
+
+                        if (result.Succeeded)
+                        {
+                            return Json(new { success = true, imagePath = "/Uploads/Profiles/" + uniqueFileName });
+                        }
+                    }
+
+                    return Json(new { success = false, message = "Failed to update database." });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+            }
+
+            return Json(new { success = false, message = "No file selected." });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.Value))
+            {
+                return Json(new { success = false, message = "Invalid data submitted." });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "User not found." });
+            }
+
+            if (request.Type == "name")
+            {
+                user.Name = request.Value; // تحديث الاسم (تأكد إن اسم الخاصية عندك في الـ ApplicationUser هو Name)
+            }
+            else if (request.Type == "email")
+            {
+                // تحديث الإيميل والـ UserName الخاص بالـ Identity
+                user.Email = request.Value;
+                user.NormalizedEmail = request.Value.ToUpper();
+                user.UserName = request.Value;
+                user.NormalizedUserName = request.Value.ToUpper();
+            }
+            else
+            {
+                return Json(new { success = false, message = "Invalid update type." });
+            }
+
+            // حفظ التعديلات في قاعدة البيانات
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Json(new { success = true });
+            }
+
+            // لو حصل خطأ أثناء الحفظ (مثلاً الإيميل مستخدم قبل كده)
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            return Json(new { success = false, message = errors });
+        }
+
+        // كلاس صغير لاستقبال بيانات الـ JSON القادمة من الـ Fetch
+        public class UpdateProfileRequest
+        {
+            public string Type { get; set; }
+            public string Value { get; set; }
         }
         public IActionResult newpassword() => View();
 
