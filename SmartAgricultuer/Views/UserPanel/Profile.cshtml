@@ -1,0 +1,64 @@
+﻿@model SmartAgricultuer.ViewModels.ProfileViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    
+*@
+@{
+    Layout = "_UserPanelLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true">
+}
+
+
+    <div class="card">
+
+        <div class="profile-top">
+        <label for="fileInput" class="profile-img-container">
+            <img src="https://i.pravatar.cc/160" class="profile-img" id="profileImage">
+            <div class="overlay">Edit</div>
+        </label>
+
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
+
+            <div>
+            <h2>@Model.FullName</h2>
+            <p>@Model.Email</p>
+            </div>
+        </div>
+
+        <div class="menu">
+       
+
+            <button>
+                <span class="material-symbols-outlined">edit</span>
+                Edit Name
+            </button>
+
+            <button>
+            <a asp-controller="UserPanel" asp-action="newpassword" class="change-password-link">
+                <span class="material-symbols-outlined">lock</span>
+                Change Password
+            </a>
+            </button>
+
+            <button class="logout">
+                <span class="material-symbols-outlined">logout</span>
+                Logout
+            </button>
+
+        </div>
+
+    </div>
+
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('profileImage');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

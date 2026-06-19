@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f0f0f0;
+}
+
+/* 🔥 Full Width Card */
+.card {
+    width: 90%;
+    margin: 40px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+/* Top section */
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Image */
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+/* إخفاء الـ Checkbox الفعلي */
+.hidden-checkbox {
+    display: none;
+}
+
+
+/* لتحسين شكل الزر */
+.profile-btn-trigger {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+/* Name */
+h2 {
+    margin: 0;
+    font-size: 26px;
+}
+
+/* Email */
+p {
+    margin: 5px 0 0;
+    color: gray;
+    font-size: 18px;
+}
+
+/* Menu */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Buttons */
+.menu button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #e8f5e9;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.menu button:hover {
+    background: #c8e6c9;
+}
+
+/* Logout */
+.logout {
+    background: #ffcdd2;
+}
+
+.logout:hover {
+    background: #ef9a9a;
+}
+
+/* Icons */
+.material-symbols-outlined {
+    font-size: 22px;
+}
+.profile-img-container {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.profile-img {
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.profile-img-container:hover .profile-img {
+    filter: brightness(70%);
+}
+
+.profile-img-container .overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    display: none;
+}
+
+.profile-img-container:hover .overlay {
+    display: block;
+}
+
+/* ده الكلاس اللي هتديه للرابط بتاع Change Password */
+.change-password-link {
+    display: flex; /* عشان الأيقونة والكلام يبقوا جنب بعض */
+    align-items: center; /* عشان يتسنتروا عمودياً */
+    gap: 10px; /* مسافة بسيطة بين الأيقونة والكلمة */
+
+    color: #000000; /* لون الخط الأخضر الغامق (زي باقي الأزرار) */
+    text-decoration: none; /* ده اللي هيشيل الخط اللي تحت الرابط */
+    font-weight: 500; /* سمك الخط */
+    padding: 10px; /* عشان ياخد نفس مساحة الزرار */
+    cursor: pointer;
+}
+
+    /* عشان لما تقفي بالماوس عليه يبقى شكله زي الأزرار بالظبط */
+    .change-password-link:hover {
+        color: #1b5e20; /* درجة أغمق شوية عند الماوس */
+    }

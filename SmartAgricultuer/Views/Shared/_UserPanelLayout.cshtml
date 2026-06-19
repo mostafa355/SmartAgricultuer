@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
-
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -55,7 +56,7 @@
                 </a>
                 <a asp-controller="UserPanel" asp-action="Archive" class="nav-item" data-page="archive">
                     <i class="fas fa-archive nav-icon" aria-hidden="true"></i>
-                    <span class="nav-text">Archive</span>
+                    <span class="nav-text">Encyclopedia</span>
                 </a>
 
                 <div class="nav-item dropdown-trigger" id="historyDropdown" role="button" tabindex="0"
@@ -106,21 +107,35 @@
                 <div class="profile-container">
                     <button id="profileTrigger" class="nav-item profile-btn-trigger" aria-expanded="false"
                             aria-controls="profileCard">
-                        <i class="fas fa-user-circle nav-icon" aria-hidden="true"></i>
-                        <span class="nav-text">Profile</span>
+                            <i class="fas fa-user-circle nav-icon" aria-hidden="true"></i>
+                            <span class="nav-text">Profile</span>
+                        
                     </button>
                     <div id="profileCard" class="profile-menu" role="menu" aria-label="Profile Menu">
+                        @{
+                            var user = await UserManager.GetUserAsync(User);
+                        }
+
                         <div class="profile-info">
-                            <b>John Doe</b>
-                            <p>john@email.com</p>
+                            @if (user != null)
+                            {
+                                <b>@(user.Name)</b>
+                                <p>@(user.Email)</p>
+     }
+                            else
+                            {
+                                <b>Guest</b>
+                                <p>Please login</p>
+                            }
                         </div>
+                       
+                      
                         <hr>
-                        <a href="register.html" class="menu-item" role="menuitem">
-                            <i class="fas fa-user-edit" aria-hidden="true"></i> Edit Profile
+                        <a asp-controller="UserPanel" asp-action="Profile" data-page="Profile" class="menu-item" role="menuitem">
+                        
+                            <i class="fas fa-user-edit" aria-hidden="true"></i> Setting
                         </a>
-                        <a href="newpassword.html" class="menu-item" role="menuitem">
-                            <i class="fas fa-key" aria-hidden="true"></i> Password
-                        </a>
+                       
                     </div>
                 </div>
                 <form asp-action="Logout" asp-controller="Account" method="post">

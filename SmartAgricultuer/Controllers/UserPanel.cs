@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartAgricultuer.Models;
 using SmartAgricultuer.Services;
 using SmartAgriculture.ViewModels;
 using System.Security.Claims;
+
 
 namespace SmartAgricultuer.Controllers
 {
@@ -15,14 +17,22 @@ namespace SmartAgricultuer.Controllers
         private readonly IDiagnosisService _diagnosisService;
         private readonly IHistoryService _historyService;
         private readonly AppdbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserPanel(IImageService imageService, IDiagnosisService diagnosisService, IHistoryService historyService, AppdbContext context)
+        // دمج كل الخدمات في Constructor واحد فقط
+        public UserPanel(
+            IImageService imageService,
+            IDiagnosisService diagnosisService,
+            IHistoryService historyService,
+            AppdbContext context,
+            UserManager<ApplicationUser> userManager) // أضفنا الـ userManager هنا
             : base(historyService)
         {
             _imageService = imageService;
             _diagnosisService = diagnosisService;
             _historyService = historyService;
             _context = context;
+            _userManager = userManager; // قمنا بتهيئة المتغير هنا
         }
 
         public IActionResult Home() => View();
@@ -241,5 +251,26 @@ namespace SmartAgricultuer.Controllers
 
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var model = new SmartAgricultuer.ViewModels.ProfileViewModel
+            {
+                FullName = user.Name,
+                Email = user.Email
+            };
+
+            return View(model);
+        }
+        public IActionResult newpassword() => View();
+
+
+
     }
 }
