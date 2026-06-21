@@ -27,5 +27,10 @@
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="efpt.config.json.user" />
+    <None Include="wwwroot\DS\css\Diseases.css" />
+    <None Include="wwwroot\DS\css\Insects.css" />
+  </ItemGroup>
 
 </Project>
