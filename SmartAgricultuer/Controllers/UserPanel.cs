@@ -46,7 +46,11 @@ namespace SmartAgricultuer.Controllers
         [HttpPost]
         public async Task<IActionResult> Result(IFormFile fileInput, bool isInsect)
         {
-            if (fileInput == null) return RedirectToAction("Upload");
+            if (fileInput == null)
+            {
+                TempData["Error"] = "Please add a photo.";
+                return RedirectToAction("Upload");
+            }
 
             try
             {
@@ -65,22 +69,20 @@ namespace SmartAgricultuer.Controllers
                 // 2. حفظ الـ Upload في الداتابيز
                 int uploadId = await _historyService.SaveUploadAsync(userId, analysisTypeId, imagePath);
 
+                // ... بعد حفظ الصورة بنجاح ...
+
                 if (isInsect)
                 {
-                    // 3a. تشخيص حشرة
                     var insectResult = await _diagnosisService.DiagnoseInsectAsync(fileInput);
 
-                    Console.WriteLine("==========================================");
-                    Console.WriteLine($"✅ Success: {insectResult.Success}");
-                    Console.WriteLine($"🐛 Detected: {insectResult.Detected}");
-                    Console.WriteLine($"📋 Type: {insectResult.Type}");
-                    Console.WriteLine($"⚠️ IsHarmful: {insectResult.IsHarmful}");
-                    Console.WriteLine($"📊 Confidence: {insectResult.ConfidencePct}");
-                    Console.WriteLine("==========================================");
-
-                    if (!insectResult.Success)
+                    // التحقق الجديد: هل النتيجة null أو الثقة أقل من 60%؟
+                    // افترضت أن الـ ConfidencePct عندك من 0 إلى 100، لو هي من 0 إلى 1، غيرها لـ 0.6
+                    if (insectResult == null ||
+        insectResult.ConfidencePct < 60 ||
+        insectResult.Detected == "Not_Insect" ||
+        insectResult.Type == "Not_Insect")
                     {
-                        TempData["Error"] = insectResult.Error;
+                        TempData["Error"] = "Sorry, the image is unclear, or the insect could not be accurately identified. Please upload a clearer image.";
                         return RedirectToAction("Upload");
                     }
 
@@ -88,21 +90,15 @@ namespace SmartAgricultuer.Controllers
                 }
                 else
                 {
-                    // 3b. تشخيص نبات
                     var plantResult = await _diagnosisService.DiagnosePlantAsync(fileInput);
 
-                    Console.WriteLine("==========================================");
-                    Console.WriteLine($"✅ Success: {plantResult.Success}");
-                    Console.WriteLine($"🌿 Plant: {plantResult.Plant}");
-                    Console.WriteLine($"🦠 Disease: {plantResult.Disease}");
-                    Console.WriteLine($"📋 Status: {plantResult.Status}");
-                    Console.WriteLine($"⚠️ IsHarmful: {plantResult.IsHarmful}");
-                    Console.WriteLine($"📊 Confidence: {plantResult.ConfidencePct}");
-                    Console.WriteLine("==========================================");
-
-                    if (!plantResult.Success)
+                    // نفس التحقق للنبات
+                    if (plantResult == null ||
+        plantResult.ConfidencePct < 60 ||
+        plantResult.Plant == "Background_without_leaves" ||
+        plantResult.Disease == "Background_without_leaves")
                     {
-                        TempData["Error"] = plantResult.Error;
+                        TempData["Error"] = "Sorry, the image is unclear, or the plant could not be accurately identified. Please upload a clearer image.";
                         return RedirectToAction("Upload");
                     }
 
@@ -202,7 +198,7 @@ namespace SmartAgricultuer.Controllers
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient();
 
-                var response = await httpClient.GetAsync("https://tribesman-unworldly-calorie.ngrok-free.dev");
+                var response = await httpClient.GetAsync("https://tribesman-unworldly-calorie.ngrok-free.dev/api/health");
                 return Json(new { online = response.IsSuccessStatusCode });
             }
             catch

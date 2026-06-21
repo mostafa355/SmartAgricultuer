@@ -10,7 +10,14 @@
 }
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">@TempData["Error"]</div>
+    <div id="errorModal" class="loader-overlay @(TempData["Error"] != null ? "" : "hidden")">
+        <div class="modal-content">
+            <span class="material-symbols-outlined" style="font-size: 60px; color: #e53e3e;">warning</span>
+            <h2>Oops! Issue Detected</h2>
+            <p>@TempData["Error"]</p>
+            <button type="button" onclick="closeErrorModal()" class="retry-btn">Try Again</button>
+        </div>
+    </div>
 }
 
 <main class="content">
@@ -24,9 +31,30 @@
             <form asp-controller="UserPanel" asp-action="Result" method="post" enctype="multipart/form-data">
                 <!-- Toggle -->
                 <!-- حطه فوق الـ Toggle مباشرة -->
-                <div id="apiWarningMsg" class="api-warning hidden">
-                    <span class="material-symbols-outlined">wifi_off</span>
-                    AI Service is currently offline. Please try again later.
+                <!-- Connecting Loader -->
+                <div id="fullScreenLoader" class="loader-overlay hidden" style="position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:99999;">
+                    <div class="loader-content">
+                        <div class="spinner"></div>
+                        <p>Analyzing your image...</p>
+                        <small>This may take a few seconds</small>
+                    </div>
+                </div>
+                <div id="connectingLoader" class="loader-overlay">
+                    <div class="loader-content">
+                        <div class="spinner"></div>
+                        <p>Connecting to AI Service...</p>
+                        <small>Please wait a moment</small>
+                    </div>
+                </div>
+
+                <!-- Connection Failed Message -->
+                <div id="connectionFailedMsg" class="loader-overlay hidden">
+                    <div class="loader-content">
+                        <span class="material-symbols-outlined" style="font-size: 50px; color: #e53e3e;">wifi_off</span>
+                        <p style="color: #e53e3e;">Failed to connect to AI Server</p>
+                        <small>Please try again later</small>
+                        <button type="button" onclick="location.reload()" class="retry-btn">Retry</button>
+                    </div>
                 </div>
                     <div id="warningMsg" class="warning-msg">
                     Please select Plant or Insect before scanning! ⚠️
