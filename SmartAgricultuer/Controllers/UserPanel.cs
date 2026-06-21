@@ -202,7 +202,7 @@ namespace SmartAgricultuer.Controllers
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient();
 
-                var response = await httpClient.GetAsync("http://127.0.0.1:5000/api/health");
+                var response = await httpClient.GetAsync("https://plantdocai-api.onrender.com/api/health");
                 return Json(new { online = response.IsSuccessStatusCode });
             }
             catch

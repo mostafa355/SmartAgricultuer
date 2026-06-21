@@ -10,7 +10,7 @@ namespace SmartAgricultuer.Services
         public DiagnosisService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("http://127.0.0.1:5000");
+            _httpClient.BaseAddress = new Uri("https://tribesman-unworldly-calorie.ngrok-free.dev");
         }
 
         private async Task<string> SendImageAsync(IFormFile image, string endpoint)
