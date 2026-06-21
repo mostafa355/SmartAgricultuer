@@ -39,6 +39,19 @@
         opacity: 1;
     }
 }
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    animation: rotation 1.5s linear infinite;
+}
 
 /* ========================================
    FULL SCREEN LOADER & OVERLAY

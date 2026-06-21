@@ -374,7 +374,33 @@ namespace SmartAgricultuer.Controllers
             public string Type { get; set; }
             public string Value { get; set; }
         }
-        public IActionResult newpassword() => View();
+
+        [HttpGet]
+        public IActionResult newpassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] 
+        public async Task<IActionResult> newpassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            if (newPassword != confirmPassword)
+                return Json(new { success = false, message = "New passwords do not match!" });
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Json(new { success = false, message = "User not found." });
+
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+            if (result.Succeeded)
+            {
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false, message = "Failed to update. Please check your current password." });
+        }
 
 
 

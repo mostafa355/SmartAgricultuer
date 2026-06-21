@@ -55,28 +55,43 @@ function selectType(type) {
     warningMsg.classList.add('hidden');
 }
 
-uploadForm.addEventListener('submit', function (e) {
-    if (isSubmitting || !apiOnline) {
-        e.preventDefault();
-        return;
-    }
+// استبدل الـ uploadForm.addEventListener('submit', ...) بهذا الكود
+uploadForm.addEventListener('submit', async function (e) {
+    e.preventDefault(); // منع الإرسال التلقائي للفورم
 
+    if (isSubmitting || !apiOnline) return;
     if (!typeSelected) {
-        e.preventDefault();
         warningMsg.classList.remove('hidden');
         return;
     }
 
-    // تفعيل التحميل
     isSubmitting = true;
-    scanBtn.textContent = "Analyzing...";
+    scanBtn.disabled = true;
+    scanBtn.innerHTML = `<span class="material-symbols-outlined rotating">analytics</span> Analyzing...`;
+    fullScreenLoader.classList.remove('hidden');
 
-    // إظهار الـ Loader اللي بيغطي الشاشة
-    if (fullScreenLoader) {
-        fullScreenLoader.classList.remove('hidden');
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            window.location.href = response.url;
+        } else {
+            fullScreenLoader.classList.add('hidden');
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to process image.' });
+            isSubmitting = false;
+        }
+    } catch (err) {
+        fullScreenLoader.classList.add('hidden');
+        console.error(err);
+        alert("Connection error occurred.");
     }
 });
-// دالة إغلاق الـ Modal الخاص بالخطأ
+
 function closeErrorModal() {
     const errorModal = document.getElementById('errorModal');
     if (errorModal) {
@@ -90,7 +105,7 @@ async function checkApiStatus() {
 
         if (data.online) {
             apiOnline = true;
-            connectingLoader.classList.add('hidden'); // إخفاء لودر الاتصال
+            connectingLoader.classList.add('hidden'); 
         } else {
             showConnectionFailed();
         }
