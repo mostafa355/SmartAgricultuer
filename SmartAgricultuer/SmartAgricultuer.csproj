@@ -27,8 +27,5 @@
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Content Include="wwwroot\**\*" CopyToPublishDirectory="Always" />
-	</ItemGroup>
 
 </Project>
