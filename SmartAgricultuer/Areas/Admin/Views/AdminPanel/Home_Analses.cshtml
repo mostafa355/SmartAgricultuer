@@ -1,0 +1,403 @@
+﻿@model SmartAgricultuer.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+
+    <link rel="stylesheet" href="~/DS/css/analses.css" asp-append-version="true">
+}
+@section Scripts {
+    <script src="~/DS/js/analses.js" asp-append-version="true"></script>
+}
+<div>
+    <div class="topbar">
+
+        <div class="topbar-title-area">
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--green-dark);">Analytics Insights</h2>
+        </div>
+
+        <div class="topbar-right">
+
+       
+
+      
+
+            <div class="profile-info">
+                <strong>Dr. Aris Thorne</strong>
+                <span>Senior Agronomist</span>
+            </div>
+            <div class="avatar">AT</div>
+
+        </div>
+    </div>
+
+
+
+    <div class="content">
+
+      
+     
+
+
+      
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#14532d" stroke-width="2" width="20" height="20">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-label">TOTAL USERS</div>
+                <div class="stat-value">@Model.TotalUsers.ToString("N0")</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#14532d" stroke-width="2" width="20" height="20">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-label">TOTAL UPLOADS</div>
+                <div class="stat-value">@Model.TotalUploads.ToString("N0")</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#14532d" stroke-width="2" width="20" height="20">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-label">TOTAL ANALYSES</div>
+                <div class="stat-value">@Model.TotalAnalyses.ToString("N0")</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" width="20" height="20">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-label">DISEASED PLANTS</div>
+                <div class="stat-value">@Model.DiseasedPlants.ToString("N0")</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#14532d" stroke-width="2" width="20" height="20">
+                            <path d="M12 22V12M12 12C12 12 7 10 7 5a5 5 0 0 1 10 0c0 5-5 7-5 7z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-label">HEALTHY PLANTS</div>
+                <div class="stat-value">@Model.HealthyPlants.ToString("N0")</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" width="20" height="20">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-label">INSECT DETECTIONS</div>
+                <div class="stat-value">@Model.InsectDetections.ToString("N0")</div>
+            </div>
+
+        </div>
+
+
+  
+        <div class="mid-grid">
+
+
+            <div class="card">
+                <div class="chart-header">
+                    <div class="card-title">Daily Activity (Last 7 Days)</div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#006d3d"></div> UPLOADS
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#dff3e5"></div> USERS
+                        </div>
+                    </div>
+                </div>
+
+                @{
+                    int maxVal = Model.WeeklyActivity.Any()
+                        ? Math.Max(Model.WeeklyActivity.Max(d => d.Uploads), 1)
+                        : 1;
+                }
+
+                <div class="bar-chart">
+                    @foreach (var day in Model.WeeklyActivity)
+                    {
+                        int uploadHeight = (int)((double)day.Uploads / maxVal * 200);
+                        int userHeight = (int)((double)day.Users / maxVal * 200);
+
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar bar-uploads" style="height:@(uploadHeight)px"></div>
+                                <div class="bar bar-users" style="height:@(userHeight)px"></div>
+                            </div>
+                            <div class="bar-label">@day.DayLabel</div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+      
+            <div class="card">
+                <div class="card-title">Plant Health Distribution</div>
+                <div class="donut-wrap">
+                    <div class="donut-container">
+                        @{
+                            double circumference = 314.2;
+                            double healthyDash = circumference * (Model.HealthyPct / 100);
+                            double diseasedDash = circumference * (Model.DiseasedPct / 100);
+                            double insectDash = circumference * (Model.InsectPct / 100);
+                            double diseasedOffset = -healthyDash;
+                            double insectOffset = -(healthyDash + diseasedDash);
+                        }
+                        <svg class="donut-svg" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="18" />
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#006d3d" stroke-width="18"
+                                    stroke-dasharray="@healthyDash.ToString("0.0") @circumference" stroke-dashoffset="0" stroke-linecap="round" />
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#ef4444" stroke-width="18"
+                                    stroke-dasharray="@diseasedDash.ToString("0.0") @circumference" stroke-dashoffset="@diseasedOffset.ToString("0.0")" stroke-linecap="round" />
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#f59e0b" stroke-width="18"
+                                    stroke-dasharray="@insectDash.ToString("0.0") @circumference" stroke-dashoffset="@insectOffset.ToString("0.0")" stroke-linecap="round" />
+                        </svg>
+                        <div class="donut-inner">
+                            <h3>@((Model.DiseasedPlants + Model.HealthyPlants + Model.InsectDetections).ToString("N0"))</h3>
+                            <p>TOTAL ANALYZED</p>
+                        </div>
+                    </div>
+
+                    <div class="donut-legend">
+                        <div class="donut-row">
+                            <div class="legend-label">
+                                <div class="legend-circle" style="background:#006d3d"></div> Healthy
+                            </div>
+                            <span class="donut-pct">@Model.HealthyPct%</span>
+                        </div>
+                        <div class="donut-row">
+                            <div class="legend-label">
+                                <div class="legend-circle" style="background:#ef4444"></div> Diseased
+                            </div>
+                            <span class="donut-pct">@Model.DiseasedPct%</span>
+                        </div>
+                        <div class="donut-row">
+                            <div class="legend-label">
+                                <div class="legend-circle" style="background:#f59e0b"></div> Insect Detected
+                            </div>
+                            <span class="donut-pct">@Model.InsectPct%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-grid">
+
+            <div class="card">
+                <div class="card-title">Most Detected Diseases</div>
+                <div class="disease-row">
+                    @if (Model.TopDiseases.Any())
+                    {
+                        @foreach (var disease in Model.TopDiseases)
+                        {
+                            <div class="disease-item">
+                                <div class="disease-header">
+                                    <span>@disease.Name</span>
+                                    <span class="disease-count">@disease.Count cases</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width:@disease.Percentage%; background:#ef4444"></div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="small">No disease data yet.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Common Insects</div>
+
+                @if (Model.TopInsects.Any())
+                {
+                    @foreach (var insect in Model.TopInsects)
+                    {
+                        <div class="insect-item">
+                            <div class="insect-icon">🐛</div>
+                            <div class="insect-info">
+                                <div class="insect-name">@insect.Name</div>
+                            </div>
+                            <div class="insect-count">
+                                <div class="insect-num">@insect.Count</div>
+                                <span class="insect-tag @(insect.Status == "Harmful" ? "tag-invasive" : "tag-stable")">
+                                    @insect.Status
+                                </span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="small">No insect data yet.</p>
+                }
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:18px;">
+
+                <div class="confidence-card">
+                    <div class="confidence-header">
+                        <h3>Model Confidence</h3>
+                        <div class="lightning">⚡</div>
+                    </div>
+                    <div class="conf-pct">
+                        <span>@Model.AvgConfidence.ToString("0.0")%</span> <small>Global Avg</small>
+                    </div>
+                    <div class="conf-label">ACCURACY</div>
+                    <div class="acc-row">
+                        <span>ACCURACY</span>
+                        <span>@Model.AvgConfidence.ToString("0.0")%</span>
+                    </div>
+                    <div class="acc-bar">
+                        <div class="acc-fill" style="width:@Model.AvgConfidence.ToString("0.0")%"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title" style="font-size:13px;">Top Analyzed Plants</div>
+                    <div class="plants-grid">
+                        @foreach (var plant in Model.TopPlants)
+                        {
+                            <div class="plant-card">
+                                <small>@plant.Name.ToUpper()</small>
+                                <strong>@plant.Percentage%</strong>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="last-grid">
+
+            <div class="card">
+                <div class="card-title">Critical Alerts</div>
+
+                <div class="alert-item alert-red">
+                    <div class="alert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                        <div>
+                            <div class="alert-title" style="color:#dc2626">
+                                Tomato Yellow Curl increased by 40% this week
+                            </div>
+                            <div class="alert-desc">Affected regions: Southern Sector, Plot 4B</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-item alert-orange">
+                    <div class="alert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <div>
+                            <div class="alert-title" style="color:#d97706">
+                                High disease activity detected in tomatoes
+                            </div>
+                            <div class="alert-desc">System recommendation: Immediate copper-based treatment</div>
+                        </div>
+                    </div>
+                </div>
+
+        
+            </div>
+
+            <div class="card">
+                <div class="table-header">
+                    <div class="card-title">Recent Diagnostic Activity</div>
+                </div>
+
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>USER</th>
+                            <th>PLANT NAME</th>
+                            <th>RESULT</th>
+                            <th>CONFIDENCE</th>
+                            <th>DATE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.RecentActivity)
+                        {
+                            var initials = string.Join("", item.UserName.Split(' ').Select(p => p.Length > 0 ? p[0] : ' ')).ToUpper();
+
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-av">@initials</div>
+                                        <div class="user-name">@item.UserName</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="plant-name">@(item.PlantName ?? "—")</div>
+                                    <div class="plant-sci">@item.ScientificName</div>
+                                </td>
+                                <td>
+                                    <span class="result-badge @(item.IsHealthy ? "badge-healthy" : "badge-blight")">
+                                        @item.ResultLabel
+                                    </span>
+                                </td>
+                                <td><span class="conf-val">@item.Confidence?.ToString("0.0")%</span></td>
+                                <td><div class="date-val">@item.Date?.ToString("MMM dd, HH:mm")</div></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>

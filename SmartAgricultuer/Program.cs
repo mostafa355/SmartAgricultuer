@@ -34,7 +34,6 @@ namespace SmartAgricultuer
 
             .AddEntityFrameworkStores<AppdbContext>()
             .AddDefaultTokenProviders();
-            // ← أضف هنا
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Account/Login";

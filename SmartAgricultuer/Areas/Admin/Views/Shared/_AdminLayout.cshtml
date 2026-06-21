@@ -29,30 +29,30 @@
             </div>
 
             <nav class="nav-menu">
-                <a href="analses.html" class="nav-item">
+                <a asp-controller="AdminPanel" asp-action="Home_Analses" class="nav-item">
                     <span class="material-symbols-outlined">monitoring</span>
                     <span class="nav-label">Analytics</span>
                 </a>
 
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-item active" id="tablesToggle">
+                    <a asp-controller="AdminPanel" asp-action="table_plant" class="nav-item active" id="tablesToggle">
                         <span class="material-symbols-outlined">table_chart</span>
                         <span class="nav-label">Tables</span>
                         <span class="material-symbols-outlined arrow-icon">expand_more</span>
                     </a>
 
                     <div class="dropdown-container" id="tablesDropdown">
-                        <a href="Insects.html" class="dropdown-item">
+                        <a asp-controller="AdminPanel" asp-action="Insects" class="dropdown-item">
                             <span class="material-symbols-outlined">bug_report</span>
                             <span>Insects</span>
                         </a>
 
-                        <a href="table_plant.html" class="dropdown-item">
+                        <a asp-controller="AdminPanel" asp-action="Plants" class="dropdown-item">
                             <span class="material-symbols-outlined">potted_plant</span>
                             <span>Plants</span>
                         </a>
 
-                        <a href="Diseases.html" class="dropdown-item">
+                        <a asp-controller="AdminPanel" asp-action="Diseases" class="dropdown-item">
                             <span class="material-symbols-outlined">coronavirus</span>
                             <span>Diseases</span>
                         </a>
@@ -61,15 +61,18 @@
             </nav>
 
             <div class="sidebar-footer">
-                <a href="profile.html" class="nav-item">
+                <a asp-controller="AdminPanel" asp-action="Profile" class="nav-item">
                     <span class="material-symbols-outlined">account_circle</span>
                     <span class="nav-label">Profile</span>
                 </a>
 
-                <a href="login.html" class="nav-item logout-item">
-                    <span class="material-symbols-outlined">logout</span>
-                    <span class="nav-label">Log Out</span>
-                </a>
+                <form asp-controller="AdminPanel" asp-action="Logout" method="post" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-item logout-item" style="background:none; border:none; width:100%; cursor:pointer;">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="nav-label">Log Out</span>
+                    </button>
+                </form>
             </div>
         </aside>
     </header>

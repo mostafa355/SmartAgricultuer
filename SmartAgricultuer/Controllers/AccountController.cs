@@ -23,7 +23,7 @@ namespace SmartAgricultuer.Controllers
             if (User.Identity!.IsAuthenticated)
             {
                 if (User.IsInRole("Admin"))
-                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    return RedirectToAction("Home_Analses", "AdminPanel", new { area = "Admin" });
                 else
                     return RedirectToAction("Home", "UserPanel");
             }
@@ -46,7 +46,7 @@ namespace SmartAgricultuer.Controllers
                 var roles = await _userManager.GetRolesAsync(user);
 
                 if (roles.Contains("Admin"))
-                return RedirectToAction("Index", "Home", new { area = "Admin" });
+                return RedirectToAction("Home_Analses", "AdminPanel", new { area = "Admin" });
                 else
                 return RedirectToAction("Home", "UserPanel");
             }
