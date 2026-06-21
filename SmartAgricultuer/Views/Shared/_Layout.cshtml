@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - PlantDoc AI</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
-    <link rel="stylesheet" href="~/css/indxeH1.css"  />
+    <link rel="stylesheet" href="~/css/indxeH1.css" asp-append-version="true" />
 </head>
 <body>
     <div class="App">
@@ -54,8 +54,8 @@
                 </div>
             </div>
         </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     

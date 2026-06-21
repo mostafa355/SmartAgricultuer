@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="~/css/login.css">
-    <link rel="stylesheet" href="~/css/rejster.css">
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" >
+    <link rel="stylesheet" href="~/css/rejster.css" asp-append-version="true">
     </head>
     <body>
         <div>
@@ -13,8 +13,8 @@
         </div>
 
         <script src="https://unpkg.com/lucide@latest"></script>
-        <script src="~/js/Login.js"></script>
-            <script src="~/js/rejster.js"></script>
+    <script src="~/js/Login.js" asp-append-version="true"></script>
+            <script src="~/js/rejster.js" asp-append-version="true"></script>
 
         @await RenderSectionAsync("Scripts", required: false)
     </body>
