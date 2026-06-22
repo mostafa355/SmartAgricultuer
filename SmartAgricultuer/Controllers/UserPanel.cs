@@ -58,55 +58,60 @@ namespace SmartAgricultuer.Controllers
                 int analysisTypeId = isInsect ? 2 : 1;
                 string folder = isInsect ? "Insects" : "Plants";
 
-                // 1. حفظ الصورة
-                string? imagePath = await _imageService.SaveImageAsync(fileInput, folder);
-                if (imagePath == null)
-                {
-                    TempData["Error"] = "There's a problem uploading the image.";
-                    return RedirectToAction("Upload");
-                }
-
-                // 2. حفظ الـ Upload في الداتابيز
-                int uploadId = await _historyService.SaveUploadAsync(userId, analysisTypeId, imagePath);
-
-                // ... بعد حفظ الصورة بنجاح ...
+                int uploadId; // ✅ متعرّف هنا برّا الـ if/else
 
                 if (isInsect)
                 {
+                    // ✅ خطوة 1: التشخيص الأول قبل أي حفظ
                     var insectResult = await _diagnosisService.DiagnoseInsectAsync(fileInput);
 
-                    // التحقق الجديد: هل النتيجة null أو الثقة أقل من 60%؟
-                    // افترضت أن الـ ConfidencePct عندك من 0 إلى 100، لو هي من 0 إلى 1، غيرها لـ 0.6
                     if (insectResult == null ||
-        insectResult.ConfidencePct < 60 ||
-        insectResult.Detected == "Not_Insect" ||
-        insectResult.Type == "Not_Insect")
+                        insectResult.ConfidencePct < 60 ||
+                        insectResult.Detected == "Not_Insect" ||
+                        insectResult.Type == "Not_Insect")
                     {
                         TempData["Error"] = "Sorry, the image is unclear, or the insect could not be accurately identified. Please upload a clearer image.";
+                        return RedirectToAction("Upload"); // ✅ رجع من غير ما يحفظ أي حاجة
+                    }
+
+                    // ✅ خطوة 2: بس لو النتيجة تمام، احفظ الصورة والبيانات
+                    string? imagePath = await _imageService.SaveImageAsync(fileInput, folder);
+                    if (imagePath == null)
+                    {
+                        TempData["Error"] = "There's a problem uploading the image.";
                         return RedirectToAction("Upload");
                     }
 
+                    uploadId = await _historyService.SaveUploadAsync(userId, analysisTypeId, imagePath);
                     await _historyService.SaveInsectResultAsync(uploadId, insectResult);
                 }
                 else
                 {
+                    // ✅ خطوة 1: التشخيص الأول قبل أي حفظ
                     var plantResult = await _diagnosisService.DiagnosePlantAsync(fileInput);
 
-                    // نفس التحقق للنبات
                     if (plantResult == null ||
-        plantResult.ConfidencePct < 60 ||
-        plantResult.Plant == "Background_without_leaves" ||
-        plantResult.Disease == "Background_without_leaves")
+                        plantResult.ConfidencePct < 60 ||
+                        plantResult.Plant == "Background_without_leaves" ||
+                        plantResult.Disease == "Background_without_leaves")
                     {
                         TempData["Error"] = "Sorry, the image is unclear, or the plant could not be accurately identified. Please upload a clearer image.";
+                        return RedirectToAction("Upload"); // ✅ رجع من غير ما يحفظ أي حاجة
+                    }
+
+                    // ✅ خطوة 2: بس لو النتيجة تمام، احفظ الصورة والبيانات
+                    string? imagePath = await _imageService.SaveImageAsync(fileInput, folder);
+                    if (imagePath == null)
+                    {
+                        TempData["Error"] = "There's a problem uploading the image.";
                         return RedirectToAction("Upload");
                     }
 
+                    uploadId = await _historyService.SaveUploadAsync(userId, analysisTypeId, imagePath);
                     await _historyService.SavePlantResultAsync(uploadId, plantResult);
                 }
 
-                // 4. Redirect للـ Result
-                return RedirectToAction("Result", new { id = uploadId });
+                return RedirectToAction("Result", new { id = uploadId }); // ✅ شغّال دلوقتي
             }
             catch (Exception ex)
             {
@@ -245,7 +250,7 @@ namespace SmartAgricultuer.Controllers
             var plantsList = _context.Plants.ToList();
 
             var insectsList = _context.Insects.ToList();
-
+         
             ViewBag.Plants = plantsList;
             ViewBag.Insects = insectsList;
 
