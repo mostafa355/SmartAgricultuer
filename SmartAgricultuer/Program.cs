@@ -95,6 +95,7 @@ namespace SmartAgricultuer
                 }
 
                 // إنشاء أول Admin
+                
                 string adminEmail = "admin@plantguard.com";
                 string adminPassword = "Admin@123";
 

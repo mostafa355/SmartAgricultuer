@@ -30,7 +30,7 @@
   <ItemGroup>
     <None Include="efpt.config.json.user" />
     <None Include="wwwroot\DS\css\Diseases.css" />
-    <None Include="wwwroot\DS\css\Insects.css" />
+    <None Include="wwwroot\DS\css\formtable.css" />
   </ItemGroup>
 
 </Project>

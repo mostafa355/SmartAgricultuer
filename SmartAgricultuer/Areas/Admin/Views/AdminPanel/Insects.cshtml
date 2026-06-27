@@ -1,18 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Insects Page";
-}
+﻿@model IEnumerable<SmartAgricultuer.ViewModels.InsectTableViewModel>
+
 @{
+    ViewData["Title"] = "Insects Page";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+
 @section Styles {
-    <link rel="stylesheet" href="~/DS/css/Insects.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DS/css/formtable.css" asp-append-version="true" />
 }
+
 @section Scripts {
     <script src="~/DS/js/Insects.js" asp-append-version="true"></script>
 }
+
 <main class="main-content">
     <div class="content-container">
-
 
         <div class="page-header">
             <div class="page-title">
@@ -25,9 +27,7 @@
                     Add Insect
                 </button>
             </a>
-          
         </div>
-
 
         <div class="stats-grid">
             <div class="stat-card">
@@ -35,38 +35,38 @@
                     <span class="material-symbols-outlined">report_problem</span>
                 </div>
                 <div class="stat-info">
-                    <span class="stat-label">CRITICAL ALERTS</span>
-                    <span class="stat-value">12</span>
+                    <span class="stat-label">CRITICAL ALERTS (HARMFUL)</span>
+                    <span class="stat-value" style="color: #dc2626;">@ViewBag.CriticalAlerts</span>
                 </div>
             </div>
 
             <div class="stat-card">
                 <div class="stat-icon-wrapper green-bg">
-                    <span class="material-symbols-outlined">bug_report</span>
+                    <span class="material-symbols-outlined">eco</span>
                 </div>
                 <div class="stat-info">
-                    <span class="stat-label">TOTAL SPECIES</span>
-                    <span class="stat-value">142</span>
+                    <span class="stat-label">BENEFICIAL SPECIES</span>
+                    <span class="stat-value" style="color: #16a34a;">@ViewBag.BeneficialSpecies</span>
                 </div>
             </div>
 
             <div class="stat-card">
                 <div class="stat-icon-wrapper blue-bg">
-                    <span class="material-symbols-outlined">verified_user</span>
+                    <span class="material-symbols-outlined">visibility</span>
                 </div>
                 <div class="stat-info">
-                    <span class="stat-label">PREVENTION RATE</span>
-                    <span class="stat-value">92%</span>
+                    <span class="stat-label">MONITORED SPECIES</span>
+                    <span class="stat-value" style="color: #2563eb;">@ViewBag.TotalSpecies</span>
                 </div>
             </div>
 
             <div class="stat-card">
                 <div class="stat-icon-wrapper purple-bg">
-                    <span class="material-symbols-outlined">dna</span>
+                    <span class="material-symbols-outlined">bug_report</span>
                 </div>
                 <div class="stat-info">
-                    <span class="stat-label">GENOMIC DATA</span>
-                    <span class="stat-value">2.4k</span>
+                    <span class="stat-label">TOTAL SPECIES</span>
+                    <span class="stat-value" style="color: #9333ea;">@ViewBag.TotalSpecies</span>
                 </div>
             </div>
         </div>
@@ -74,10 +74,9 @@
         <div class="search-container">
             <div class="search-box">
                 <span class="material-symbols-outlined search-icon">search</span>
-                <input type="text" id="Insects" placeholder="Search by Insects name, plant type, or ID...">
+                <input type="text" id="insectSearch" onkeyup="filterInsectsTable()" placeholder="Search by Insects name, scientific name, or ID...">
             </div>
         </div>
-
 
         <div class="table-card">
             <div class="table-responsive">
@@ -93,21 +92,78 @@
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" style="text-align:center; color:#64748b; padding: 24px;">No insects found in database</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                // تحديد كلاس الحالة والـ Badge بشكل ديناميكي بناءً على داتا الـ SQL الحقيقية
+                                string statusBadgeClass = "status-controlled";
+                                if (item.Status == "Harmful")
+                                {
+                                    statusBadgeClass = "status-harmful";
+                                }
+                                else if (item.Status == "Beneficial")
+                                {
+                                    statusBadgeClass = "status-controlled"; // لون أخضر مريح
+                                }
+
+                                <tr>
+                                    <td style="color: #94a3b8; font-family: monospace;">#INS-@item.Id.ToString("D4")</td>
+                                    <td>
+                                        <div class="insect-cell">
+                                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                            {
+                                                <img src="@Url.Content("~/" + item.ImageUrl)" class="table-thumb-img" alt="@item.Name">
+                                            }
+                                            else
+                                            {
+                                                <div class="table-thumb-placeholder">🪲</div>
+                                            }
+                                            <span style="font-weight: 600; color: #002d1c;">@item.Name</span>
+                                        </div>
+                                    </td>
+                                    <td class="scientific-name" style="font-style: italic; color: #475569;">@item.ScientificName</td>
+                                    <td>
+                                        <span style="color: #334155;">@item.AffectedPlants</span>
+                                    </td>
+                                    <td style="max-width: 250px; color: #475569;" title="@item.DamageType">
+                                        @(item.DamageType.Length > 50 ? item.DamageType.Substring(0, 50) + "..." : item.DamageType)
+                                    </td>
+                                    <td>
+                                        <span class="status-badge @statusBadgeClass">
+                                            <span class="dot"></span> @item.Status
+                                        </span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <div class="action-menu">
+                                            <button class="btn-action-trigger" onclick="toggleDropdown(event, 'dropdown-@item.Id')">
+                                                <span class="material-symbols-outlined">more_vert</span>
+                                            </button>
+                                            <div class="dropdown" id="dropdown-@item.Id" style="display:none;">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
+
             <div class="table-footer">
-                <span id="entryCount">Showing 4 of 4 entries</span>
-                <div class="pagination">
-                    <button disabled><span class="material-symbols-outlined">chevron_left</span></button>
-                    <button class="active">1</button>
-                    <button>2</button>
-                    <button><span class="material-symbols-outlined">chevron_right</span></button>
+                <span id="entryCount">Loading entries...</span>
+
+                <div class="pagination" id="paginationWrapper">
                 </div>
             </div>
         </div>
-
 
         <div class="bento-grid">
             <div class="card card-white">

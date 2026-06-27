@@ -58,11 +58,11 @@ namespace SmartAgricultuer.Controllers
                 int analysisTypeId = isInsect ? 2 : 1;
                 string folder = isInsect ? "Insects" : "Plants";
 
-                int uploadId; // ✅ متعرّف هنا برّا الـ if/else
+                int uploadId; 
 
                 if (isInsect)
                 {
-                    // ✅ خطوة 1: التشخيص الأول قبل أي حفظ
+
                     var insectResult = await _diagnosisService.DiagnoseInsectAsync(fileInput);
 
                     if (insectResult == null ||
@@ -71,10 +71,10 @@ namespace SmartAgricultuer.Controllers
                         insectResult.Type == "Not_Insect")
                     {
                         TempData["Error"] = "Sorry, the image is unclear, or the insect could not be accurately identified. Please upload a clearer image.";
-                        return RedirectToAction("Upload"); // ✅ رجع من غير ما يحفظ أي حاجة
+                        return RedirectToAction("Upload"); 
                     }
 
-                    // ✅ خطوة 2: بس لو النتيجة تمام، احفظ الصورة والبيانات
+
                     string? imagePath = await _imageService.SaveImageAsync(fileInput, folder);
                     if (imagePath == null)
                     {
@@ -87,7 +87,6 @@ namespace SmartAgricultuer.Controllers
                 }
                 else
                 {
-                    // ✅ خطوة 1: التشخيص الأول قبل أي حفظ
                     var plantResult = await _diagnosisService.DiagnosePlantAsync(fileInput);
 
                     if (plantResult == null ||
@@ -96,10 +95,9 @@ namespace SmartAgricultuer.Controllers
                         plantResult.Disease == "Background_without_leaves")
                     {
                         TempData["Error"] = "Sorry, the image is unclear, or the plant could not be accurately identified. Please upload a clearer image.";
-                        return RedirectToAction("Upload"); // ✅ رجع من غير ما يحفظ أي حاجة
+                        return RedirectToAction("Upload"); 
                     }
 
-                    // ✅ خطوة 2: بس لو النتيجة تمام، احفظ الصورة والبيانات
                     string? imagePath = await _imageService.SaveImageAsync(fileInput, folder);
                     if (imagePath == null)
                     {
@@ -111,7 +109,7 @@ namespace SmartAgricultuer.Controllers
                     await _historyService.SavePlantResultAsync(uploadId, plantResult);
                 }
 
-                return RedirectToAction("Result", new { id = uploadId }); // ✅ شغّال دلوقتي
+                return RedirectToAction("Result", new { id = uploadId }); 
             }
             catch (Exception ex)
             {

@@ -21,8 +21,7 @@
                         <span class="logo-text">Plant AI</span>
                         <p class="sector-tag">Field Data</p>
                     </div>
-
-                    <button class="menu-toggle" id="menuToggle">
+                    <button class="menu-toggle" id="menuToggle" type="button">
                         <span class="material-symbols-outlined">menu</span>
                     </button>
                 </div>
@@ -42,19 +41,17 @@
                     </a>
 
                     <div class="dropdown-container" id="tablesDropdown">
-                        <a asp-controller="AdminPanel" asp-action="Insects" class="dropdown-item">
-                            <span class="material-symbols-outlined">bug_report</span>
-                            <span>Insects</span>
-                        </a>
-
                         <a asp-controller="AdminPanel" asp-action="Plants" class="dropdown-item">
                             <span class="material-symbols-outlined">potted_plant</span>
                             <span>Plants</span>
                         </a>
-
                         <a asp-controller="AdminPanel" asp-action="Diseases" class="dropdown-item">
                             <span class="material-symbols-outlined">coronavirus</span>
                             <span>Diseases</span>
+                        </a>
+                        <a asp-controller="AdminPanel" asp-action="Insects" class="dropdown-item">
+                            <span class="material-symbols-outlined">bug_report</span>
+                            <span>Insects</span>
                         </a>
                     </div>
                 </div>
@@ -66,16 +63,18 @@
                     <span class="nav-label">Profile</span>
                 </a>
 
-                <form asp-controller="AdminPanel" asp-action="Logout" method="post" style="margin:0;">
+                <form id="logoutForm" asp-controller="AdminPanel" asp-action="Logout" method="post" style="display:none;">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="nav-item logout-item" style="background:none; border:none; width:100%; cursor:pointer;">
-                        <span class="material-symbols-outlined">logout</span>
-                        <span class="nav-label">Log Out</span>
-                    </button>
                 </form>
+
+                <div class="nav-item logout-item" onclick="handleLogout()">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="nav-label">Log Out</span>
+                </div>
             </div>
         </aside>
     </header>
+
     <div class="main">
         @RenderBody()
     </div>
@@ -83,6 +82,7 @@
     <footer>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/DS/js/navbar.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

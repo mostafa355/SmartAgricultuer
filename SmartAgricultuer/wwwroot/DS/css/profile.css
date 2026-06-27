@@ -3,9 +3,8 @@
 .topbar {
     position: fixed;
     top: 0;
-    width: calc(100% - 260px);
-    left: 270px;
-    right: 0;
+    left: 260px; /* القيمة الصحيحة لبداية الشريط */
+    width: calc(100% - 260px); /* المساحة المتبقية */
     height: 70px;
     background: #fff;
     border-bottom: 1px solid var(--border);
@@ -14,6 +13,13 @@
     justify-content: space-between;
     padding: 0 30px;
     z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* إضافة أنيميشن */
+}
+
+/* عندما يطوى السايدبار، يتمدد التوب بار */
+body.sidebar-is-collapsed .topbar {
+    left: 70px;
+    width: calc(100% - 70px);
 }
 
 .logo {
@@ -21,6 +27,78 @@
     font-weight: 800;
     color: var(--primary);
     font-family: 'Manrope',sans-serif;
+}
+/* --- ستايل حاوية الصورة الشخصية --- */
+.profile-avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto 15px auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .profile-avatar-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+/* الأيقونة الافتراضية في حال عدم وجود صورة */
+.avatar-placeholder {
+    color: #006d3d !important;
+}
+
+    .avatar-placeholder .material-symbols-outlined {
+        font-size: 120px;
+    }
+.avatar-icon-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #006d3d !important;
+}
+
+    .avatar-icon-fallback .material-symbols-outlined {
+        font-size: 28px; /* حجم الأيقونة */
+    }
+
+
+/* طبقة الـ Hover الشفافة */
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+    .avatar-overlay .material-symbols-outlined {
+        font-size: 24px;
+    }
+
+/* ظهور كلمة وتأثير الـ Edit عند الوقوف بالماوس */
+.profile-avatar-container:hover .avatar-overlay {
+    opacity: 1;
 }
 
 .top-icons {
@@ -49,18 +127,24 @@
 .main-profile-content {
     padding: 40px;
     box-sizing: border-box;
-    width: auto;
-    /* الخدعة لحل مشكلة الدخول تحت الناف بار العلوي */
-    margin-top: 70px; /* يعطي مسافة تساوي ارتفاع الـ Topbar العلوي لكي لا يتداخل المحتوى معه */
-    /* المسافات الجانبية مع السايدبار ديناميكياً */
-    margin-inline-start: 260px;
-    margin-left: 260px;
+    margin-top: 70px; 
+    margin-left: 100px; 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* التوافق التام مع اتجاه الـ RTL للمشروع */
+/* عند طي السايدبار، المحتوى يأخذ مساحة أكبر */
+body.sidebar-is-collapsed .main-profile-content {
+    margin-left: 70px;
+}
+
+/* إصلاح الـ RTL */
 [dir="rtl"] .main-profile-content {
-    margin-left: 0 !important;
-    margin-right: 260px !important;
+    margin-left: 0;
+    margin-right: 260px;
+}
+
+[dir="rtl"] body.sidebar-is-collapsed .main-profile-content {
+    margin-right: 70px;
 }
 
 .page-title {
@@ -97,6 +181,7 @@
 /* كارت البروفايل */
 .profile-card {
     text-align: center;
+    width: 400px;
 }
 
     .profile-card img {

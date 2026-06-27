@@ -56,12 +56,9 @@ namespace SmartAgricultuer.Controllers
             return View(model);
         }
 
-        // GET: /Account/Register
-        // بيعرض صفحة التسجيل فارغة
+
         public IActionResult Register() => View();
 
-        // POST: /Account/Register
-        // بيستقبل البيانات من الصفحة ويبعتها للـ Service
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -85,7 +82,6 @@ namespace SmartAgricultuer.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // لو فيه أخطاء نضيفها للـ ModelState عشان تظهر في الصفحة
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);
 

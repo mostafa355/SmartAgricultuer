@@ -1,144 +1,212 @@
-﻿@{
-    ViewData["Title"] = "Insects Page";
-}
+﻿@model IEnumerable<SmartAgricultuer.ViewModels.PlantTableViewModel>
+
 @{
+    ViewData["Title"] = "Plants Page";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 @section Styles {
-    <link rel="stylesheet" href="~/DS/css/Insects.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DS/css/formtable.css" asp-append-version="true" />
 }
 @section Scripts {
-    <script src="~/DS/js/Insects.js" asp-append-version="true"></script>
+    <script src="~/DS/js/Plants.js" asp-append-version="true"></script>
 }
-<main class="main-content">
-    <div class="content-container">
 
+<div class="content-container">
 
-        <div class="page-header">
-            <div class="page-title">
-                <h1>Insects Database</h1>
-                <p>Manage harmful insects affecting plants</p>
-            </div>
-            <a asp-area="Admin" asp-controller="AdminPanel" asp-action="Add_Insects">
-                <button class="btn-add">
-                    <span class="material-symbols-outlined">add_circle</span>
-                    Add Insect
-                </button>
-            </a>
-
+    <div class="page-header">
+        <div class="page-title">
+            <h1>Plants Database</h1>
+            <p>Manage plants and their diseases</p>
         </div>
+        <a asp-area="Admin" asp-controller="AdminPanel" asp-action="Add_plant">
+            <button class="btn-add">
+                <span class="material-symbols-outlined">add_circle</span>
+                Add Plant
+            </button>
+        </a>
+    </div>
 
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon-wrapper red-bg">
-                    <span class="material-symbols-outlined">report_problem</span>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-label">CRITICAL ALERTS</span>
-                    <span class="stat-value">12</span>
-                </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper green-bg">
+                <span class="material-symbols-outlined">eco</span>
             </div>
-
-            <div class="stat-card">
-                <div class="stat-icon-wrapper green-bg">
-                    <span class="material-symbols-outlined">bug_report</span>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-label">TOTAL SPECIES</span>
-                    <span class="stat-value">142</span>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon-wrapper blue-bg">
-                    <span class="material-symbols-outlined">verified_user</span>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-label">PREVENTION RATE</span>
-                    <span class="stat-value">92%</span>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon-wrapper purple-bg">
-                    <span class="material-symbols-outlined">dna</span>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-label">GENOMIC DATA</span>
-                    <span class="stat-value">2.4k</span>
-                </div>
+            <div class="stat-info">
+                <span class="stat-label">TOTAL PLANTS</span>
+                <span class="stat-value">@Model.Count()</span>
             </div>
         </div>
 
-        <div class="search-container">
-            <div class="search-box">
-                <span class="material-symbols-outlined search-icon">search</span>
-                <input type="text" id="Insects" placeholder="Search by Insects name, plant type, or ID...">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper red-bg">
+                <span class="material-symbols-outlined">coronavirus</span>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">ACTIVE DISEASES</span>
+                <span class="stat-value">28</span>
             </div>
         </div>
 
-
-        <div class="table-card">
-            <div class="table-responsive">
-                <table id="insectsTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Insect Name</th>
-                            <th>Scientific Name</th>
-                            <th>Affected Plants</th>
-                            <th>Damage Type</th>
-                            <th>Status</th>
-                            <th class="text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                    </tbody>
-                </table>
+        <div class="stat-card">
+            <div class="stat-icon-wrapper blue-bg">
+                <span class="material-symbols-outlined">potted_plant</span>
             </div>
-            <div class="table-footer">
-                <span id="entryCount">Showing 4 of 4 entries</span>
-                <div class="pagination">
-                    <button disabled><span class="material-symbols-outlined">chevron_left</span></button>
-                    <button class="active">1</button>
-                    <button>2</button>
-                    <button><span class="material-symbols-outlined">chevron_right</span></button>
-                </div>
+            <div class="stat-info">
+                <span class="stat-label">MONITORED CROPS</span>
+                <span class="stat-value">84%</span>
             </div>
         </div>
 
-
-        <div class="bento-grid">
-            <div class="card card-white">
-                <div class="card-header-icon text-secondary">
-                    <span class="material-symbols-outlined">monitoring</span>
-                    <span>OUTBREAK RISK</span>
-                </div>
-                <h3>High Activity</h3>
-                <p>Predicted increase in Potato Beetle activity due to rising soil temperatures.</p>
-                <a href="#" class="link-arrow">View Hotspot Map →</a>
+        <div class="stat-card">
+            <div class="stat-icon-wrapper purple-bg">
+                <span class="material-symbols-outlined">science</span>
             </div>
-
-            <div class="card card-green">
-                <div class="card-header-icon text-emerald">
-                    <span class="material-symbols-outlined">shield</span>
-                    <span>PREVENTION TIP</span>
-                </div>
-                <h3>Biological Control</h3>
-                <p>Introduce natural predators like Ladybugs to manage Aphid populations.</p>
-                <button class="btn-outline-white">Request Resource Delivery</button>
-            </div>
-
-            <div class="card card-white relative">
-                <div class="card-header-icon text-slate">
-                    <span class="material-symbols-outlined">hub</span>
-                    <span>GLOBAL DATABASE</span>
-                </div>
-                <h3>1,200+ Species</h3>
-                <p>Our AI model has expanded to identify more regional variants of tropical insects.</p>
-                <span class="material-symbols-outlined bg-icon-watermark">bug_report</span>
+            <div class="stat-info">
+                <span class="stat-label">HEALTH INDEX</span>
+                <span class="stat-value">A+</span>
             </div>
         </div>
     </div>
-</main>
+
+    <div class="search-container">
+        <div class="search-box">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by plant name...">
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-responsive">
+            <table id="plantsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Plant Name</th>
+                        <th>Scientific Name</th>
+                        <th>Common Diseases</th>
+                        <th>Related Insects</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:#64748b;">No plants found</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="color:#94a3b8; font-family:monospace;">#PLT-@item.Id.ToString("D4")</td>
+                                <td>
+                                    <div class="plant-cell">
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="~/@item.ImageUrl" class="table-thumb-img" alt="@item.Name">
+                                        }
+                                        else
+                                        {
+                                            <div class="table-thumb-placeholder">🌿</div>
+                                        }
+                                        <span style="font-weight:600; color:#002d1c;">@item.Name</span>
+                                    </div>
+                                </td>
+                                <td class="scientific-name">@item.Scientific</td>
+                                <td>
+                                    @if (item.Diseases != null && item.Diseases.Any())
+                                    {
+                                        @foreach (var d in item.Diseases.Take(2))
+                                        {
+                                            <span class="tag">@d</span>
+                                        }
+                                        @if (item.Diseases.Count > 2)
+                                        {
+                                            <span class="tag">+@(item.Diseases.Count - 2)</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span style="color:#94a3b8;">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Insects != null && item.Insects.Any())
+                                    {
+                                        @foreach (var i in item.Insects.Take(2))
+                                        {
+                                            <span class="tag tag-insect" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;">@i</span>
+                                        }
+                                        @if (item.Insects.Count > 2)
+                                        {
+                                            <span class="tag">+@(item.Insects.Count - 2)</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span style="color:#94a3b8;">—</span>
+                                    }
+                                </td>
+                                <td class="actions-cell">
+                                    <div class="action-menu">
+                                        <button class="btn-action-trigger" onclick="toggleDropdown(event, 'dropdown-@item.Id')">
+                                            <span class="material-symbols-outlined">more_vert</span>
+                                        </button>
+                                        <div class="dropdown" id="dropdown-@item.Id" style="display:none;">
+                                            <a asp-action="EditPlant" asp-route-id="@item.Id" style="text-decoration:none; color:inherit;">
+                                                <button type="button">Edit</button>
+                                            </a>
+                                            <a asp-action="DeletePlant" asp-route-id="@item.Id" onclick="return confirm('Are you sure?')" style="text-decoration:none; color:inherit;">
+                                                <button type="button" class="btn-delete">Delete</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <span id="entryCount">Loading entries...</span>
+            <div class="pagination" id="paginationWrapper">
+            </div>
+        </div>
+    </div>
+
+    <div class="bento-grid">
+        <div class="card card-white">
+            <div class="card-header-icon text-secondary">
+                <span class="material-symbols-outlined">spa</span>
+                <span>CROP ROTATION</span>
+            </div>
+            <h3>Soil Health</h3>
+            <p>Rotate Solanaceae crops with legumes to reduce pathogen accumulation in soil.</p>
+            <a href="#" class="link-arrow">View Rotation Guide →</a>
+        </div>
+
+        <div class="card card-green">
+            <div class="card-header-icon text-emerald">
+                <span class="material-symbols-outlined">wb_sunny</span>
+                <span>CLIMATE ALERT</span>
+            </div>
+            <h3>Irrigation Alert</h3>
+            <p>High humidity predicted. Adjust watering schedules to prevent fungal growth.</p>
+            <button class="btn-outline-white">Update Automation</button>
+        </div>
+
+        <div class="card card-white relative">
+            <div class="card-header-icon text-slate">
+                <span class="material-symbols-outlined">local_library</span>
+                <span>BOTANY INDEX</span>
+            </div>
+            <h3>Continuous Sync</h3>
+            <p>Your database is actively syncing with the global agricultural health registry.</p>
+            <span class="material-symbols-outlined bg-icon-watermark">eco</span>
+        </div>
+    </div>
+
+</div>

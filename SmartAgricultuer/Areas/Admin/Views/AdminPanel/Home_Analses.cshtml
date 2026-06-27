@@ -13,36 +13,36 @@
     <script src="~/DS/js/analses.js" asp-append-version="true"></script>
 }
 <div>
-    <div class="topbar">
-
+    <header class="topbar">
         <div class="topbar-title-area">
-            <h2 style="font-size: 20px; font-weight: 800; color: var(--green-dark);">Analytics Insights</h2>
+            <h2 class="page-title-text">Analytics Insights</h2>
         </div>
 
         <div class="topbar-right">
-
-       
-
-      
-
             <div class="profile-info">
-                <strong>Dr. Aris Thorne</strong>
-                <span>Senior Agronomist</span>
+                <strong>@ViewBag.UserName</strong>
+                <span>@ViewBag.UserEmail</span>
             </div>
-            <div class="avatar">AT</div>
-
+            <div class="avatar">
+                @if (!string.IsNullOrEmpty(ViewBag.ProfilePicture))
+                {
+                    <img src="@Url.Content("~/" + ViewBag.ProfilePicture)" alt="Profile"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="avatar-icon-fallback" style="display: none;">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="avatar-icon-fallback" style="display: flex;">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </div>
+                }
+            </div>
         </div>
+    </header>
     </div>
-
-
-
     <div class="content">
-
-      
-     
-
-
-      
         <div class="stats-grid">
 
             <div class="stat-card">

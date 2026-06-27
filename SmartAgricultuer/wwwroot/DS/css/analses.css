@@ -61,20 +61,80 @@
   font-weight   : 600;
   text-transform: uppercase;
 }
-
-.avatar {
-  width          : 38px;
-  height         : 38px;
-  border-radius  : 50%;
-  background     : var(--secondary);
-  display        : flex;
-  align-items    : center;
-  justify-content: center;
-  font-size      : 14px;
-  font-weight    : 700;
-  color          : white;
+/* تحسين التوب بار - إضافة عمق وظل خفيف */
+.topbar {
+    background: var(--white);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03); /* لمسة جمالية */
 }
 
+.page-title-text {
+    font-size: 18px !important;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin: 0;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #f8fafc; 
+    padding: 6px 16px;
+    border-radius: 50px; 
+    border: 1px solid #edf2f7;
+}
+
+.profile-info {
+    text-align: right;
+    line-height: 1.2;
+}
+
+.avatar {
+    width: 36px; 
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid white; 
+    box-shadow: 0 0 0 1px #e2e8f0;
+}
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f5f9; /* لون خلفية خفيف للأيقونة */
+    border: 1px solid #e2e8f0;
+}
+
+.avatar-icon-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8; /* لون رمادي للأيقونة */
+}
+
+    .avatar-icon-fallback .material-symbols-outlined {
+        font-size: 28px; /* حجم الأيقونة */
+    }
+
+    .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* الأهم: تغطية المساحة بدون تغيير أبعاد الصورة الأصلية */
+        display: block;
+    }
 
 
 

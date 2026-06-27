@@ -1,23 +1,29 @@
-function initializeNavbar() {
+document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const menuToggle = document.getElementById('menuToggle');
-    const navItems = document.querySelectorAll('.nav-item');
     const tablesToggle = document.getElementById('tablesToggle');
     const tablesDropdown = document.getElementById('tablesDropdown');
 
-    const currentPath = window.location.pathname.split("/").pop(); 
-    
-    navItems.forEach(item => {
-        const itemHref = item.getAttribute('href');
-        
-        if (itemHref === currentPath) {
-            navItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
+    const navLinks = document.querySelectorAll('.nav-item, .dropdown-item');
 
-            if (item.classList.contains('dropdown-item')) {
-                tablesDropdown?.classList.add('open');
-                tablesToggle?.querySelector('.arrow-icon')?.classList.add('rotate-arrow');
-                tablesToggle?.classList.add('active');
+    const currentUrl = window.location.pathname.toLowerCase();
+
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href) {
+            const lowerHref = href.toLowerCase();
+            if (currentUrl === lowerHref || currentUrl.endsWith(lowerHref)) {
+
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+                if (link.classList.contains('dropdown-item')) {
+                    link.classList.add('active'); 
+                    tablesToggle?.classList.add('active');
+                    tablesDropdown?.classList.add('open');
+                    tablesToggle?.querySelector('.arrow-icon')?.classList.add('rotate-arrow');
+                } else {
+                    link.classList.add('active');
+                }
             }
         }
     });
@@ -25,6 +31,9 @@ function initializeNavbar() {
     if (menuToggle && sidebar) {
         menuToggle.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
+            // إضافة كلاس على الـ body للتحكم في العناصر الخارجية مثل .main
+            document.body.classList.toggle('sidebar-is-collapsed');
+
             if (sidebar.classList.contains('collapsed')) {
                 tablesDropdown?.classList.remove('open');
                 tablesToggle?.querySelector('.arrow-icon')?.classList.remove('rotate-arrow');
@@ -32,35 +41,32 @@ function initializeNavbar() {
         });
     }
 
-    navItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            if (this.id === 'tablesToggle') {
-                e.preventDefault();
-                if (sidebar && !sidebar.classList.contains('collapsed')) {
-                    tablesDropdown?.classList.toggle('open');
-                    this.querySelector('.arrow-icon')?.classList.toggle('rotate-arrow');
-                }
+    if (tablesToggle) {
+        tablesToggle.addEventListener('click', function (e) {
+            if (sidebar && sidebar.classList.contains('collapsed')) {
                 return; 
             }
 
-            navItems.forEach(nav => nav.classList.remove('active', 'logout-active'));
-            this.classList.add(this.classList.contains('logout-item') ? 'logout-active' : 'active');
+            e.preventDefault();
+            tablesDropdown?.classList.toggle('open');
+            this.querySelector('.arrow-icon')?.classList.toggle('rotate-arrow');
         });
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const placeholder = document.getElementById('navbar-placeholder');
-    const menuToggleInDOM = document.getElementById('menuToggle');
-
-    if (placeholder) {
-        fetch('navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                placeholder.innerHTML = data;
-                initializeNavbar(); 
-            });
-    } else if (menuToggleInDOM) {
-        initializeNavbar();
     }
 });
+
+function handleLogout() {
+    Swal.fire({
+        title: 'Do you want to log out?',
+        text: "The current session will end and you will return to the login page.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#006d3d', 
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('logoutForm').submit();
+        }
+    });
+}

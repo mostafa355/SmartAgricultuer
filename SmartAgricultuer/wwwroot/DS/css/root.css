@@ -1,16 +1,15 @@
 :root {
+    /* ثيم الألوان الأساسي للهوية (AgriPulse / Plant AI) */
     --primary: #002d1c;
     --secondary: #006d3d;
     --secondary-container: #8df8b3;
-      --text-main: #191c1e;
-     --text-muted: #414944;
-     
+    --text-main: #191c1e;
+    --text-muted: #414944;
     --outline: #717973;
     --outline-variant: #c1c8c2;
-     --bg-color:  #f4f7f6;
+    --bg-color: #f4f7f6;
     --surface-container: #eceef0;
     --error: #ba1a1a;
-    
     --warning-container: #fff4d6;
     --tertiary-fixed: #d7e6dc;
     --border-color: #e0e3e5;
@@ -18,89 +17,72 @@
     --accent-green: #00522d;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --input-bg: #f2f4f6;
-  --green-dark   : #14532d;
-  --green-light  : #dff3e5;
-  --green-pale   : #e8f5e9;
-  --white        : #ffffff;
-  --gray         : #6b7280;
-  --border       : #e5e7eb;
-  --red          : #ef4444;
-  --font         : 'DM Sans', sans-serif;
-  --primary-container:#064e3b;
-  --secondary-cont:#c3ecd7;
-  --surface-2:#eff4ff;
-  --text:#0b1c30;
-   
-   --navbar-width: 260px;
-    
+    --green-dark: #14532d;
+    --green-light: #dff3e5;
+    --green-pale: #e8f5e9;
+    --white: #ffffff;
+    --gray: #6b7280;
+    --border: #e5e7eb;
+    --red: #ef4444;
+    /* الخطوط والمساحات الديناميكية للسايد بار */
+    --font: 'Inter', 'DM Sans', sans-serif;
+    --navbar-width: 260px;
+    --sidebar-collapsed-width: 70px;
+    --primary-container: #064e3b;
+    --secondary-cont: #c3ecd7;
+    --surface-2: #eff4ff;
+    --text: #0b1c30;
     --warning: #f59e0b;
-    
     --success-bg: #8af6b0;
     --hover-gray: #f1f5f9;
     --error-red: #d93025;
     --error-bg: #fdf2f2;
     --bg-all: #f8fafc;
-    
-    --sidebar-collapsed-width: 80px;
-  --tap-color:         #004d00;
-  --info:              #374151;
-  --text-light:        #9ca3a8;
-  --add-hover:         #007240;
-  --notvy-hover:       #f3f4f6; 
-  --border-light:      #f0f2f4;
-  --border-input:      #d1d5db;
-  --status-healthy-bg:    #d1fae5;
-  --status-healthy-text:  #065f46;
-  --status-healthy-dot:   #059669;
-  --status-warning-bg:    #fff7ed;
-  --status-warning-text:  #c2410c;
-  --status-warning-dot:   #f97316;
-    --status-danger-text:   #991b1b;
-  
-  --stat-green-bg:      #ecfdf5;
-  --stat-risk-border:   #fecaca;
-  --stat-value-color:   #111827;
-    --table-row-hover:    #f9fafb;
-    --climate-bg:         #1a4331;
-  --recommend-btn-bg:   #a7f3d0;
-  --recommend-btn-hover:#6ee7b7;
-  --edit-color:         #1f2937;
-  --edit-hover-bg:      #eff6ff;
-  --edit-hover-text:    #2563eb;
-  --delete-color:       #dc2626;
-  --delete-hover-bg:    #fef2f2;
-
-  --alert-red-bg: #fff1f1;
---alert-orange-bg: #fffbeb;
+    --tap-color: #004d00;
+    --info: #374151;
+    --text-light: #9ca3a8;
+    --add-hover: #007240;
+    --notvy-hover: #f3f4f6;
+    --border-light: #f0f2f4;
+    --border-input: #d1d5db;
+    /* حالات الحقول والعناصر */
+    --status-healthy-bg: #d1fae5;
+    --status-healthy-text: #065f46;
+    --status-healthy-dot: #059669;
+    --status-warning-bg: #fff7ed;
+    --status-warning-text: #c2410c;
+    --status-warning-dot: #f97316;
+    --status-danger-text: #991b1b;
+    --stat-green-bg: #ecfdf5;
+    --stat-risk-border: #fecaca;
+    --stat-value-color: #111827;
+    --table-row-hover: #f9fafb;
+    --climate-bg: #1a4331;
+    --recommend-btn-bg: #a7f3d0;
+    --recommend-btn-hover: #6ee7b7;
+    --edit-color: #1f2937;
+    --edit-hover-bg: #eff6ff;
+    --edit-hover-text: #2563eb;
+    --delete-color: #dc2626;
+    --delete-hover-bg: #fef2f2;
+    --alert-red-bg: #fff1f1;
+    --alert-orange-bg: #fffbeb;
 }
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    margin: 0;
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.8s ease;
-      font-family : var(--font);
-  font-size   : 14px;
-  color : var(--edit-color);
-  line-height: 1.5;
-   background-color: #e5eee7;
-    font-family: 'Arial', sans-serif;
-    overflow-x: hidden; 
-   
-       animation: pageFadeIn 0.6s ease-in-out;
-           background-color: var(--bg-all);
-color:var(--text);
- color: var(--tap-color);
 
-}
+/* تنظيف وتوحيد إعدادات الـ CSS العامة لكل العناصر */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font);
+}
+
+/* نسخة الـ body النظيفة والمستقرة للـ Dashboard */
+body {
+    font-family: var(--font);
+    background-color: var(--bg-all); /* يضمن خلفية ناعمة ومريحة للـ Dashboard */
+    color: var(--text-main);
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden; /* يمنع ظهور السكرول الأفقي المزعج */
 }

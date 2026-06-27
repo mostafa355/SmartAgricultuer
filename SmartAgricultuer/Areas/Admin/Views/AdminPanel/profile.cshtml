@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SmartAgricultuer.ViewModels.ProfileViewModel
+
+@{
     ViewData["Title"] = "User Profile";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -8,21 +10,30 @@
 }
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/DS/js/profile.js" asp-append-version="true"></script>
 }
-<div id="navbar-placeholder">
-</div>
-<header class="topbar">
-    <div class="logo">AgriPulse AI</div>
 
-    <div class="top-icons">
-        <div class="profile-small">
-            <img src="~/DS/images/one.jpg" alt="Profile">
+
+
+<main class="main-profile-content">
+    <div class="topbar">
+        <div class="logo">AgriPulse AI</div>
+        <div class="top-icons">
+            <div class="profile-small">
+                @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                {
+                    <img src="@Url.Content("~/" + Model.ProfilePicture)" alt="Profile" id="topbarAvatar">
+                }
+                else
+                {
+                    <div class="avatar-icon-fallback" style="display: flex;">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</header>
-<div id="navbar"></div>
-<main class="main-profile-content">
     <div class="page-title">
         <h1>User Profile</h1>
         <p>Manage your account settings and preferences.</p>
@@ -30,25 +41,31 @@
 
     <div class="grid-layout">
         <div class="card profile-card">
-            <img src="~/DS/images/one.jpg" alt="Julian Thorne" />
-            <h2>Julian Thorne</h2>
-            <p>julian.thorne@agripulse.ai</p>
-
-            <div class="tags">
-                <div class="tag">Senior Lead</div>
-                <div class="tag">Verification Tech</div>
+            <!-- الـ Container الخاص بالصورة وتعديلها -->
+            <div class="profile-avatar-container" onclick="triggerFileInput()">
+                @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                {
+                    <img src="@Url.Content("~/" + Model.ProfilePicture)" alt="@Model.FullName" id="profileCardAvatar" />
+                }
+                else
+                {
+                   
+                    <div class="avatar-placeholder" id="avatarPlaceholderIcon">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </div>
+                }
+                <!-- طبقة الـ Hover اللي بتظهر للمستخدم -->
+                <div class="avatar-overlay">
+                    <span class="material-symbols-outlined">photo_camera</span>
+                    <span>Edit</span>
+                </div>
             </div>
 
-            <div class="stats">
-                <div class="stat">
-                    <p>Fields Managed</p>
-                    <h3>12</h3>
-                </div>
-                <div class="stat">
-                    <p>Reports Filed</p>
-                    <h3>148</h3>
-                </div>
-            </div>
+            <!-- Input مخفي تماماً مخصص لرفع الملفات -->
+            <input type="file" id="profileImageInput" accept="image/*" style="display: none;" onchange="uploadProfilePicture()" />
+
+            <h2 id="displayFullName">@Model.FullName</h2>
+            <p id="displayEmail">@Model.Email</p>
         </div>
 
         <div class="card settings-card">
@@ -58,9 +75,7 @@
 
             <a href="#" onclick="openEditPopup()" class="setting-item">
                 <div class="setting-left">
-                    <div class="setting-icon">
-                        <span class="material-symbols-outlined">edit</span>
-                    </div>
+                    <div class="setting-icon"><span class="material-symbols-outlined">edit</span></div>
                     <div class="setting-text">
                         <h4>Edit Profile</h4>
                         <p>Update your personal details</p>
@@ -71,9 +86,7 @@
 
             <a href="#" onclick="openPopup()" class="setting-item">
                 <div class="setting-left">
-                    <div class="setting-icon">
-                        <span class="material-symbols-outlined">lock</span>
-                    </div>
+                    <div class="setting-icon"><span class="material-symbols-outlined">lock</span></div>
                     <div class="setting-text">
                         <h4>Change Password</h4>
                         <p>Update your account password securely</p>
@@ -82,11 +95,13 @@
                 <span class="material-symbols-outlined">chevron_right</span>
             </a>
 
-            <div class="setting-item logout">
+            <form id="logoutForm" action="/Admin/AdminPanel/Logout" method="post" style="display:none;">
+                @Html.AntiForgeryToken()
+            </form>
+
+            <div class="setting-item logout" style="cursor: pointer;" onclick="handleLogout()">
                 <div class="setting-left">
-                    <div class="setting-icon">
-                        <span class="material-symbols-outlined">logout</span>
-                    </div>
+                    <div class="setting-icon"><span class="material-symbols-outlined">logout</span></div>
                     <div class="setting-text">
                         <h4>Logout</h4>
                         <p>Safely sign out</p>
@@ -100,12 +115,10 @@
 <div id="editProfilePopup" class="popup-overlay">
     <div class="popup-box">
         <h2>Edit Profile</h2>
-        <form>
-            <input type="text" placeholder="Full Name">
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="New Password">
-            <input type="password" placeholder="Confirm Password">
-            <button type="button">Save Changes</button>
+        <form id="editProfileForm">
+            <input type="text" id="inputFullName" placeholder="Full Name" value="@Model.FullName" required>
+            <input type="email" id="inputEmail" placeholder="Email" value="@Model.Email" required>
+            <button type="button" onclick="submitEditProfile()">Save Changes</button>
         </form>
         <span class="close-btn" onclick="closeEditPopup()">✖</span>
     </div>
@@ -115,11 +128,11 @@
     <div class="popup-box">
         <h2>Change Password</h2>
         <p>Enter your current and new password</p>
-        <form>
-            <input type="password" placeholder="Old Password">
-            <input type="password" placeholder="New Password">
-            <input type="password" placeholder="Confirm Password">
-            <button type="button">Update Password</button>
+        <form id="changePasswordForm">
+            <input type="password" id="oldPassword" placeholder="Old Password" required>
+            <input type="password" id="newPassword" placeholder="New Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+            <button type="button" onclick="submitChangePassword()">Update Password</button>
         </form>
         <span class="close-btn" onclick="closePopup()">✖</span>
     </div>
