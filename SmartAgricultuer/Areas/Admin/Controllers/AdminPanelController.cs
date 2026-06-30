@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartAgricultuer.Models;
 using SmartAgricultuer.ViewModels;
-
+using Microsoft.AspNetCore.Hosting;
+using SmartAgricultuer.ViewModelsAdmin;
 
 namespace SmartAgricultuer.Areas.Admin.Controllers
 {
-    // تحديد أن الكنترولر تابع لمنطقة الأدمن
     [Area("Admin")]
     [Authorize]
     public class AdminPanelController : Controller
@@ -17,30 +17,300 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
         private readonly AppdbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminPanelController(AppdbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public AdminPanelController(
+            AppdbContext context,
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
-        // الأكشن الخاص بصفحة الحشرات (Insects)
-        
+
+        public IActionResult table_plant()
+        {
+            return View();
+        }
+
+        public IActionResult Add_plant()
+        {
+            return View();
+        }
+
+        public IActionResult adddisease()
+        {
+            return View();
+        }
+        [HttpGet]
         public IActionResult Add_Insects()
         {
             return View();
         }
-        public IActionResult table_plant()
+
+        [HttpPost]
+        public ActionResult Add_Insects(InsectFormViewModel model)
         {
-            return View(); 
+            if (model == null || string.IsNullOrEmpty(model.Name))
+            {
+                return Json(new { success = false, message = "Submitted data is invalid. Insect Name is required." });
+            }
+
+            try
+            {
+                string dbImagePath = "ImageSource/Insects/default.png";
+
+                if (!string.IsNullOrEmpty(model.ImageBase64))
+                {
+                    string base64Data = model.ImageBase64;
+                    if (base64Data.Contains(","))
+                    {
+                        base64Data = base64Data.Split(',')[1];
+                    }
+
+                    byte[] imageBytes = Convert.FromBase64String(base64Data);
+                    string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageSource", "Insects");
+
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + ".png";
+                    string fullPath = Path.Combine(folderPath, uniqueFileName);
+
+                    System.IO.File.WriteAllBytes(fullPath, imageBytes);
+                    dbImagePath = "ImageSource/Insects/" + uniqueFileName;
+                }
+
+
+                string finalDescription = model.Status == "Harmful" ? (model.DamageDescription ?? "") : "No damage - Beneficial insect.";
+                string finalPrevention = model.PreventionMethod ?? "";
+                string finalSciName = model.ScientificName ?? "";
+
+                var newInsect = new Insect
+                {
+                    Name = model.Name,
+                    ScientificName = finalSciName,
+                    Description = finalDescription,
+                    Prevention = finalPrevention,
+                    Status = model.Status,
+                    ImageUrl = dbImagePath,
+                    IsDeleted = false,
+                    CreatedAt = DateTime.Now
+                };
+
+                _context.Insects.Add(newInsect);
+                _context.SaveChanges();
+
+                if (model.Status == "Harmful" && model.AffectedPlants != null && model.AffectedPlants.Count > 0)
+                {
+                    foreach (var plantName in model.AffectedPlants)
+                    {
+                        if (string.IsNullOrEmpty(plantName)) continue;
+
+                        var plant = _context.Plants.FirstOrDefault(p => p.Name.ToLower() == plantName.ToLower());
+
+                        if (plant == null)
+                        {
+                            plant = new Plant
+                            {
+                                Name = plantName,
+                                IsDeleted = false,
+                                CreatedAt = DateTime.Now
+                            };
+                            _context.Plants.Add(plant);
+                            _context.SaveChanges();
+                        }
+
+                        var relation = new InsectPlant
+                        {
+                            InsectId = newInsect.Id,
+                            PlantId = plant.Id,
+                            DamageType = finalDescription
+                        };
+
+                        _context.InsectPlants.Add(relation);
+                    }
+                    _context.SaveChanges();
+                }
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
-        public IActionResult Add_plant()
+
+        [HttpGet]
+        public ActionResult Delete_Insect(int id)
         {
-            return View(); 
+            try
+            {
+                var insect = _context.Insects.FirstOrDefault(i => i.Id == id);
+                if (insect != null)
+                {
+                    insect.IsDeleted = true;
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction("Insects");
         }
-        public IActionResult adddisease()
+        [HttpGet]
+        public async Task<IActionResult> Edit_Insect(int id)
         {
-            return View(); 
+            var insect = await _context.Insects
+                .Include(i => i.InsectPlants)
+                    .ThenInclude(ip => ip.Plant)
+                .FirstOrDefaultAsync(i => i.Id == id && i.IsDeleted == false);
+
+            if (insect == null) return RedirectToAction("Insects");
+
+            var model = new InsectFormViewModel
+            {
+                Id = insect.Id,
+                Name = insect.Name,
+                ScientificName = insect.ScientificName,
+                Status = insect.Status,
+                DamageDescription = insect.Description,
+                PreventionMethod = insect.Prevention,
+                ImageBase64 = insect.ImageUrl,
+                AffectedPlants = insect.InsectPlants
+                    .Select(ip => ip.Plant.Name)
+                    .ToList()
+            };
+
+            ViewBag.AllPlants = await _context.Plants
+                .Where(p => p.IsDeleted != true)
+                .Select(p => p.Name)
+                .ToListAsync();
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult Edit_Insect(InsectFormViewModel model)
+        {
+            if (model == null || model.Id <= 0 || string.IsNullOrEmpty(model.Name))
+            {
+                return Json(new { success = false, message = "Submitted data is invalid." });
+            }
+
+            try
+            {
+                var insect = _context.Insects.FirstOrDefault(i => i.Id == model.Id && i.IsDeleted == false);
+                if (insect == null)
+                {
+                    return Json(new { success = false, message = "Insect not found." });
+                }
+
+                if (!string.IsNullOrEmpty(model.ImageBase64))
+                {
+                    string base64Data = model.ImageBase64;
+                    if (base64Data.Contains(","))
+                    {
+                        base64Data = base64Data.Split(',')[1];
+                    }
+
+                    byte[] imageBytes = Convert.FromBase64String(base64Data);
+                    string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageSource", "Insects");
+
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + ".png";
+                    string fullPath = Path.Combine(folderPath, uniqueFileName);
+
+                    System.IO.File.WriteAllBytes(fullPath, imageBytes);
+                    insect.ImageUrl = "ImageSource/Insects/" + uniqueFileName;
+                }
+
+                string finalDescription = model.Status == "Harmful" ? (model.DamageDescription ?? "") : "No damage - Beneficial insect.";
+
+                insect.Name = model.Name;
+                insect.ScientificName = model.ScientificName ?? "";
+                insect.Status = model.Status;
+                insect.Description = finalDescription;
+                insect.Prevention = model.PreventionMethod ?? "";
+
+                _context.SaveChanges();
+
+                var existingRelations = _context.InsectPlants.Where(ip => ip.InsectId == insect.Id).ToList();
+
+                if (model.Status == "Harmful" && model.AffectedPlants != null && model.AffectedPlants.Count > 0)
+                {
+                    var incomingPlantNames = model.AffectedPlants.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim().ToLower()).ToList();
+
+                    foreach (var relation in existingRelations)
+                    {
+                        var plant = _context.Plants.FirstOrDefault(p => p.Id == relation.PlantId);
+                        if (plant == null || !incomingPlantNames.Contains(plant.Name.ToLower()))
+                        {
+                            _context.InsectPlants.Remove(relation);
+                        }
+                    }
+
+                    foreach (var plantName in model.AffectedPlants)
+                    {
+                        if (string.IsNullOrEmpty(plantName)) continue;
+
+                        var plant = _context.Plants.FirstOrDefault(p => p.Name.ToLower() == plantName.Trim().ToLower());
+
+                        if (plant == null)
+                        {
+                            plant = new Plant
+                            {
+                                Name = plantName.Trim(),
+                                IsDeleted = false,
+                                CreatedAt = DateTime.Now
+                            };
+                            _context.Plants.Add(plant);
+                            _context.SaveChanges(); 
+                        }
+
+                        var hasRelation = _context.InsectPlants.Any(ip => ip.InsectId == insect.Id && ip.PlantId == plant.Id);
+                        if (!hasRelation)
+                        {
+                            var newRelation = new InsectPlant
+                            {
+                                InsectId = insect.Id,
+                                PlantId = plant.Id,
+                                DamageType = finalDescription
+                            };
+                            _context.InsectPlants.Add(newRelation);
+                        }
+                        else
+                        {
+                            var currentRelation = _context.InsectPlants.First(ip => ip.InsectId == insect.Id && ip.PlantId == plant.Id);
+                            currentRelation.DamageType = finalDescription;
+                        }
+                    }
+                }
+                else
+                {
+                    if (existingRelations.Any())
+                    {
+                        _context.InsectPlants.RemoveRange(existingRelations);
+                    }
+                }
+
+                _context.SaveChanges();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         [HttpGet]
@@ -49,7 +319,7 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return RedirectToAction("Login", "Account"); 
+                return RedirectToAction("Login", "Account");
             }
 
             var model = new ProfileViewModel
@@ -61,6 +331,7 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [Route("Admin/AdminPanel/UploadProfilePicture")]
         public async Task<IActionResult> UploadProfilePicture(IFormFile ProfilePictureFile)
@@ -92,10 +363,8 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                     await ProfilePictureFile.CopyToAsync(stream);
                 }
 
-                // المسار اللي هيتسيف في الـ DB
                 string dbImagePath = "uploads/profiles/" + uniqueFileName;
 
-                // الحفظ الفعلي في الـ Identity لليوزر الحالي 👇
                 user.ProfilePicture = dbImagePath;
                 var result = await _userManager.UpdateAsync(user);
 
@@ -111,6 +380,7 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Error saving file: " + ex.Message });
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateProfile([FromBody] ProfileViewModel model)
         {
@@ -125,8 +395,7 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 return Json(new { success = false, message = "User not found." });
             }
 
-            // تحديث البيانات في الـ Identity
-            user.UserName = model.FullName; // أو user.FullName لو أنت ضايف الكلاس المخصص
+            user.UserName = model.FullName;
             user.Email = model.Email;
 
             var result = await _userManager.UpdateAsync(user);
@@ -135,9 +404,9 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 return Json(new { success = true, message = "Profile updated successfully in Identity!" });
             }
 
-            // لو فيه أخطاء (مثلاً الإيميل مستخدم قبل كده)
             return Json(new { success = false, message = "Update failed: " + string.Join(", ", result.Errors.Select(e => e.Description)) });
         }
+
         [HttpPost]
         public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword)
         {
@@ -152,17 +421,16 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 return Json(new { success = false, message = "User not found." });
             }
 
-            // ميثود جاهزة وقوية في الـ Identity بتعمل Hash للباسورد الجديد وتتأكد من القديم
             var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
             if (result.Succeeded)
             {
                 return Json(new { success = true, message = "Password changed successfully!" });
             }
 
-            // لو الباسورد القديم غلط أو الجديد مش متوافق مع شروط الـ Identity (Complexity)
             string errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
             return Json(new { success = false, message = errorMessage });
         }
+
         public async Task<IActionResult> Insects()
         {
             var insectsList = await _context.Insects
@@ -181,17 +449,18 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                         ? string.Join(" | ", i.InsectPlants.Select(ip => ip.DamageType).Where(d => !string.IsNullOrEmpty(d)).Distinct())
                         : "None (Beneficial Pollinator)",
 
-                    Status = i.Status ?? "Controlled", 
+                    Status = i.Status ?? "Controlled",
                     ImageUrl = i.ImageUrl ?? ""
                 })
                 .ToListAsync();
 
-            ViewBag.CriticalAlerts = insectsList.Count(i => i.Status == "Harmful"); 
-            ViewBag.BeneficialSpecies = insectsList.Count(i => i.Status == "Beneficial"); 
-            ViewBag.TotalSpecies = insectsList.Count; 
+            ViewBag.CriticalAlerts = insectsList.Count(i => i.Status == "Harmful");
+            ViewBag.BeneficialSpecies = insectsList.Count(i => i.Status == "Beneficial");
+            ViewBag.TotalSpecies = insectsList.Count;
 
             return View(insectsList);
         }
+
         public async Task<IActionResult> Diseases()
         {
             var diseasesList = await _context.PlantDiseases
@@ -208,12 +477,13 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 .ToListAsync();
 
             ViewBag.CriticalAlerts = diseasesList.Count(d => d.Status == "High" || d.Status == "Critical");
-            ViewBag.ModerateAlerts = diseasesList.Count(d => d.Status == "Moderate"); 
-            ViewBag.LowAndNormal = diseasesList.Count(d => d.Status == "Low" || d.Status == "Normal"); 
-            ViewBag.TotalPathogens = diseasesList.Count; 
+            ViewBag.ModerateAlerts = diseasesList.Count(d => d.Status == "Moderate");
+            ViewBag.LowAndNormal = diseasesList.Count(d => d.Status == "Low" || d.Status == "Normal");
+            ViewBag.TotalPathogens = diseasesList.Count;
 
             return View(diseasesList);
         }
+
         public async Task<IActionResult> Plants()
         {
             var plants = await _context.Plants
@@ -221,12 +491,12 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 .Include(p => p.PlantDiseases)
                 .Include(p => p.InsectPlants)
                     .ThenInclude(ip => ip.Insect)
-                .Select( p => new PlantTableViewModel
+                .Select(p => new PlantTableViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Scientific = p.ScientificName ,
-                    ImageUrl = p.ImageUrl ,
+                    Scientific = p.ScientificName,
+                    ImageUrl = p.ImageUrl,
                     Diseases = p.PlantDiseases.Where(d => d.IsDeleted != true).Select(d => d.Name).ToList(),
                     Insects = p.InsectPlants.Select(ip => ip.Insect.Name).ToList()
                 })
@@ -238,10 +508,10 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
         public async Task<IActionResult> Home_Analses()
         {
             var user = await _userManager.GetUserAsync(User);
-            ViewBag.UserName = user?.UserName ;
-            ViewBag.ProfilePicture = user?.ProfilePicture ;
+            ViewBag.UserName = user?.UserName;
+            ViewBag.ProfilePicture = user?.ProfilePicture;
             ViewBag.UserEmail = user?.Email;
-            var totalUsers = await _context.Users.CountAsync(); // أو _userManager.Users.CountAsync()
+            var totalUsers = await _context.Users.CountAsync();
             var uploads = await _context.Uploads.Where(u => u.IsDeleted != true).ToListAsync();
             var results = await _context.AnalysisResults.ToListAsync();
 
@@ -271,7 +541,6 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                     ? Math.Round((double)insectDetections / totalAnalyzedForChart * 100, 1) : 0,
             };
 
-            // أكثر الأمراض اكتشافاً
             var diseaseGroups = await _context.AnalysisResults
                 .Where(r => r.DetectedDiseaseId != null)
                 .Include(r => r.DetectedDisease)
@@ -289,7 +558,6 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 Percentage = Math.Round((double)d.Count / maxDiseaseCount * 100, 1)
             }).ToList();
 
-            // أكثر الحشرات شيوعاً
             var insectGroups = await _context.AnalysisResults
                 .Where(r => r.DetectedInsectId != null)
                 .Include(r => r.DetectedInsect)
@@ -306,7 +574,6 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                 Status = i.Status
             }).ToList();
 
-            // أكثر النباتات تحليلاً
             var plantGroups = await _context.AnalysisResults
                 .Where(r => r.DetectedPlantId != null)
                 .Include(r => r.DetectedPlant)
@@ -325,7 +592,6 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                     ? Math.Round((double)p.Count / totalPlantAnalyses * 100, 1) : 0
             }).ToList();
 
-            // النشاط اليومي آخر 7 أيام
             var last7Days = Enumerable.Range(0, 7)
                 .Select(i => DateTime.UtcNow.Date.AddDays(-6 + i))
                 .ToList();
@@ -340,7 +606,6 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
                                 .Count()
             }).ToList();
 
-            // آخر العمليات
             var recent = await _context.Uploads
                 .Where(u => u.IsDeleted != true)
                 .Include(u => u.User)
@@ -373,7 +638,8 @@ namespace SmartAgricultuer.Areas.Admin.Controllers
 
             return View(viewModel);
         }
-            [HttpPost]
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {

@@ -1,28 +1,26 @@
 ﻿@{
-    ViewData["Title"] = "Add Insect Page";
-}
-@{
+    ViewData["Title"] = "Add Insect";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+
 @section Styles {
     <link rel="stylesheet" href="~/DS/css/Add Insect.css" asp-append-version="true" />
 }
+
 @section Scripts {
     <script src="~/DS/js/Add Insect.js" asp-append-version="true"></script>
 }
-<main class="main-content" style="padding-left: 260px; padding-top: 80px; width: 100%; display: block;">
-    <div class="add-insect-container">
 
+<main class="main-profile-content">
+    <div class="add-insect-container">
 
         <header class="page-header">
             <h1>Add New Insect</h1>
             <p>Enter insect information and affected plants to update the registry.</p>
         </header>
 
-
         <form id="insectForm" class="form-card">
             <div class="form-body">
-                <!-- Basic Info -->
                 <div class="grid-2">
                     <div class="input-group">
                         <label>Insect Name</label>
@@ -34,54 +32,43 @@
                     </div>
                 </div>
 
-
-                <div class="input-group">
-                    <label>Affected Plants</label>
-                    <div class="tag-container" id="tagContainer">
-                        <span class="tag">Corn <span class="material-symbols-outlined remove-tag">close</span></span>
-                        <span class="tag">Wheat <span class="material-symbols-outlined remove-tag">close</span></span>
-                        <input type="text" id="plantInput" placeholder="Add plant...">
-                    </div>
-                </div>
-
-
                 <div class="input-group">
                     <label>Insect Status</label>
                     <div class="status-grid">
                         <label class="status-option harmful">
-                            <input type="radio" name="status" value="harmful">
+                            <input type="radio" name="status" value="Harmful" required>
                             <div class="status-info">
                                 <span class="title">Harmful</span>
                                 <span class="desc">Immediate threat</span>
                             </div>
                         </label>
-                        <label class="status-option warning">
-                            <input type="radio" name="status" value="warning">
-                            <div class="status-info">
-                                <span class="title">Warning</span>
-                                <span class="desc">Monitor closely</span>
-                            </div>
-                        </label>
                         <label class="status-option controlled">
-                            <input type="radio" name="status" value="controlled">
+                            <input type="radio" name="status" value="Beneficial">
                             <div class="status-info">
-                                <span class="title">Controlled</span>
-                                <span class="desc">Stable population</span>
+                                <span class="title">Beneficial</span>
+                                <span class="desc">Helpful ecosystem partner</span>
                             </div>
                         </label>
                     </div>
                 </div>
 
+                <div class="input-group input-group-relative" id="affectedPlantsSection">
+                    <label>Affected Plants</label>
+                    <div class="tag-container" id="tagContainer">
+                        <input type="text" id="plantInput" placeholder="Add plant...">
+                    </div>
+                    <div id="autocompleteList" class="autocomplete-suggestions hidden"></div>
+                </div>
 
-                <div class="input-group">
+                <div class="input-group" id="damageDescSection">
                     <label>Damage Description</label>
                     <textarea id="damageDesc" rows="3" placeholder="Describe the typical damage caused..."></textarea>
                 </div>
+
                 <div class="input-group">
                     <label>Prevention Method</label>
                     <textarea id="prevention" rows="3" placeholder="List recommended prevention measures..."></textarea>
                 </div>
-
 
                 <div class="input-group">
                     <label>Insect Photo</label>
@@ -96,7 +83,6 @@
                     </div>
                 </div>
 
-
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
                     <button type="submit" class="btn-save" id="saveBtn">
@@ -106,7 +92,6 @@
                 </div>
             </div>
         </form>
-
 
         <div class="guidance-footer">
             <span class="material-symbols-outlined">info</span>

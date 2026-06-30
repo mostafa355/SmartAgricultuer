@@ -1,11 +1,9 @@
-// متغيرات التحكم في الصفحات
 let currentPage = 1;
 const rowsPerPage = 10;
 
 document.addEventListener("DOMContentLoaded", function () {
     initPagination();
 
-    // إغلاق أي Dropdown مفتوح عند الضغط في أي مكان خارجي بالصفحة
     document.addEventListener("click", function (event) {
         if (!event.target.closest('.action-menu')) {
             closeAllDropdowns();
@@ -13,40 +11,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// ميثود تشغيل وبناء الصفحات لأول مرة
 function initPagination() {
     currentPage = 1;
     showPage(currentPage);
 }
 
-// ميثود عرض صفحة معينة وإخفاء الباقي
 function showPage(page) {
     const table = document.getElementById("insectsTable");
     if (!table) return;
 
     const tbody = table.getElementsByTagName("tbody")[0];
-    const rows = Array.from(tbody.getElementsByTagName("tr"));
+    const rows = Array.from(tbody.children);
 
-    // تخطي رسالة "No insects found" لو موجودة
     if (rows.length === 1 && rows[0].cells.length === 1) return;
 
     currentPage = page;
     const totalRows = rows.length;
     const totalPages = Math.ceil(totalRows / rowsPerPage);
 
-    // حساب بداية ونهاية الصفوف للصفحة الحالية
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
     rows.forEach((row, index) => {
         if (index >= start && index < end) {
-            row.style.display = ""; // إظهار
+            row.style.display = "";
         } else {
-            row.style.display = "none"; // إخفاء
+            row.style.display = "none";
         }
     });
 
-    // تحديث الأزرار والعداد السفلي
     updatePaginationControls(totalPages);
 
     const entryCount = document.getElementById("entryCount");
@@ -56,16 +49,14 @@ function showPage(page) {
     }
 }
 
-// ميثود رسم وتحديث أزرار التنقل (الأرقام، التالي، السابق)
 function updatePaginationControls(totalPages) {
     const paginationContainer = document.getElementById("paginationWrapper");
     if (!paginationContainer) return;
 
     paginationContainer.innerHTML = "";
 
-    if (totalPages <= 1) return; // لو الداتا كلها أقل من 10 صفوف مش هنعرض أزرار
+    if (totalPages <= 1) return;
 
-    // 1. زرار السابق (Chevron Left)
     const prevBtn = document.createElement("button");
     prevBtn.innerHTML = '<span class="material-symbols-outlined">chevron_left</span>';
     prevBtn.disabled = currentPage === 1;
@@ -75,7 +66,6 @@ function updatePaginationControls(totalPages) {
     };
     paginationContainer.appendChild(prevBtn);
 
-    // 2. أزرار أرقام الصفحات
     for (let i = 1; i <= totalPages; i++) {
         const pageBtn = document.createElement("button");
         pageBtn.innerText = i;
@@ -89,7 +79,6 @@ function updatePaginationControls(totalPages) {
         paginationContainer.appendChild(pageBtn);
     }
 
-    // 3. زرار التالي (Chevron Right)
     const nextBtn = document.createElement("button");
     nextBtn.innerHTML = '<span class="material-symbols-outlined">chevron_right</span>';
     nextBtn.disabled = currentPage === totalPages;
@@ -100,14 +89,13 @@ function updatePaginationControls(totalPages) {
     paginationContainer.appendChild(nextBtn);
 }
 
-// ميثود الـ Dropdown العائم (محدثة لمنع التداخل وهزات التصميم)
 function toggleDropdown(event, id) {
-    event.stopPropagation(); // منع انتشار الحدث للـ document
+    event.stopPropagation();
     const targetDropdown = document.getElementById(id);
 
     if (targetDropdown) {
         const isCurrentlyOpen = targetDropdown.style.display === "block";
-        closeAllDropdowns(); // إغلاق باقي القوائم المفتوحة أولاً لضمان عدم التداخل هندسياً
+        closeAllDropdowns();
 
         if (!isCurrentlyOpen) {
             targetDropdown.style.display = "block";
@@ -115,7 +103,6 @@ function toggleDropdown(event, id) {
     }
 }
 
-// دالة عامة مسؤولة عن إغلاق كافة الـ Dropdowns المفتوحة بالكامل
 function closeAllDropdowns() {
     const dropdowns = document.querySelectorAll(".dropdown");
     dropdowns.forEach(d => {
@@ -123,7 +110,6 @@ function closeAllDropdowns() {
     });
 }
 
-// ميثود البحث الفوري (متوافقة مع الـ Pagination والـ Dropdowns)
 function filterInsectsTable() {
     const input = document.getElementById("insectSearch");
     if (!input) return;
@@ -133,20 +119,19 @@ function filterInsectsTable() {
     if (!table) return;
 
     const tbody = table.getElementsByTagName("tbody")[0];
-    const rows = tbody.getElementsByTagName("tr");
+    const rows = tbody.children;
 
     if (rows.length === 1 && rows[0].cells.length === 1) return;
 
     let hasFilter = filter.length > 0;
 
     if (!hasFilter) {
-        // لو البحث فاضي نرجع للنظام العادي المقسم لصفحات ونغلق المنسدلات المفتوحة
         closeAllDropdowns();
         initPagination();
         return;
     }
 
-    closeAllDropdowns(); // إغلاق أي قائمة مفتوحة فوراً أثناء الكتابة والبحث لتفادي العيوب البصرية
+    closeAllDropdowns();
     let visibleCount = 0;
 
     for (let i = 0; i < rows.length; i++) {
@@ -164,7 +149,6 @@ function filterInsectsTable() {
         }
     }
 
-    // إخفاء الأزرار أثناء البحث لعرض النتائج المفلترة كاملة مرة واحدة
     const paginationContainer = document.getElementById("paginationWrapper");
     if (paginationContainer) paginationContainer.innerHTML = "";
 
@@ -172,4 +156,23 @@ function filterInsectsTable() {
     if (entryCount) {
         entryCount.innerText = `Found ${visibleCount} matching entries`;
     }
+}
+function editInsect(id) {
+    window.location.href = `/Admin/AdminPanel/Edit_Insect/${id}`;
+}
+
+function deleteInsect(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#006d3d',
+        cancelButtonColor: '#dc2626',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/Admin/AdminPanel/Delete_Insect/${id}`;
+        }
+    });
 }
